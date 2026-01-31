@@ -19,20 +19,14 @@
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-    <depends>com.intellij.modules.compose</depends>
-    <depends>com.intellij.modules.lsp</depends>
-
-    <depends>org.jetbrains.kotlin</depends>
-    <depends>com.intellij.modules.json</depends>
-    <depends>com.intellij.modules.xml</depends>
-    <depends>com.intellij.properties</depends>
-    <depends>org.intellij.plugins.markdown</depends>
-    <depends>com.intellij.database</depends>
-    <resource-bundle>messages.MyMessageBundle</resource-bundle>
+    <depends>com.intellij.modules.platform</depends>
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="MyToolWindow" factoryClass="com.example.explainableaiplugin.MyToolWindowFactory"
+        <toolWindow id="AI assistant"
+                    stripeTitle="AI assistant"
+                    anchor="right"
+                    factoryClass="com.example.explainableaiplugin.MyToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
     </extensions>
 </idea-plugin>

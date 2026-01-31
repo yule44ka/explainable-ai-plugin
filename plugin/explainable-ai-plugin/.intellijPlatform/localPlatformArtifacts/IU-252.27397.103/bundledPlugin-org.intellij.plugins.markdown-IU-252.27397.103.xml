@@ -1,0 +1,12 @@
+<ivy-module version="2.0">
+  <info organisation="bundledPlugin" module="org.intellij.plugins.markdown" revision="IU-252.27397.103"/>
+  <configurations>
+    <conf name="default" visibility="public"/>
+  </configurations>
+  <publications>
+    <artifact name="markdown" ext="jar" conf="default" url="plugins/markdown/lib"/>
+    <artifact name="intellij.markdown.frontend" ext="jar" conf="default" url="plugins/markdown/lib/modules"/>
+    <artifact name="intellij.markdown.backend" ext="jar" conf="default" url="plugins/markdown/lib/modules"/>
+  </publications>
+  <dependencies/>
+</ivy-module>

@@ -18,7 +18,7 @@ repositories {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
     intellijPlatform {
-        intellijIdea("2025.2.4")
+        intellijIdeaCommunity("2025.2.4")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
         // Add plugin dependencies for compilation here:
@@ -26,9 +26,6 @@ dependencies {
         composeUI()
 
         bundledPlugin("org.jetbrains.kotlin")
-        bundledPlugin("com.intellij.modules.json")
-        bundledPlugin("org.intellij.plugins.markdown")
-        bundledPlugin("com.intellij.database")
     }
 }
 
