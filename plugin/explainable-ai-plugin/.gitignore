@@ -41,3 +41,14 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Plugin Settings (SECURITY: Never commit these) ###
+# OpenAI settings file (contains references to secure storage)
+openai-settings.xml
+# Any local configuration files
+*-local.xml
+# Environment files
+.env
+.env.local
+*.key
+*.secret
