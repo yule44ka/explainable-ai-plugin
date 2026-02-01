@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.intellij.platform") version "2.10.2"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
 }
 
 group = "com.example"
@@ -27,6 +28,15 @@ dependencies {
 
         bundledPlugin("org.jetbrains.kotlin")
     }
+    
+    // HTTP Client for OpenAI API
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    
+    // JSON parsing
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    
+    // Coroutines (bundled but explicit for clarity)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 }
 
 intellijPlatform {
@@ -46,6 +56,11 @@ tasks {
     withType<JavaCompile> {
         sourceCompatibility = "21"
         targetCompatibility = "21"
+    }
+    
+    // Configure test task to use JUnit 5
+    test {
+        useJUnitPlatform()
     }
 }
 

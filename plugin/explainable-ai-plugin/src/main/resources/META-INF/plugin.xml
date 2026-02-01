@@ -28,5 +28,37 @@
                     anchor="right"
                     factoryClass="com.example.explainableaiplugin.MyToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
+        
+        <!-- Settings -->
+        <projectConfigurable 
+            parentId="tools"
+            instance="com.example.explainableaiplugin.settings.OpenAISettingsConfigurable"
+            id="com.example.explainableaiplugin.settings.OpenAISettingsConfigurable"
+            displayName="Explainable AI"/>
+        
+        <!-- Services -->
+        <projectService serviceImplementation="com.example.explainableaiplugin.services.OpenAIService"/>
+        
+        <!-- Notification Group -->
+        <notificationGroup id="Explainable AI" displayType="BALLOON"/>
     </extensions>
+    
+    <!-- Actions -->
+    <actions>
+        <group id="ExplainableAI.EditorPopupMenu" text="AI Assistant" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            
+            <action id="ExplainableAI.ExplainCode"
+                    class="com.example.explainableaiplugin.actions.ExplainCodeAction"
+                    text="Explain Code"
+                    description="Explain selected code using AI"
+                    icon="AllIcons.Actions.IntentionBulb"/>
+            
+            <action id="ExplainableAI.AnalyzeCode"
+                    class="com.example.explainableaiplugin.actions.AnalyzeCodeAction"
+                    text="Analyze Code"
+                    description="Analyze selected code for issues"
+                    icon="AllIcons.Actions.InspectCode"/>
+        </group>
+    </actions>
 </idea-plugin>
