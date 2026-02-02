@@ -173,4 +173,80 @@ class OpenAIService(private val project: Project) {
             systemMessage = "You are a helpful assistant."
         )
     }
+    
+    /**
+     * Генерировать многоуровневое summary для выбранного кода
+     * @param code Выделенный код для анализа
+     * @param fileContext Полный контекст файла для лучшего понимания
+     * @return CodeSummary объект с различными уровнями детализации
+     */
+    suspend fun generateCodeSummary(code: String, fileContext: String): Result<CodeSummary> = withContext(Dispatchers.IO) {
+        val client = createClient() 
+            ?: return@withContext Result.failure(
+                IllegalStateException("API key not configured")
+            )
+        
+        val prompt = """
+You are an expert code summarizer. For the following code, generate 6 summaries, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
+- low_unstructured: One-sentence, low-detail, paragraph style.
+- low_structured: 2-3 short bullet points, low-detail, as a single string. Each bullet must start with "•" and be separated by \n. Never return an array.
+- medium_unstructured: 2-3 sentences, medium-detail, paragraph style.
+- medium_structured: 3-5 bullet points, medium-detail, as a single string. Use "•" for first-level bullets, and ENCOURAGE the use of two-level bullets (use "◦" for the second level, and indent the second-level bullet with 2 spaces before the "◦") when logical groupings exist. Bullets must be separated by \n. Never return an array.
+- high_unstructured: 3-4 sentences, high-detail, paragraph style.
+- high_structured: 4-8 bullet points, high-detail, as a single string. Use "•" for first-level bullets, and ENCOURAGE the use of two-level bullets (use "◦" for the second level, and indent the second-level bullet with 2 spaces before the "◦") when logical groupings exist. Bullets must be separated by \n. Never return an array.
+
+IMPORTANT:
+- For medium_structured and high_structured, if there are logical groupings, you should use two-level bullets ("•" and "◦"). For the second-level bullet ("◦"), always indent with 2 spaces before the "◦".
+- The file context below is provided ONLY for reference to help understand the code's environment.
+- Your summary MUST focus ONLY on the specific code snippet provided.
+- Return your response as a JSON object with keys: title, low_unstructured, low_structured, medium_unstructured, medium_structured, high_unstructured, high_structured.
+
+File Context (for reference only):
+$fileContext
+
+Code to summarize:
+$code
+        """.trimIndent()
+        
+        try {
+            val result = client.sendPrompt(
+                prompt = prompt,
+                systemMessage = "You are an expert code analyzer that generates structured summaries.",
+                model = getModel(),
+                temperature = getTemperature(),
+                maxTokens = getMaxTokens()
+            )
+            
+            result.mapCatching { response ->
+                // Парсим JSON ответ
+                val jsonResponse = response.trim().removePrefix("```json").removeSuffix("```").trim()
+                parseCodeSummary(jsonResponse)
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Парсинг JSON ответа в объект CodeSummary
+     */
+    private fun parseCodeSummary(jsonString: String): CodeSummary {
+        // Простой парсинг JSON (можно использовать kotlinx.serialization для более надежного парсинга)
+        val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+        return json.decodeFromString(CodeSummary.serializer(), jsonString)
+    }
 }
+
+/**
+ * Модель данных для code summary с различными уровнями детализации
+ */
+@kotlinx.serialization.Serializable
+data class CodeSummary(
+    val title: String = "",
+    val low_unstructured: String = "",
+    val low_structured: String = "",
+    val medium_unstructured: String = "",
+    val medium_structured: String = "",
+    val high_unstructured: String = "",
+    val high_structured: String = ""
+)

@@ -59,6 +59,12 @@
                     text="Analyze Code"
                     description="Analyze selected code for issues"
                     icon="AllIcons.Actions.InspectCode"/>
+            
+            <action id="ExplainableAI.GenerateSummary"
+                    class="com.example.explainableaiplugin.actions.GenerateSummaryAction"
+                    text="Generate Summary"
+                    description="Generate multi-level summary of selected code"
+                    icon="AllIcons.Actions.Preview"/>
         </group>
     </actions>
 </idea-plugin>
