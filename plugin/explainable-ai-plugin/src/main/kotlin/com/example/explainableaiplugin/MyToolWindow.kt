@@ -52,6 +52,18 @@ class MyToolWindow(private val project: Project) {
     private val detailLevelCombo = ComboBox(arrayOf("Low Detail", "Medium Detail", "High Detail"))
     private val formatTypeCombo = ComboBox(arrayOf("Paragraph", "Bullet Points"))
     
+    // Model pricing data
+    private val modelPricing = mapOf(
+        "gpt-4.1" to "$2.00",
+        "gpt-4.1-mini" to "$0.40",
+        "gpt-4.1-nano" to "$0.10",
+        "gpt-4o" to "$2.50",
+        "gpt-4o-mini" to "$0.15"
+    )
+    
+    // Combobox for model selection with prices
+    private val modelCombo = ComboBox(modelPricing.map { (model, price) -> "$model | $price" }.toTypedArray())
+    
     // Color palette for mapping (should match NaturalEdit)
     private val mappingColors = listOf(
         Color(255, 179, 198, 128), // pink
@@ -117,11 +129,6 @@ class MyToolWindow(private val project: Project) {
             row {
                 label("✓ OpenAI API configured")
             }
-            row {
-                label("Model: ${openAIService.getModel()}").applyToComponent {
-                    font = Font(font.name, Font.PLAIN, 10)
-                }
-            }
             separator()
             
             row {
@@ -135,6 +142,25 @@ class MyToolWindow(private val project: Project) {
             }
             
             separator()
+            
+            row {
+                label("Model:")
+                cell(modelCombo).applyToComponent {
+                    // Set current model from settings as default
+                    val currentModel = openAIService.getModel()
+                    for (i in 0 until itemCount) {
+                        val itemModel = getItemAt(i)?.split(" | ")?.firstOrNull()
+                        if (itemModel == currentModel) {
+                            selectedIndex = i
+                            break
+                        }
+                    }
+                    // If current model not in list, select first item
+                    if (selectedIndex == -1) {
+                        selectedIndex = 0
+                    }
+                }
+            }
             
             row {
                 label("Detail Level:")
@@ -215,6 +241,10 @@ class MyToolWindow(private val project: Project) {
         val document = editor.document
         val fileContext = document.text
         
+        // Get selected model (extract model name from "model | price" format)
+        val selectedModelWithPrice = modelCombo.selectedItem as? String
+        val selectedModel = selectedModelWithPrice?.split(" | ")?.firstOrNull()?.trim() ?: openAIService.getModel()
+        
         // Run generation in background
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Generating Code Summary...", true) {
@@ -225,11 +255,11 @@ class MyToolWindow(private val project: Project) {
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = false
                     indicator.fraction = 0.0
-                    indicator.text = "Generating summary..."
+                    indicator.text = "Generating summary with $selectedModel..."
                     
                     runBlocking {
                         // Stage 1: Generate summary
-                        val summaryResult = openAIService.generateCodeSummary(selectedText, fileContext)
+                        val summaryResult = openAIService.generateCodeSummary(selectedText, fileContext, selectedModel)
                         summaryResult.onSuccess { 
                             summary = it
                             indicator.fraction = 0.3
@@ -251,7 +281,8 @@ class MyToolWindow(private val project: Project) {
                                     val mappingResult = openAIService.buildSummaryMapping(
                                         selectedText, 
                                         summaryText, 
-                                        startLine
+                                        startLine,
+                                        selectedModel
                                     )
                                     mappingResult.onSuccess { mapping ->
                                         mappingResults[key] = mapping

@@ -178,13 +178,20 @@ class OpenAIService(private val project: Project) {
      * Generate multi-level summary for selected code
      * @param code Selected code for analysis
      * @param fileContext Full file context for better understanding
+     * @param model Model to use for generation (if null, uses default from settings)
      * @return CodeSummary object with different levels of detail
      */
-    suspend fun generateCodeSummary(code: String, fileContext: String): Result<CodeSummary> = withContext(Dispatchers.IO) {
+    suspend fun generateCodeSummary(
+        code: String, 
+        fileContext: String, 
+        model: String? = null
+    ): Result<CodeSummary> = withContext(Dispatchers.IO) {
         val client = createClient() 
             ?: return@withContext Result.failure(
                 IllegalStateException("API key not configured")
             )
+        
+        val modelToUse = model ?: getModel()
         
         val prompt = """
 You are an expert code summarizer. For the following code, generate 6 summaries, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
@@ -212,7 +219,7 @@ $code
             val result = client.sendPrompt(
                 prompt = prompt,
                 systemMessage = "You are an expert code analyzer that generates structured summaries.",
-                model = getModel(),
+                model = modelToUse,
                 temperature = getTemperature(),
                 maxTokens = getMaxTokens()
             )
@@ -241,17 +248,21 @@ $code
      * @param code Code for mapping
      * @param summaryText Summary text
      * @param realStartLine Real starting line of code (1-based)
+     * @param model Model to use for generation (if null, uses default from settings)
      * @return List of mappings between summary components and code segments
      */
     suspend fun buildSummaryMapping(
         code: String,
         summaryText: String,
-        realStartLine: Int = 1
+        realStartLine: Int = 1,
+        model: String? = null
     ): Result<List<SummaryMapping>> = withContext(Dispatchers.IO) {
         val client = createClient() 
             ?: return@withContext Result.failure(
                 IllegalStateException("API key not configured")
             )
+        
+        val modelToUse = model ?: getModel()
         
         // Add line numbers to code
         val codeWithLineNumbers = code.split("\n")
@@ -297,7 +308,7 @@ $summaryText
             val result = client.sendPrompt(
                 prompt = prompt,
                 systemMessage = "You are an expert at code analysis and mapping.",
-                model = getModel(),
+                model = modelToUse,
                 temperature = getTemperature(),
                 maxTokens = getMaxTokens()
             )

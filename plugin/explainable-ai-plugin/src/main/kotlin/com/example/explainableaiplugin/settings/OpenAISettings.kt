@@ -19,7 +19,7 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     
     data class State(
         var apiEndpoint: String = "https://api.openai.com/v1",
-        var model: String = "gpt-4",
+        var model: String = "gpt-4.1-nano",
         var temperature: Double = 0.7,
         var maxTokens: Int = 2000
     )
