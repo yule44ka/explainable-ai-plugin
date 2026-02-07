@@ -15,14 +15,14 @@ import kotlinx.coroutines.launch
 import javax.swing.JComponent
 
 /**
- * UI для настроек OpenAI в Settings -> Tools -> Explainable AI
+ * UI for OpenAI settings in Settings -> Tools -> Explainable AI
  */
 class OpenAISettingsConfigurable : Configurable {
     
     private var settingsPanel: DialogPanel? = null
     private val settings = OpenAISettings.getInstance()
     
-    // UI компоненты
+    // UI components
     private val apiKeyField = JBPasswordField()
     private val apiEndpointField = JBTextField()
     private val modelField = JBTextField()
@@ -91,7 +91,7 @@ class OpenAISettingsConfigurable : Configurable {
     }
     
     private fun testConnection() {
-        // Сначала применяем текущие настройки
+        // First apply current settings
         if (isModified()) {
             apply()
         }
@@ -107,7 +107,7 @@ class OpenAISettingsConfigurable : Configurable {
             return
         }
         
-        // Показываем диалог "Testing..."
+        // Show "Testing..." dialog
         ApplicationManager.getApplication().executeOnPooledThread {
             CoroutineScope(Dispatchers.IO).launch {
                 val result = openAIService.testConnection()

@@ -11,12 +11,12 @@ import com.intellij.openapi.ui.Messages
 import kotlinx.coroutines.runBlocking
 
 /**
- * Action для объяснения выбранного кода с помощью OpenAI
+ * Action for explaining selected code using OpenAI
  */
 class ExplainCodeAction : AnAction() {
     
     override fun update(e: AnActionEvent) {
-        // Показываем action только если выделен текст
+        // Show action only if text is selected
         val editor = e.getData(CommonDataKeys.EDITOR)
         val hasSelection = editor?.selectionModel?.hasSelection() ?: false
         e.presentation.isEnabled = hasSelection
@@ -43,7 +43,7 @@ class ExplainCodeAction : AnAction() {
             return
         }
         
-        // Запускаем в фоновом режиме с индикатором прогресса
+        // Run in background with progress indicator
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Explaining Code with AI...", true) {
                 var explanation: String? = null

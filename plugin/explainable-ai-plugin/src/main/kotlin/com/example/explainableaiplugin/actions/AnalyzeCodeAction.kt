@@ -11,12 +11,12 @@ import com.intellij.openapi.ui.Messages
 import kotlinx.coroutines.runBlocking
 
 /**
- * Action для анализа кода на возможные проблемы
+ * Action for analyzing code for possible issues
  */
 class AnalyzeCodeAction : AnAction() {
     
     override fun update(e: AnActionEvent) {
-        // Показываем action только если выделен текст
+        // Show action only if text is selected
         val editor = e.getData(CommonDataKeys.EDITOR)
         val hasSelection = editor?.selectionModel?.hasSelection() ?: false
         e.presentation.isEnabled = hasSelection
@@ -43,7 +43,7 @@ class AnalyzeCodeAction : AnAction() {
             return
         }
         
-        // Запускаем в фоновом режиме с индикатором прогресса
+        // Run in background with progress indicator
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Analyzing Code with AI...", true) {
                 var analysis: String? = null

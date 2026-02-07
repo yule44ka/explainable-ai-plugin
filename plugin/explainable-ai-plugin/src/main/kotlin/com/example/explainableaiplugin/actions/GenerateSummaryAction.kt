@@ -13,12 +13,12 @@ import com.intellij.openapi.wm.ToolWindowManager
 import kotlinx.coroutines.runBlocking
 
 /**
- * Action для генерации многоуровневого summary выбранного кода
+ * Action for generating multi-level summary of selected code
  */
 class GenerateSummaryAction : AnAction() {
     
     override fun update(e: AnActionEvent) {
-        // Показываем action всегда, но делаем активным только если выделен текст
+        // Show action always, but make active only if text is selected
         val editor = e.getData(CommonDataKeys.EDITOR)
         val hasSelection = editor?.selectionModel?.hasSelection() ?: false
         e.presentation.isEnabledAndVisible = true
@@ -39,7 +39,7 @@ class GenerateSummaryAction : AnAction() {
             return
         }
         
-        // Получаем весь текст файла для контекста
+        // Get full file text for context
         val document = editor.document
         val fileContext = document.text
         
@@ -50,7 +50,7 @@ class GenerateSummaryAction : AnAction() {
             return
         }
         
-        // Запускаем в фоновом режиме с индикатором прогресса
+        // Run in background with progress indicator
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Generating Code Summary with AI...", true) {
                 var summary: com.example.explainableaiplugin.services.CodeSummary? = null
@@ -72,10 +72,10 @@ class GenerateSummaryAction : AnAction() {
                 
                 override fun onSuccess() {
                     summary?.let { summaryData ->
-                        // Открываем Tool Window и обновляем его содержимое
+                        // Open Tool Window and update its content
                         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("AI assistant")
                         toolWindow?.show {
-                            // Обновляем содержимое Tool Window
+                            // Update Tool Window content
                             updateToolWindowWithSummary(project, summaryData)
                         }
                     }
@@ -95,20 +95,20 @@ class GenerateSummaryAction : AnAction() {
     }
     
     /**
-     * Обновление Tool Window с результатами summary
+     * Update Tool Window with summary results
      */
     private fun updateToolWindowWithSummary(
         project: com.intellij.openapi.project.Project,
         summary: com.example.explainableaiplugin.services.CodeSummary
     ) {
-        // Эта функция будет вызываться из MyToolWindow для обновления UI
-        // Сохраняем summary в project service для доступа из Tool Window
+        // This function will be called from MyToolWindow to update UI
+        // Save summary in project service for access from Tool Window
         project.putUserData(SUMMARY_KEY, summary)
         
-        // Триггерим обновление Tool Window
+        // Trigger Tool Window update
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("AI assistant")
         toolWindow?.contentManager?.getContent(0)?.let { content ->
-            // Tool Window автоматически обновится при следующем показе
+            // Tool Window will automatically update on next show
         }
     }
     

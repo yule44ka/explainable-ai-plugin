@@ -10,7 +10,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
- * HTTP клиент для работы с OpenAI API
+ * HTTP client for working with OpenAI API
  */
 class OpenAIClient(
     private val apiKey: String,
@@ -29,7 +29,7 @@ class OpenAIClient(
     }
     
     /**
-     * Отправить запрос к ChatGPT API
+     * Send request to ChatGPT API
      */
     fun sendChatRequest(
         messages: List<ChatMessage>,
@@ -76,7 +76,7 @@ class OpenAIClient(
     }
     
     /**
-     * Упрощенный метод для отправки одного запроса
+     * Simplified method for sending a single request
      */
     fun sendPrompt(
         prompt: String,
@@ -100,7 +100,7 @@ class OpenAIClient(
 }
 
 /**
- * Модели данных для OpenAI API
+ * Data models for OpenAI API
  */
 
 @Serializable

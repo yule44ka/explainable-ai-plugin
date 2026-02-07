@@ -7,8 +7,8 @@ import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.*
 
 /**
- * Service для управления настройками OpenAI API.
- * Использует PasswordSafe API для безопасного хранения токена.
+ * Service for managing OpenAI API settings.
+ * Uses PasswordSafe API for secure token storage.
  */
 @Service
 @State(
@@ -46,14 +46,14 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     }
     
     /**
-     * Получить API ключ из безопасного хранилища
+     * Get API key from secure storage
      */
     fun getApiKey(): String? {
         return PasswordSafe.instance.getPassword(createCredentialAttributes())
     }
     
     /**
-     * Сохранить API ключ в безопасное хранилище
+     * Save API key to secure storage
      */
     fun setApiKey(apiKey: String?) {
         val credentialAttributes = createCredentialAttributes()
@@ -66,21 +66,21 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     }
     
     /**
-     * Проверить, установлен ли API ключ
+     * Check if API key is configured
      */
     fun isApiKeyConfigured(): Boolean {
         return !getApiKey().isNullOrEmpty()
     }
     
     /**
-     * Очистить все настройки
+     * Clear all settings
      */
     fun clear() {
         setApiKey(null)
         state = State()
     }
     
-    // Геттеры и сеттеры для остальных настроек
+    // Getters and setters for other settings
     
     var apiEndpoint: String
         get() = state.apiEndpoint

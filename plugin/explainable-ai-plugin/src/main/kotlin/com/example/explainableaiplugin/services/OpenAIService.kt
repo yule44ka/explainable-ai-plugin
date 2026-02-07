@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Service для взаимодействия с OpenAI API
+ * Service for interacting with OpenAI API
  */
 @Service(Service.Level.PROJECT)
 class OpenAIService(private val project: Project) {
@@ -23,14 +23,14 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Проверить, настроен ли API ключ
+     * Check if API key is configured
      */
     fun isConfigured(): Boolean {
         return settings.isApiKeyConfigured()
     }
     
     /**
-     * Показать уведомление о необходимости настройки API ключа
+     * Show notification about the need to configure API key
      */
     fun showConfigurationWarning() {
         NotificationGroupManager.getInstance()
@@ -44,7 +44,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Показать уведомление об успехе
+     * Show success notification
      */
     fun showSuccessNotification(message: String) {
         NotificationGroupManager.getInstance()
@@ -58,7 +58,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Показать уведомление об ошибке
+     * Show error notification
      */
     fun showErrorNotification(message: String) {
         NotificationGroupManager.getInstance()
@@ -72,14 +72,14 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Получить API ключ (для использования в запросах)
+     * Get API key (for use in requests)
      */
     fun getApiKey(): String? {
         return settings.getApiKey()
     }
     
     /**
-     * Проверить и получить API ключ, показать предупреждение если не настроен
+     * Check and get API key, show warning if not configured
      */
     fun getApiKeyOrWarn(): String? {
         val apiKey = getApiKey()
@@ -91,7 +91,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Получить настройки для запросов к API
+     * Get settings for API requests
      */
     fun getApiEndpoint(): String = settings.apiEndpoint
     fun getModel(): String = settings.model
@@ -99,7 +99,7 @@ class OpenAIService(private val project: Project) {
     fun getMaxTokens(): Int = settings.maxTokens
     
     /**
-     * Создать клиента OpenAI с текущими настройками
+     * Create OpenAI client with current settings
      */
     private fun createClient(): OpenAIClient? {
         val apiKey = getApiKey()
@@ -110,7 +110,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Отправить простой текстовый запрос к OpenAI
+     * Send simple text request to OpenAI
      */
     suspend fun sendPrompt(
         prompt: String,
@@ -135,7 +135,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Объяснить код с помощью AI
+     * Explain code using AI
      */
     suspend fun explainCode(code: String): Result<String> {
         return sendPrompt(
@@ -145,7 +145,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Найти возможные проблемы в коде
+     * Find possible issues in code
      */
     suspend fun analyzeCode(code: String): Result<String> {
         return sendPrompt(
@@ -155,7 +155,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Предложить улучшения кода
+     * Suggest code improvements
      */
     suspend fun suggestImprovements(code: String): Result<String> {
         return sendPrompt(
@@ -165,7 +165,7 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Проверить соединение с API
+     * Test API connection
      */
     suspend fun testConnection(): Result<String> {
         return sendPrompt(
@@ -175,10 +175,10 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Генерировать многоуровневое summary для выбранного кода
-     * @param code Выделенный код для анализа
-     * @param fileContext Полный контекст файла для лучшего понимания
-     * @return CodeSummary объект с различными уровнями детализации
+     * Generate multi-level summary for selected code
+     * @param code Selected code for analysis
+     * @param fileContext Full file context for better understanding
+     * @return CodeSummary object with different levels of detail
      */
     suspend fun generateCodeSummary(code: String, fileContext: String): Result<CodeSummary> = withContext(Dispatchers.IO) {
         val client = createClient() 
@@ -218,7 +218,7 @@ $code
             )
             
             result.mapCatching { response ->
-                // Парсим JSON ответ
+                // Parse JSON response
                 val jsonResponse = response.trim().removePrefix("```json").removeSuffix("```").trim()
                 parseCodeSummary(jsonResponse)
             }
@@ -228,17 +228,131 @@ $code
     }
     
     /**
-     * Парсинг JSON ответа в объект CodeSummary
+     * Parse JSON response to CodeSummary object
      */
     private fun parseCodeSummary(jsonString: String): CodeSummary {
-        // Простой парсинг JSON (можно использовать kotlinx.serialization для более надежного парсинга)
+        // Simple JSON parsing (can use kotlinx.serialization for more robust parsing)
         val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
         return json.decodeFromString(CodeSummary.serializer(), jsonString)
+    }
+    
+    /**
+     * Build mapping between summary and code using LLM
+     * @param code Code for mapping
+     * @param summaryText Summary text
+     * @param realStartLine Real starting line of code (1-based)
+     * @return List of mappings between summary components and code segments
+     */
+    suspend fun buildSummaryMapping(
+        code: String,
+        summaryText: String,
+        realStartLine: Int = 1
+    ): Result<List<SummaryMapping>> = withContext(Dispatchers.IO) {
+        val client = createClient() 
+            ?: return@withContext Result.failure(
+                IllegalStateException("API key not configured")
+            )
+        
+        // Add line numbers to code
+        val codeWithLineNumbers = code.split("\n")
+            .mapIndexed { idx, line -> "${idx + realStartLine}: $line" }
+            .joinToString("\n")
+        
+        val prompt = """
+You are an expert at code-to-summary mapping. Given the following code and summary, extract up to 10 key summary components (phrases or semantic units) from the summary.
+
+IMPORTANT:
+1. Each summaryComponent you extract MUST be a substring (exact part) of the summary text below.
+2. Extract summaryComponents in the exact order they appear in the summary text.
+3. Do NOT hallucinate or invent summary components that do not appear in the summary.
+
+For each summaryComponent, extract one or more relevant code segments from the code that best match the meaning of the summary component.
+- For each code segment, return both the code fragment (as a string) and its line number.
+- CRITICAL: The line number MUST be the EXACT line number shown before the colon in the code below (e.g., if the code line is "7: int x = 5;", the line number is 7).
+- Prefer to use a complete code statement (such as a full line, assignment, function definition, or block) as the code segment if it clearly represents the summary component's meaning.
+- If a full statement is not appropriate or would be ambiguous, you should use a smaller, relevant fragment (such as a variable, function name, operator, or part of an expression).
+- Only include enough code to make the mapping meaningful and unambiguous.
+- If a code segment contains multiple lines, split them into separate objects in the codeSegments array.
+
+Return as a JSON array of objects:
+[
+  {
+    "summaryComponent": "exact phrase from summary",
+    "codeSegments": [
+      { "code": "relevant code fragment", "line": 5 },
+      { "code": "another relevant code fragment", "line": 10 }
+    ]
+  },
+  ...
+]
+
+Code (each line is prefixed with its absolute line number):
+$codeWithLineNumbers
+
+Summary:
+$summaryText
+        """.trimIndent()
+        
+        try {
+            val result = client.sendPrompt(
+                prompt = prompt,
+                systemMessage = "You are an expert at code analysis and mapping.",
+                model = getModel(),
+                temperature = getTemperature(),
+                maxTokens = getMaxTokens()
+            )
+            
+            result.mapCatching { response ->
+                // Parse JSON response
+                val jsonResponse = response.trim().removePrefix("```json").removeSuffix("```").trim()
+                val json = kotlinx.serialization.json.Json { 
+                    ignoreUnknownKeys = true 
+                    isLenient = true
+                }
+                
+                val mappings = json.decodeFromString<List<SummaryMapping>>(jsonResponse)
+                
+                // Check and correct line numbers if LLM returned relative numbers
+                val correctedMappings = mappings.map { mapping ->
+                    // Check first segment - if its line < realStartLine,
+                    // it means LLM returned relative numbers (1, 2, 3...)
+                    val needsCorrection = mapping.codeSegments.any { it.line < realStartLine }
+                    
+                    if (needsCorrection) {
+                        println("[buildSummaryMapping] Detected relative line numbers, correcting by adding offset ${realStartLine - 1}")
+                        val correctedSegments = mapping.codeSegments.map { segment ->
+                            CodeSegment(
+                                code = segment.code,
+                                line = segment.line + realStartLine - 1
+                            )
+                        }
+                        SummaryMapping(
+                            summaryComponent = mapping.summaryComponent,
+                            codeSegments = correctedSegments
+                        )
+                    } else {
+                        mapping
+                    }
+                }
+                
+                // Filter mappings where summaryComponent is not found in summaryText
+                correctedMappings.filter { mapping ->
+                    if (!summaryText.contains(mapping.summaryComponent)) {
+                        println("[buildSummaryMapping] summaryComponent not found in summary: ${mapping.summaryComponent}")
+                        false
+                    } else {
+                        true
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
 
 /**
- * Модель данных для code summary с различными уровнями детализации
+ * Data model for code summary with different levels of detail
  */
 @kotlinx.serialization.Serializable
 data class CodeSummary(
@@ -249,4 +363,34 @@ data class CodeSummary(
     val medium_structured: String = "",
     val high_unstructured: String = "",
     val high_structured: String = ""
+)
+
+/**
+ * Data model for code segment in mapping
+ */
+@kotlinx.serialization.Serializable
+data class CodeSegment(
+    val code: String,
+    val line: Int
+)
+
+/**
+ * Data model for mapping between summary component and code
+ */
+@kotlinx.serialization.Serializable
+data class SummaryMapping(
+    val summaryComponent: String,
+    val codeSegments: List<CodeSegment>
+)
+
+/**
+ * Container for all summary mappings
+ */
+data class SummaryMappings(
+    val low_unstructured: List<SummaryMapping> = emptyList(),
+    val low_structured: List<SummaryMapping> = emptyList(),
+    val medium_unstructured: List<SummaryMapping> = emptyList(),
+    val medium_structured: List<SummaryMapping> = emptyList(),
+    val high_unstructured: List<SummaryMapping> = emptyList(),
+    val high_structured: List<SummaryMapping> = emptyList()
 )
