@@ -30,6 +30,20 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
+     * Check if Junie CLI Token is configured
+     */
+    fun isJunieTokenConfigured(): Boolean {
+        return settings.isJunieTokenConfigured()
+    }
+    
+    /**
+     * Check if all required credentials are configured
+     */
+    fun isFullyConfigured(): Boolean {
+        return isConfigured() && isJunieTokenConfigured()
+    }
+    
+    /**
      * Show notification about the need to configure API key
      */
     fun showConfigurationWarning() {
@@ -38,6 +52,20 @@ class OpenAIService(private val project: Project) {
             .createNotification(
                 "OpenAI API Key Not Configured",
                 "Please configure your OpenAI API key in Settings -> Tools -> Explainable AI",
+                NotificationType.WARNING
+            )
+            .notify(project)
+    }
+    
+    /**
+     * Show notification about the need to configure Junie CLI Token
+     */
+    fun showJunieConfigurationWarning() {
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup("Explainable AI")
+            .createNotification(
+                "Junie CLI Token Not Configured",
+                "Please configure your Junie CLI Token in Settings -> Tools -> Explainable AI",
                 NotificationType.WARNING
             )
             .notify(project)
@@ -88,6 +116,25 @@ class OpenAIService(private val project: Project) {
             return null
         }
         return apiKey
+    }
+    
+    /**
+     * Get Junie CLI Token (for use in requests)
+     */
+    fun getJunieToken(): String? {
+        return settings.getJunieToken()
+    }
+    
+    /**
+     * Check and get Junie CLI Token, show warning if not configured
+     */
+    fun getJunieTokenOrWarn(): String? {
+        val token = getJunieToken()
+        if (token.isNullOrEmpty()) {
+            showJunieConfigurationWarning()
+            return null
+        }
+        return token
     }
     
     /**

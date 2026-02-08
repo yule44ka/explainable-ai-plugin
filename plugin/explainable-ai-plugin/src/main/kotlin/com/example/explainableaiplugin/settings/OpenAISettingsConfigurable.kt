@@ -24,6 +24,7 @@ class OpenAISettingsConfigurable : Configurable {
     
     // UI components
     private val apiKeyField = JBPasswordField()
+    private val junieTokenField = JBPasswordField()
     private val apiEndpointField = JBTextField()
     private val modelField = JBTextField()
     private val temperatureField = JBTextField()
@@ -50,7 +51,18 @@ class OpenAISettingsConfigurable : Configurable {
                         testConnection()
                     }
                 }
-                
+            }
+            
+            group("Junie CLI Configuration") {
+                row("Junie CLI Token:") {
+                    cell(junieTokenField)
+                        .align(AlignX.FILL)
+                        .comment("Your Junie CLI Token (securely stored)")
+                        .resizableColumn()
+                }
+            }
+            
+            group("Advanced Settings") {
                 separator()
                 
                 row("API Endpoint:") {
@@ -133,7 +145,11 @@ class OpenAISettingsConfigurable : Configurable {
         val currentApiKey = settings.getApiKey() ?: ""
         val newApiKey = String(apiKeyField.password)
         
+        val currentJunieToken = settings.getJunieToken() ?: ""
+        val newJunieToken = String(junieTokenField.password)
+        
         return newApiKey != currentApiKey ||
+                newJunieToken != currentJunieToken ||
                 apiEndpointField.text != settings.apiEndpoint ||
                 modelField.text != settings.model ||
                 temperatureField.text != settings.temperature.toString() ||
@@ -144,6 +160,11 @@ class OpenAISettingsConfigurable : Configurable {
         val newApiKey = String(apiKeyField.password)
         if (newApiKey.isNotEmpty()) {
             settings.setApiKey(newApiKey)
+        }
+        
+        val newJunieToken = String(junieTokenField.password)
+        if (newJunieToken.isNotEmpty()) {
+            settings.setJunieToken(newJunieToken)
         }
         
         settings.apiEndpoint = apiEndpointField.text
@@ -165,6 +186,10 @@ class OpenAISettingsConfigurable : Configurable {
     override fun reset() {
         val apiKey = settings.getApiKey() ?: ""
         apiKeyField.text = apiKey
+        
+        val junieToken = settings.getJunieToken() ?: ""
+        junieTokenField.text = junieToken
+        
         apiEndpointField.text = settings.apiEndpoint
         modelField.text = settings.model
         temperatureField.text = settings.temperature.toString()

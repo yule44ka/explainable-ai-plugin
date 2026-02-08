@@ -29,12 +29,19 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     companion object {
         private const val CREDENTIAL_SUBSYSTEM = "ExplainableAIPlugin"
         private const val CREDENTIAL_KEY = "OpenAI_API_Key"
+        private const val JUNIE_TOKEN_KEY = "Junie_CLI_Token"
         
         fun getInstance(): OpenAISettings = service()
         
         private fun createCredentialAttributes(): CredentialAttributes {
             return CredentialAttributes(
                 generateServiceName(CREDENTIAL_SUBSYSTEM, CREDENTIAL_KEY)
+            )
+        }
+        
+        private fun createJunieCredentialAttributes(): CredentialAttributes {
+            return CredentialAttributes(
+                generateServiceName(CREDENTIAL_SUBSYSTEM, JUNIE_TOKEN_KEY)
             )
         }
     }
@@ -73,10 +80,38 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     }
     
     /**
+     * Get Junie CLI Token from secure storage
+     */
+    fun getJunieToken(): String? {
+        return PasswordSafe.instance.getPassword(createJunieCredentialAttributes())
+    }
+    
+    /**
+     * Save Junie CLI Token to secure storage
+     */
+    fun setJunieToken(token: String?) {
+        val credentialAttributes = createJunieCredentialAttributes()
+        if (token.isNullOrEmpty()) {
+            PasswordSafe.instance.set(credentialAttributes, null)
+        } else {
+            val credentials = Credentials(JUNIE_TOKEN_KEY, token)
+            PasswordSafe.instance.set(credentialAttributes, credentials)
+        }
+    }
+    
+    /**
+     * Check if Junie CLI Token is configured
+     */
+    fun isJunieTokenConfigured(): Boolean {
+        return !getJunieToken().isNullOrEmpty()
+    }
+    
+    /**
      * Clear all settings
      */
     fun clear() {
         setApiKey(null)
+        setJunieToken(null)
         state = State()
     }
     

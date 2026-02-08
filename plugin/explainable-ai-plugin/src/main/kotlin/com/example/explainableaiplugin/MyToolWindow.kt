@@ -87,16 +87,31 @@ class MyToolWindow(private val project: Project) {
     private fun updateContent() {
         mainPanel.removeAll()
         
-        // Check if API key is configured
-        if (!openAIService.isConfigured()) {
+        val isOpenAIConfigured = openAIService.isConfigured()
+        val isJunieConfigured = openAIService.isJunieTokenConfigured()
+        
+        // Check if both API key and Junie token are configured
+        if (!isOpenAIConfigured || !isJunieConfigured) {
             // Show panel suggesting configuration
             val setupPanel = panel {
-                row {
-                    label("⚠️ OpenAI API key is not configured")
+                if (!isOpenAIConfigured) {
+                    row {
+                        label("⚠️ OpenAI API key is not configured")
+                    }
+                    row {
+                        text("To use AI features, please configure your OpenAI API key.")
+                    }
                 }
-                row {
-                    text("To use AI features, please configure your OpenAI API key.")
+                
+                if (!isJunieConfigured) {
+                    row {
+                        label("⚠️ Junie CLI Token is not configured")
+                    }
+                    row {
+                        text("To use Junie features, please configure your Junie CLI Token.")
+                    }
                 }
+                
                 row {
                     button("Open Settings") {
                         ShowSettingsUtil.getInstance().showSettingsDialog(
@@ -108,7 +123,7 @@ class MyToolWindow(private val project: Project) {
             }
             mainPanel.add(setupPanel, BorderLayout.CENTER)
         } else {
-            // API key configured - show main interface
+            // Both credentials configured - show main interface
             val controlPanel = createControlPanel()
             mainPanel.add(controlPanel, BorderLayout.NORTH)
             
@@ -128,6 +143,9 @@ class MyToolWindow(private val project: Project) {
         return panel {
             row {
                 label("✓ OpenAI API configured")
+            }
+            row {
+                label("✓ Junie CLI Token configured")
             }
             separator()
             
