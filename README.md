@@ -6,6 +6,8 @@ An IntelliJ IDEA plugin for explainable artificial intelligence.
 
 - JDK 21+
 - Gradle 9.0+ (wrapper included)
+- OpenAI API Key
+- Junie CLI Token
 
 ## Quick Start
 
