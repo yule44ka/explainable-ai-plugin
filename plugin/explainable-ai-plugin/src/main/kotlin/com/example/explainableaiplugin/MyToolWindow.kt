@@ -692,7 +692,6 @@ class MyToolWindow(private val project: Project) {
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
                     indicator.text = "Executing Junie CLI with your prompt..."
-                    indicator.text2 = "This may take several minutes for complex requests..."
                     
                     runBlocking {
                         result = junieCliService.generateCode(prompt)
