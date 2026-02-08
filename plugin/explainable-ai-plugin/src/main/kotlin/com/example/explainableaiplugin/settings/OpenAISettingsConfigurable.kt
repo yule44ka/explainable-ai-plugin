@@ -54,11 +54,18 @@ class OpenAISettingsConfigurable : Configurable {
             }
             
             group("Junie CLI Configuration") {
-                row("Junie CLI Token:") {
+                row("Junie API Key:") {
                     cell(junieTokenField)
                         .align(AlignX.FILL)
-                        .comment("Your Junie CLI Token (securely stored)")
+                        .comment("Your Junie API Key (securely stored)")
                         .resizableColumn()
+                }
+                row {
+                    link("Get API Key from Junie") {
+                        java.awt.Desktop.getDesktop().browse(
+                            java.net.URI("https://junie.jetbrains.com/cli")
+                        )
+                    }
                 }
             }
             

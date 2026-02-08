@@ -58,14 +58,14 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Show notification about the need to configure Junie CLI Token
+     * Show notification about the need to configure Junie API Key
      */
     fun showJunieConfigurationWarning() {
         NotificationGroupManager.getInstance()
             .getNotificationGroup("Explainable AI")
             .createNotification(
-                "Junie CLI Token Not Configured",
-                "Please configure your Junie CLI Token in Settings -> Tools -> Explainable AI",
+                "Junie API Key Not Configured",
+                "Please configure your Junie API Key in Settings -> Tools -> Explainable AI. Get your key at https://junie.jetbrains.com/cli",
                 NotificationType.WARNING
             )
             .notify(project)

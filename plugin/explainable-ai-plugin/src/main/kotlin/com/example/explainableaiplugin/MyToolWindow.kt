@@ -3,6 +3,7 @@ package com.example.explainableaiplugin
 import com.example.explainableaiplugin.actions.GenerateSummaryAction
 import com.example.explainableaiplugin.services.CodeSummary
 import com.example.explainableaiplugin.services.OpenAIService
+import com.example.explainableaiplugin.services.JunieCliService
 import com.example.explainableaiplugin.services.SummaryMappings
 import com.example.explainableaiplugin.services.SummaryMapping
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -41,6 +42,7 @@ class MyToolWindowFactory : ToolWindowFactory {
 
 class MyToolWindow(private val project: Project) {
     private val openAIService = OpenAIService.getInstance(project)
+    private val junieCliService = JunieCliService.getInstance(project)
     private val mainPanel = JPanel(BorderLayout())
     private var summaryPanel: JPanel? = null
     private var currentSummary: CodeSummary? = null
@@ -105,10 +107,10 @@ class MyToolWindow(private val project: Project) {
                 
                 if (!isJunieConfigured) {
                     row {
-                        label("⚠️ Junie CLI Token is not configured")
+                        label("⚠️ Junie API Key is not configured")
                     }
                     row {
-                        text("To use Junie features, please configure your Junie CLI Token.")
+                        text("To use Junie features, please configure your Junie API Key.")
                     }
                 }
                 
@@ -145,7 +147,7 @@ class MyToolWindow(private val project: Project) {
                 label("✓ OpenAI API configured")
             }
             row {
-                label("✓ Junie CLI Token configured")
+                label("✓ Junie API Key configured")
             }
             separator()
             
@@ -207,6 +209,32 @@ class MyToolWindow(private val project: Project) {
             row {
                 button("🚀 Generate Summary") {
                     generateSummaryFromEditor()
+                }.applyToComponent {
+                    font = Font(font.name, Font.BOLD, 12)
+                }
+            }
+            
+            separator()
+            
+            row {
+                label("🤖 Junie Code Generation").applyToComponent {
+                    font = Font(font.name, Font.BOLD, 14)
+                }
+            }
+            
+            row {
+                text("Enter your prompt to generate code")
+            }
+            
+            val promptTextField = JTextField(30)
+            row {
+                label("Prompt:")
+                cell(promptTextField)
+            }
+            
+            row {
+                button("✨ Generate Code") {
+                    generateCodeWithJunie(promptTextField.text)
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
                 }
@@ -633,5 +661,62 @@ class MyToolWindow(private val project: Project) {
     private fun displaySummary(summary: CodeSummary) {
         currentSummary = summary
         displayCurrentSummary()
+    }
+    
+    /**
+     * Generate code using Junie CLI
+     */
+    private fun generateCodeWithJunie(prompt: String) {
+        // Validate prompt
+        if (prompt.isBlank()) {
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Please enter a prompt for code generation",
+                "Empty Prompt",
+                JOptionPane.WARNING_MESSAGE
+            )
+            return
+        }
+        
+        // Check if Junie token is configured
+        if (!openAIService.isJunieTokenConfigured()) {
+            openAIService.showJunieConfigurationWarning()
+            return
+        }
+        
+        // Run generation in background
+        ProgressManager.getInstance().run(
+            object : Task.Backgroundable(project, "Generating Code with Junie...", true) {
+                var result: Result<String>? = null
+                
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = true
+                    indicator.text = "Executing Junie CLI with your prompt..."
+                    indicator.text2 = "This may take several minutes for complex requests..."
+                    
+                    runBlocking {
+                        result = junieCliService.generateCode(prompt)
+                    }
+                }
+                
+                override fun onSuccess() {
+                    result?.onSuccess { message ->
+                        openAIService.showSuccessNotification(message)
+                    }?.onFailure { error ->
+                        openAIService.showErrorNotification("Failed to generate code: ${error.message}")
+                    }
+                }
+                
+                override fun onThrowable(error: Throwable) {
+                    openAIService.showErrorNotification("Failed to generate code: ${error.message}")
+                }
+                
+                override fun onFinished() {
+                    result?.onFailure { error ->
+                        openAIService.showErrorNotification("Failed to generate code: ${error.message}")
+                    }
+                }
+            }
+        )
     }
 }
