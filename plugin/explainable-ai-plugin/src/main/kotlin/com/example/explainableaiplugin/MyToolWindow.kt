@@ -45,6 +45,15 @@ class MyToolWindow(private val project: Project) {
     private val junieCliService = JunieCliService.getInstance(project)
     private val mainPanel = JPanel(BorderLayout())
     private var summaryPanel: JPanel? = null
+    private var junieLogPanel: JPanel? = null
+    private val junieLogTextArea = JTextArea().apply {
+        isEditable = false
+        lineWrap = true
+        wrapStyleWord = true
+        font = Font("Monospaced", Font.PLAIN, 11)
+        background = Color(43, 43, 43)
+        foreground = Color(169, 183, 198)
+    }
     private var currentSummary: CodeSummary? = null
     private var currentMappings: SummaryMappings? = null
     private var originalCode: String? = null
@@ -684,6 +693,14 @@ class MyToolWindow(private val project: Project) {
             return
         }
         
+        // Show Junie log panel
+        showJunieLogPanel()
+        
+        // Clear previous logs
+        SwingUtilities.invokeLater {
+            junieLogTextArea.text = ""
+        }
+        
         // Run generation in background
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Generating Code with Junie...", true) {
@@ -691,31 +708,86 @@ class MyToolWindow(private val project: Project) {
                 
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
-                    indicator.text = "Executing Junie CLI with your prompt..."
+                    indicator.text = "Executing Junie CLI..."
                     
                     runBlocking {
-                        result = junieCliService.generateCode(prompt)
+                        result = junieCliService.generateCode(prompt) { line ->
+                            // Update UI in real-time with each output line
+                            SwingUtilities.invokeLater {
+                                junieLogTextArea.append(line + "\n")
+                                // Auto-scroll to bottom
+                                junieLogTextArea.caretPosition = junieLogTextArea.document.length
+                            }
+                        }
                     }
                 }
                 
                 override fun onSuccess() {
                     result?.onSuccess { message ->
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("\n✅ $message\n")
+                        }
                         openAIService.showSuccessNotification(message)
                     }?.onFailure { error ->
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("\n❌ Error: ${error.message}\n")
+                        }
                         openAIService.showErrorNotification("Failed to generate code: ${error.message}")
                     }
                 }
                 
                 override fun onThrowable(error: Throwable) {
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("\n❌ Error: ${error.message}\n")
+                    }
                     openAIService.showErrorNotification("Failed to generate code: ${error.message}")
                 }
                 
                 override fun onFinished() {
                     result?.onFailure { error ->
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("\n❌ Error: ${error.message}\n")
+                        }
                         openAIService.showErrorNotification("Failed to generate code: ${error.message}")
                     }
                 }
             }
         )
+    }
+    
+    /**
+     * Show Junie log panel in the UI
+     */
+    private fun showJunieLogPanel() {
+        // Remove old summary panel if exists
+        summaryPanel?.let { mainPanel.remove(it) }
+        summaryPanel = null
+        
+        // Remove old log panel if exists
+        junieLogPanel?.let { mainPanel.remove(it) }
+        
+        // Create new log panel
+        junieLogPanel = JPanel(BorderLayout()).apply {
+            border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        }
+        
+        val titleLabel = JLabel("🤖 Junie Code Generation Log").apply {
+            font = Font(font.name, Font.BOLD, 14)
+            border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+        }
+        
+        val scrollPane = JScrollPane(junieLogTextArea).apply {
+            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+            horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+            border = BorderFactory.createLineBorder(Color.LIGHT_GRAY)
+            preferredSize = java.awt.Dimension(600, 400)
+        }
+        
+        junieLogPanel?.add(titleLabel, BorderLayout.NORTH)
+        junieLogPanel?.add(scrollPane, BorderLayout.CENTER)
+        
+        mainPanel.add(junieLogPanel!!, BorderLayout.CENTER)
+        mainPanel.revalidate()
+        mainPanel.repaint()
     }
 }

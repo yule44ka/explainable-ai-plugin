@@ -2,13 +2,15 @@ package com.example.explainableaiplugin.services
 
 import com.example.explainableaiplugin.settings.OpenAISettings
 import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.process.ProcessOutput
+import com.intellij.execution.process.*
 import com.intellij.execution.util.ExecUtil
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.nio.charset.StandardCharsets
 
 /**
  * Service for interacting with Junie CLI
@@ -23,11 +25,12 @@ class JunieCliService(private val project: Project) {
     }
     
     /**
-     * Execute Junie CLI with the given prompt
+     * Execute Junie CLI with the given prompt and stream output in real-time
      * @param prompt User's prompt for code generation
+     * @param onOutputLine Callback for each line of output (called in real-time)
      * @return Result with success or error message
      */
-    suspend fun generateCode(prompt: String): Result<String> = withContext(Dispatchers.IO) {
+    suspend fun generateCode(prompt: String, onOutputLine: (String) -> Unit): Result<String> = withContext(Dispatchers.IO) {
         val token = settings.getJunieToken()
         if (token.isNullOrEmpty()) {
             return@withContext Result.failure(
@@ -45,9 +48,6 @@ class JunieCliService(private val project: Project) {
             }
             
             // Build command line for Junie CLI
-            // Assuming junie CLI is installed and available in PATH
-            // Command format: junie "prompt text"
-            // Junie CLI requires JUNIE_API_KEY environment variable for authentication
             val commandLine = GeneralCommandLine()
                 .withWorkDirectory(projectPath)
                 .withEnvironment("JUNIE_API_KEY", token)
@@ -57,45 +57,73 @@ class JunieCliService(private val project: Project) {
             
             println("[JunieCliService] Executing command: ${commandLine.commandLineString}")
             println("[JunieCliService] Working directory: $projectPath")
+            onOutputLine("🚀 Starting Junie CLI...")
+            onOutputLine("📍 Working directory: $projectPath")
+            onOutputLine("💬 Prompt: $prompt")
+            onOutputLine("─".repeat(50))
             
-            // Execute command with timeout (60 seconds)
-            val output: ProcessOutput = ExecUtil.execAndGetOutput(commandLine, 60000)
+            // Create process handler to stream output
+            val processHandler = OSProcessHandler(commandLine.withCharset(StandardCharsets.UTF_8))
             
-            println("[JunieCliService] Exit code: ${output.exitCode}")
-            println("[JunieCliService] Stdout: ${output.stdout}")
-            println("[JunieCliService] Stderr: ${output.stderr}")
+            val fullOutput = StringBuilder()
+            var exitCode = 0
+            
+            // Add listener for real-time output
+            processHandler.addProcessListener(object : ProcessAdapter() {
+                override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
+                    val text = event.text
+                    if (text.isNotEmpty()) {
+                        // Log to console
+                        println("[JunieCliService] Output: $text")
+                        
+                        // Add to full output
+                        fullOutput.append(text)
+                        
+                        // Send to UI callback in real-time
+                        text.lines().forEach { line ->
+                            if (line.isNotBlank()) {
+                                onOutputLine(line)
+                            }
+                        }
+                    }
+                }
+                
+                override fun processTerminated(event: ProcessEvent) {
+                    exitCode = event.exitCode
+                    println("[JunieCliService] Process terminated with exit code: $exitCode")
+                    onOutputLine("─".repeat(50))
+                    onOutputLine("✓ Process completed with exit code: $exitCode")
+                }
+            })
+            
+            // Start process
+            processHandler.startNotify()
+            
+            // Wait for process to complete (with timeout of 60 seconds)
+            processHandler.waitFor(60000)
+            
+            val outputText = fullOutput.toString()
+            println("[JunieCliService] Full output:\n$outputText")
             
             // Check if Junie completed successfully based on output content
-            val hasSuccessfulAuth = output.stdout.contains("Successfully authenticated")
-            val hasEditedFiles = output.stdout.contains("Edited files") || output.stdout.contains("Updated ")
-            val hasOperations = output.stdout.contains("●")
-            val hasErrors = output.stderr.isNotEmpty() && !output.stderr.contains("SlowOperations")
+            val hasSuccessfulAuth = outputText.contains("Successfully authenticated")
+            val hasEditedFiles = outputText.contains("Edited files") || outputText.contains("Updated ")
+            val hasOperations = outputText.contains("●")
             
             when {
-                output.exitCode == 0 -> {
-                    Result.success("Code generation completed successfully!\n\n${output.stdout}")
+                exitCode == 0 -> {
+                    Result.success("Code generation completed successfully!")
                 }
-                output.exitCode == -1 && hasSuccessfulAuth && (hasEditedFiles || hasOperations) && !hasErrors -> {
-                    // Exit code -1 but Junie completed work successfully
-                    Result.success("Code generation completed successfully!\n\n${output.stdout}\n\nNote: Process exited with code -1, but all operations completed successfully.")
-                }
-                output.exitCode == -1 && output.isTimeout -> {
-                    // Process timed out
-                    Result.failure(
-                        RuntimeException("Junie CLI timed out after 5 minutes.\n\nOutput:\n${output.stdout}")
-                    )
+                exitCode == -1 && hasSuccessfulAuth && (hasEditedFiles || hasOperations) -> {
+                    Result.success("Code generation completed successfully!")
                 }
                 else -> {
-                    // Other errors
-                    val errorMessage = if (output.stderr.isNotEmpty()) {
-                        "Junie CLI failed with exit code ${output.exitCode}:\n${output.stderr}\n\nOutput:\n${output.stdout}"
-                    } else {
-                        "Junie CLI failed with exit code ${output.exitCode}\n\nOutput:\n${output.stdout}"
-                    }
-                    Result.failure(RuntimeException(errorMessage))
+                    Result.failure(RuntimeException("Junie CLI failed with exit code $exitCode"))
                 }
             }
         } catch (e: Exception) {
+            println("[JunieCliService] Exception: ${e.message}")
+            e.printStackTrace()
             Result.failure(e)
         }
     }
