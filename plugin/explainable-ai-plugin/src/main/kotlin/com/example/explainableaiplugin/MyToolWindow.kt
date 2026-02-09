@@ -4,6 +4,8 @@ import com.example.explainableaiplugin.actions.GenerateSummaryAction
 import com.example.explainableaiplugin.services.CodeSummary
 import com.example.explainableaiplugin.services.OpenAIService
 import com.example.explainableaiplugin.services.JunieCliService
+import com.example.explainableaiplugin.services.CodeChangeDetector
+import com.example.explainableaiplugin.services.FileChange
 import com.example.explainableaiplugin.services.SummaryMappings
 import com.example.explainableaiplugin.services.SummaryMapping
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -43,9 +45,13 @@ class MyToolWindowFactory : ToolWindowFactory {
 class MyToolWindow(private val project: Project) {
     private val openAIService = OpenAIService.getInstance(project)
     private val junieCliService = JunieCliService.getInstance(project)
+    private val codeChangeDetector = CodeChangeDetector.getInstance(project)
     private val mainPanel = JPanel(BorderLayout())
     private var summaryPanel: JPanel? = null
     private var junieLogPanel: JPanel? = null
+    private var changeSummaryPanel: JPanel? = null
+    private var summaryTabPanel: JPanel? = null
+    private var generationTabPanel: JPanel? = null
     private val junieLogTextArea = JTextArea().apply {
         isEditable = false
         lineWrap = true
@@ -59,7 +65,10 @@ class MyToolWindow(private val project: Project) {
     private var originalCode: String? = null
     private var startLine: Int = 1
     
-    // Comboboxes for format selection
+    // Store all generated change summaries for interactive viewing
+    private var currentChangeSummaries: List<ChangeSummaryResult> = emptyList()
+    
+    // Comboboxes for Code Summary tab
     private val detailLevelCombo = ComboBox(arrayOf("Low Detail", "Medium Detail", "High Detail"))
     private val formatTypeCombo = ComboBox(arrayOf("Paragraph", "Bullet Points"))
     
@@ -72,8 +81,13 @@ class MyToolWindow(private val project: Project) {
         "gpt-4o-mini" to "$0.15"
     )
     
-    // Combobox for model selection with prices
+    // Combobox for model selection with prices (Code Summary tab)
     private val modelCombo = ComboBox(modelPricing.map { (model, price) -> "$model | $price" }.toTypedArray())
+    
+    // Comboboxes for Code Generation tab
+    private val generationModelCombo = ComboBox(modelPricing.map { (model, price) -> "$model | $price" }.toTypedArray())
+    private val generationDetailLevelCombo = ComboBox(arrayOf("Low Detail", "Medium Detail", "High Detail"))
+    private val generationFormatTypeCombo = ComboBox(arrayOf("Paragraph", "Bullet Points"))
     
     // Color palette for mapping (should match NaturalEdit)
     private val mappingColors = listOf(
@@ -134,9 +148,18 @@ class MyToolWindow(private val project: Project) {
             }
             mainPanel.add(setupPanel, BorderLayout.CENTER)
         } else {
-            // Both credentials configured - show main interface
-            val controlPanel = createControlPanel()
-            mainPanel.add(controlPanel, BorderLayout.NORTH)
+            // Both credentials configured - show main interface with tabs
+            val tabbedPane = JTabbedPane()
+            
+            // Create Summary tab
+            summaryTabPanel = createSummaryTab()
+            tabbedPane.addTab("📝 Code Summary", null, summaryTabPanel, "Generate and view code summaries")
+            
+            // Create Code Generation tab
+            generationTabPanel = createCodeGenerationTab()
+            tabbedPane.addTab("✨ Code Generation", null, generationTabPanel, "Generate code with Junie AI")
+            
+            mainPanel.add(tabbedPane, BorderLayout.CENTER)
             
             // Check if there's a saved summary
             val summary = project.getUserData(GenerateSummaryAction.SUMMARY_KEY)
@@ -150,16 +173,14 @@ class MyToolWindow(private val project: Project) {
         mainPanel.repaint()
     }
     
-    private fun createControlPanel(): JPanel {
-        return panel {
-            row {
-                label("✓ OpenAI API configured")
-            }
-            row {
-                label("✓ Junie API Key configured")
-            }
-            separator()
-            
+    /**
+     * Create Summary tab content
+     */
+    private fun createSummaryTab(): JPanel {
+        val tabPanel = JPanel(BorderLayout())
+        
+        // Control panel for summary
+        val controlPanel = panel {
             row {
                 label("📝 Code Summary Generator").applyToComponent {
                     font = Font(font.name, Font.BOLD, 14)
@@ -167,7 +188,7 @@ class MyToolWindow(private val project: Project) {
             }
             
             row {
-                text("Select code in editor and click Generate")
+                text("Select code in editor and click Generate to create AI-powered summaries")
             }
             
             separator()
@@ -226,19 +247,82 @@ class MyToolWindow(private val project: Project) {
             separator()
             
             row {
+                button("⚙️ Settings") {
+                    ShowSettingsUtil.getInstance().showSettingsDialog(
+                        project,
+                        "Explainable AI"
+                    )
+                }.applyToComponent {
+                    font = Font(font.name, Font.PLAIN, 10)
+                }
+            }
+        }
+        
+        // Create main scrollable container
+        val mainContainer = JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        }
+        
+        // Add control panel
+        controlPanel.alignmentX = JComponent.LEFT_ALIGNMENT
+        mainContainer.add(controlPanel)
+        
+        // Add separator
+        mainContainer.add(Box.createVerticalStrut(15))
+        mainContainer.add(JSeparator(SwingConstants.HORIZONTAL).apply {
+            maximumSize = java.awt.Dimension(Integer.MAX_VALUE, 2)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        })
+        mainContainer.add(Box.createVerticalStrut(15))
+        
+        // Container for summary (will be populated by displayCurrentSummary)
+        val summaryContainer = JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        }
+        mainContainer.add(summaryContainer)
+        
+        // Store reference for later use
+        summaryTabPanel = summaryContainer
+        
+        // Wrap in scroll pane
+        val scrollPane = JScrollPane(mainContainer).apply {
+            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+            horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            border = null
+        }
+        
+        tabPanel.add(scrollPane, BorderLayout.CENTER)
+        return tabPanel
+    }
+    
+    /**
+     * Create Code Generation tab content
+     */
+    private fun createCodeGenerationTab(): JPanel {
+        val tabPanel = JPanel(BorderLayout())
+        
+        // Control panel for code generation
+        val controlPanel = panel {
+            row {
                 label("🤖 Junie Code Generation").applyToComponent {
                     font = Font(font.name, Font.BOLD, 14)
                 }
             }
             
             row {
-                text("Enter your prompt to generate code")
+                text("Enter a natural language prompt to generate or modify code")
             }
+            
+            separator()
             
             val promptTextField = JTextField(30)
             row {
                 label("Prompt:")
-                cell(promptTextField)
+                cell(promptTextField).applyToComponent {
+                    toolTipText = "Describe what code you want to generate or modify"
+                }
             }
             
             row {
@@ -246,6 +330,66 @@ class MyToolWindow(private val project: Project) {
                     generateCodeWithJunie(promptTextField.text)
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
+                }
+            }
+            
+            separator()
+            
+            row {
+                label("📊 Summary Settings for Code Changes").applyToComponent {
+                    font = Font(font.name, Font.BOLD, 12)
+                }
+            }
+            
+            row {
+                text("Configure how changed code will be explained after generation")
+            }
+            
+            separator()
+            
+            row {
+                label("Model:")
+                cell(generationModelCombo).applyToComponent {
+                    // Set current model from settings as default
+                    val currentModel = openAIService.getModel()
+                    for (i in 0 until itemCount) {
+                        val itemModel = getItemAt(i)?.split(" | ")?.firstOrNull()
+                        if (itemModel == currentModel) {
+                            selectedIndex = i
+                            break
+                        }
+                    }
+                    // If current model not in list, select first item
+                    if (selectedIndex == -1) {
+                        selectedIndex = 0
+                    }
+                    toolTipText = "AI model to use for generating summaries"
+                }
+            }
+            
+            row {
+                label("Detail Level:")
+                cell(generationDetailLevelCombo).applyToComponent {
+                    selectedIndex = 1 // Medium by default
+                    toolTipText = "Level of detail for summaries"
+                    addActionListener {
+                        if (currentChangeSummaries.isNotEmpty()) {
+                            displayGenerationSummaries()
+                        }
+                    }
+                }
+            }
+            
+            row {
+                label("Format:")
+                cell(generationFormatTypeCombo).applyToComponent {
+                    selectedIndex = 0 // Paragraph by default
+                    toolTipText = "Summary format: paragraph or bullet points"
+                    addActionListener {
+                        if (currentChangeSummaries.isNotEmpty()) {
+                            displayGenerationSummaries()
+                        }
+                    }
                 }
             }
             
@@ -262,6 +406,84 @@ class MyToolWindow(private val project: Project) {
                 }
             }
         }
+        
+        // Create scrollable content area that includes control panel, logs and summaries
+        createGenerationContentArea(tabPanel, controlPanel)
+        
+        return tabPanel
+    }
+    
+    /**
+     * Create scrollable content area for control panel, logs and summaries
+     */
+    private fun createGenerationContentArea(parentPanel: JPanel, controlPanel: JComponent) {
+        // Create vertical container for everything (control panel + logs + summaries)
+        val contentContainer = JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        }
+        
+        // Add control panel first
+        controlPanel.alignmentX = JComponent.LEFT_ALIGNMENT
+        contentContainer.add(controlPanel)
+        
+        // Add separator
+        contentContainer.add(Box.createVerticalStrut(15))
+        contentContainer.add(JSeparator(SwingConstants.HORIZONTAL).apply {
+            maximumSize = java.awt.Dimension(Integer.MAX_VALUE, 2)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        })
+        contentContainer.add(Box.createVerticalStrut(15))
+        
+        // Create log panel
+        junieLogPanel = JPanel(BorderLayout()).apply {
+            border = BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            )
+            maximumSize = java.awt.Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        }
+        
+        val logTitleLabel = JLabel("📋 Generation Log").apply {
+            font = Font(font.name, Font.BOLD, 12)
+            border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+        }
+        
+        junieLogTextArea.apply {
+            rows = 15
+            minimumSize = java.awt.Dimension(400, 200)
+        }
+        
+        val logTextScrollPane = JScrollPane(junieLogTextArea).apply {
+            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+            horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+            border = null
+        }
+        
+        junieLogPanel?.add(logTitleLabel, BorderLayout.NORTH)
+        junieLogPanel?.add(logTextScrollPane, BorderLayout.CENTER)
+        
+        contentContainer.add(junieLogPanel!!)
+        
+        // Create summary panel (initially hidden, will be added after generation)
+        changeSummaryPanel = JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            border = BorderFactory.createEmptyBorder(20, 0, 0, 0)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+            isVisible = false
+        }
+        
+        contentContainer.add(changeSummaryPanel!!)
+        
+        // Wrap everything in a scroll pane
+        val mainScrollPane = JScrollPane(contentContainer).apply {
+            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+            horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            border = null
+        }
+        
+        parentPanel.add(mainScrollPane, BorderLayout.CENTER)
     }
     
     private fun generateSummaryFromEditor() {
@@ -388,9 +610,10 @@ class MyToolWindow(private val project: Project) {
     
     private fun displayCurrentSummary() {
         val summary = currentSummary ?: return
+        val targetPanel = summaryTabPanel ?: return
         
-        // Remove old summary panel if exists
-        summaryPanel?.let { mainPanel.remove(it) }
+        // Clear previous content
+        targetPanel.removeAll()
         
         // Determine which summary to show based on selected options
         val detailLevel = when (detailLevelCombo.selectedIndex) {
@@ -406,61 +629,53 @@ class MyToolWindow(private val project: Project) {
         val mappingKey = "${detailLevel}_${if (isStructured) "structured" else "unstructured"}"
         val mappings = getMappingsForKey(mappingKey)
         
-        // Create panel for display
-        summaryPanel = JPanel(BorderLayout()).apply {
-            border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        }
-        
-        val contentPanel = JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.Y_AXIS)
-        }
-        
         // Title
         if (summary.title.isNotEmpty()) {
-            contentPanel.add(JLabel("📝 " + summary.title).apply {
+            targetPanel.add(JLabel("📝 " + summary.title).apply {
                 font = Font(font.name, Font.BOLD, 14)
                 border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+                alignmentX = JComponent.LEFT_ALIGNMENT
             })
         }
         
         // Show selected format
         val formatLabel = "${detailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (isStructured) "Bullet Points" else "Paragraph"}"
-        contentPanel.add(JLabel(formatLabel).apply {
+        targetPanel.add(JLabel(formatLabel).apply {
             font = Font(font.name, Font.ITALIC, 11)
             foreground = java.awt.Color.GRAY
             border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+            alignmentX = JComponent.LEFT_ALIGNMENT
         })
         
         // Display summary with interactive mapping
         if (mappings.isNotEmpty()) {
-            contentPanel.add(createInteractiveSummaryPanel(summaryText, mappings))
+            val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings)
+            interactivePanel.alignmentX = JComponent.LEFT_ALIGNMENT
+            targetPanel.add(interactivePanel)
         } else {
             // If no mapping, show plain text
             val textArea = JTextArea(summaryText).apply {
                 isEditable = false
                 lineWrap = true
                 wrapStyleWord = true
-                background = contentPanel.background
+                background = targetPanel.background
                 border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
                 font = Font(font.name, Font.PLAIN, 12)
+                alignmentX = JComponent.LEFT_ALIGNMENT
             }
-            contentPanel.add(textArea)
+            targetPanel.add(textArea)
         }
         
-        val scrollPane = JScrollPane(contentPanel).apply {
-            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
-            horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
-            border = BorderFactory.createLineBorder(java.awt.Color.LIGHT_GRAY)
-        }
-        
-        summaryPanel?.add(scrollPane, BorderLayout.CENTER)
-        mainPanel.add(summaryPanel!!, BorderLayout.CENTER)
-        mainPanel.revalidate()
-        mainPanel.repaint()
+        targetPanel.revalidate()
+        targetPanel.repaint()
     }
     
     private fun getMappingsForKey(key: String): List<SummaryMapping> {
         val mappings = currentMappings ?: return emptyList()
+        return getMappingsForChangeSummary(mappings, key)
+    }
+    
+    private fun getMappingsForChangeSummary(mappings: SummaryMappings, key: String): List<SummaryMapping> {
         return when (key) {
             "low_unstructured" -> mappings.low_unstructured
             "low_structured" -> mappings.low_structured
@@ -673,6 +888,16 @@ class MyToolWindow(private val project: Project) {
     }
     
     /**
+     * Remove ANSI color codes from string
+     */
+    private fun stripAnsiCodes(text: String): String {
+        // Pattern for ANSI escape codes: ESC[...m or just [...m
+        return text.replace(Regex("\u001b\\[[0-9;]*m"), "")
+                   .replace(Regex("\\x1b\\[[0-9;]*m"), "")
+                   .replace(Regex("\\[([0-9]{1,3}(;[0-9]{1,3})*)?m"), "")
+    }
+    
+    /**
      * Generate code using Junie CLI
      */
     private fun generateCodeWithJunie(prompt: String) {
@@ -693,12 +918,23 @@ class MyToolWindow(private val project: Project) {
             return
         }
         
-        // Show Junie log panel
+        // Clear previous logs
         showJunieLogPanel()
         
-        // Clear previous logs
         SwingUtilities.invokeLater {
-            junieLogTextArea.text = ""
+            junieLogTextArea.append("📸 Capturing snapshot of open files...\n")
+        }
+        
+        // Capture snapshot of current files before generation
+        codeChangeDetector.captureSnapshot()
+        
+        // Get count of captured files
+        val fileEditorManager = FileEditorManager.getInstance(project)
+        val openFileCount = fileEditorManager.openFiles.size
+        
+        SwingUtilities.invokeLater {
+            junieLogTextArea.append("✅ Captured snapshot of $openFileCount file(s)\n")
+            junieLogTextArea.append("🚀 Starting Junie code generation...\n\n")
         }
         
         // Run generation in background
@@ -712,9 +948,10 @@ class MyToolWindow(private val project: Project) {
                     
                     runBlocking {
                         result = junieCliService.generateCode(prompt) { line ->
-                            // Update UI in real-time with each output line
+                            // Update UI in real-time with each output line (strip ANSI codes)
                             SwingUtilities.invokeLater {
-                                junieLogTextArea.append(line + "\n")
+                                val cleanLine = stripAnsiCodes(line)
+                                junieLogTextArea.append(cleanLine + "\n")
                                 // Auto-scroll to bottom
                                 junieLogTextArea.caretPosition = junieLogTextArea.document.length
                             }
@@ -726,8 +963,12 @@ class MyToolWindow(private val project: Project) {
                     result?.onSuccess { message ->
                         SwingUtilities.invokeLater {
                             junieLogTextArea.append("\n✅ $message\n")
+                            junieLogTextArea.append("\n🔍 Detecting code changes...\n")
                         }
                         openAIService.showSuccessNotification(message)
+                        
+                        // Detect changes and generate summaries
+                        processCodeChanges()
                     }?.onFailure { error ->
                         SwingUtilities.invokeLater {
                             junieLogTextArea.append("\n❌ Error: ${error.message}\n")
@@ -756,38 +997,393 @@ class MyToolWindow(private val project: Project) {
     }
     
     /**
-     * Show Junie log panel in the UI
+     * Detect code changes after generation and generate summaries
+     */
+    private fun processCodeChanges() {
+        ProgressManager.getInstance().run(
+            object : Task.Backgroundable(project, "Analyzing Code Changes...", true) {
+                var fileChanges: List<FileChange> = emptyList()
+                val changeSummaries = mutableListOf<ChangeSummaryResult>()
+                
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = false
+                    indicator.fraction = 0.0
+                    
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("⏳ Waiting for file system to sync...\n")
+                    }
+                    
+                    // Wait for Junie to finish writing files
+                    Thread.sleep(2000)
+                    
+                    // Reload documents and refresh VFS to get latest changes from disk
+                    com.intellij.openapi.application.ApplicationManager.getApplication().invokeAndWait {
+                        val fileDocumentManager = com.intellij.openapi.fileEditor.FileDocumentManager.getInstance()
+                        val fileEditorManager = com.intellij.openapi.fileEditor.FileEditorManager.getInstance(project)
+                        val vfs = com.intellij.openapi.vfs.VirtualFileManager.getInstance()
+                        
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("🔄 Refreshing virtual file system...\n")
+                        }
+                        
+                        // Refresh VFS to pick up file system changes
+                        vfs.syncRefresh()
+                        
+                        // Reload all open files from disk
+                        val openFiles = fileEditorManager.openFiles
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("📂 Reloading ${openFiles.size} open files from disk...\n")
+                        }
+                        
+                        openFiles.forEach { virtualFile ->
+                            // Refresh individual file
+                            virtualFile.refresh(false, false)
+                            
+                            // Reload document from disk
+                            val document = fileDocumentManager.getDocument(virtualFile)
+                            if (document != null) {
+                                fileDocumentManager.reloadFromDisk(document)
+                                println("[processCodeChanges] Reloaded: ${virtualFile.path}")
+                            }
+                        }
+                    }
+                    
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("🔍 Analyzing changes...\n")
+                    }
+                    
+                    // Small delay to ensure documents are fully reloaded
+                    Thread.sleep(500)
+                    
+                    // Detect changes
+                    fileChanges = codeChangeDetector.detectChanges()
+                    
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("📊 Found ${fileChanges.size} file(s) with changes\n")
+                    }
+                    
+                    if (fileChanges.isEmpty()) {
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("ℹ️ No changes detected\n")
+                        }
+                        return
+                    }
+                    
+                    // Get selected model from generation tab
+                    val selectedModelWithPrice = generationModelCombo.selectedItem as? String
+                    val selectedModel = selectedModelWithPrice?.split(" | ")?.firstOrNull()?.trim() 
+                        ?: openAIService.getModel()
+                    
+                    // Get detail level and format from generation tab
+                    val detailLevel = when (generationDetailLevelCombo.selectedIndex) {
+                        0 -> "low"
+                        1 -> "medium"
+                        2 -> "high"
+                        else -> "medium"
+                    }
+                    val isStructured = generationFormatTypeCombo.selectedIndex == 1
+                    val summaryKey = "${detailLevel}_${if (isStructured) "structured" else "unstructured"}"
+                    
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("⚙️ Using model: $selectedModel\n")
+                        junieLogTextArea.append("📊 Detail level: ${detailLevel.replaceFirstChar { it.uppercase() }}, Format: ${if (isStructured) "Bullet Points" else "Paragraph"}\n")
+                    }
+                    
+                    // Generate summaries for each changed segment
+                    var processedSegments = 0
+                    val totalSegments = fileChanges.sumOf { it.changedSegments.size }
+                    
+                    fileChanges.forEach { fileChange ->
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("\n📄 Processing ${fileChange.filePath.substringAfterLast("/")}\n")
+                        }
+                        
+                        fileChange.changedSegments.forEach { segment ->
+                            indicator.fraction = processedSegments.toDouble() / totalSegments
+                            indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments..."
+                            
+                            runBlocking {
+                                // Only process ADDED or MODIFIED segments with substantial code
+                                if ((segment.changeType == com.example.explainableaiplugin.services.ChangeType.ADDED || 
+                                     segment.changeType == com.example.explainableaiplugin.services.ChangeType.MODIFIED) &&
+                                    segment.newCode.trim().isNotEmpty() &&
+                                    segment.newCode.trim().lines().size >= 3) {
+                                    
+                                    SwingUtilities.invokeLater {
+                                        junieLogTextArea.append("  • Lines ${segment.startLine}-${segment.endLine}: Generating summary...\n")
+                                    }
+                                    
+                                    // Generate summary for this segment
+                                    val summaryResult = openAIService.generateCodeSummary(
+                                        segment.newCode,
+                                        segment.newCode, // Use segment as context
+                                        selectedModel
+                                    )
+                                    
+                                    summaryResult.onSuccess { summary ->
+                                        SwingUtilities.invokeLater {
+                                            junieLogTextArea.append("    ✅ Summary generated\n")
+                                            junieLogTextArea.append("    🔗 Building mappings for all formats...\n")
+                                        }
+                                        
+                                        // Build mappings for all 6 summary types (like in Code Summary tab)
+                                        val mappingKeys = listOf(
+                                            "low_unstructured" to summary.low_unstructured,
+                                            "low_structured" to summary.low_structured,
+                                            "medium_unstructured" to summary.medium_unstructured,
+                                            "medium_structured" to summary.medium_structured,
+                                            "high_unstructured" to summary.high_unstructured,
+                                            "high_structured" to summary.high_structured
+                                        )
+                                        
+                                        val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
+                                        mappingKeys.forEach { (key, summaryText) ->
+                                            if (summaryText.isNotEmpty()) {
+                                                val mappingResult = openAIService.buildSummaryMapping(
+                                                    segment.newCode,
+                                                    summaryText,
+                                                    segment.startLine,
+                                                    selectedModel
+                                                )
+                                                mappingResult.onSuccess { mapping ->
+                                                    mappingResults[key] = mapping
+                                                }.onFailure { e ->
+                                                    println("[processCodeChanges] Failed to build mapping for $key: ${e.message}")
+                                                }
+                                            }
+                                        }
+                                        
+                                        SwingUtilities.invokeLater {
+                                            junieLogTextArea.append("    ✅ Mappings built for ${mappingResults.size} formats\n")
+                                        }
+                                        
+                                        // Create SummaryMappings with all mappings
+                                        val summaryMappings = SummaryMappings(
+                                            low_unstructured = mappingResults["low_unstructured"] ?: emptyList(),
+                                            low_structured = mappingResults["low_structured"] ?: emptyList(),
+                                            medium_unstructured = mappingResults["medium_unstructured"] ?: emptyList(),
+                                            medium_structured = mappingResults["medium_structured"] ?: emptyList(),
+                                            high_unstructured = mappingResults["high_unstructured"] ?: emptyList(),
+                                            high_structured = mappingResults["high_structured"] ?: emptyList()
+                                        )
+                                        
+                                        changeSummaries.add(ChangeSummaryResult(
+                                            filePath = fileChange.filePath,
+                                            startLine = segment.startLine,
+                                            endLine = segment.endLine,
+                                            code = segment.newCode,
+                                            summary = summary,
+                                            mappings = summaryMappings,
+                                            detailLevel = detailLevel,
+                                            isStructured = isStructured
+                                        ))
+                                    }.onFailure { e ->
+                                        SwingUtilities.invokeLater {
+                                            junieLogTextArea.append("    ❌ Failed: ${e.message}\n")
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            processedSegments++
+                        }
+                    }
+                    
+                    indicator.fraction = 1.0
+                }
+                
+                override fun onSuccess() {
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("\n✨ Generated ${changeSummaries.size} summaries\n")
+                        junieLogTextArea.append("💡 You can now change Detail Level or Format above to view different summaries\n")
+                    }
+                    
+                    if (changeSummaries.isNotEmpty()) {
+                        // Save summaries for interactive viewing
+                        currentChangeSummaries = changeSummaries
+                        
+                        // Display summaries in UI
+                        displayChangeSummaries(changeSummaries)
+                        openAIService.showSuccessNotification("Code changes analyzed successfully!")
+                    }
+                    
+                    // Clear snapshots
+                    codeChangeDetector.clearSnapshots()
+                }
+                
+                override fun onThrowable(error: Throwable) {
+                    SwingUtilities.invokeLater {
+                        junieLogTextArea.append("\n❌ Error processing changes: ${error.message}\n")
+                    }
+                    codeChangeDetector.clearSnapshots()
+                }
+            }
+        )
+    }
+    
+    /**
+     * Refresh display with current settings
+     */
+    private fun displayGenerationSummaries() {
+        if (currentChangeSummaries.isNotEmpty()) {
+            displayChangeSummaries(currentChangeSummaries)
+        }
+    }
+    
+    /**
+     * Display summaries for code changes below the logs
+     */
+    private fun displayChangeSummaries(summaries: List<ChangeSummaryResult>) {
+        val targetPanel = changeSummaryPanel ?: return
+        
+        // Clear the summary panel
+        targetPanel.removeAll()
+        
+        // Add separator line
+        targetPanel.add(JSeparator(SwingConstants.HORIZONTAL).apply {
+            maximumSize = java.awt.Dimension(Integer.MAX_VALUE, 2)
+            border = BorderFactory.createEmptyBorder(10, 0, 10, 0)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        })
+        
+        // Get current settings from comboboxes
+        val currentDetailLevel = when (generationDetailLevelCombo.selectedIndex) {
+            0 -> "low"
+            1 -> "medium"
+            2 -> "high"
+            else -> "medium"
+        }
+        val currentIsStructured = generationFormatTypeCombo.selectedIndex == 1
+        
+        // Title with current settings
+        val formatInfo = "${currentDetailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (currentIsStructured) "Bullet Points" else "Paragraph"}"
+        val titleLabel = JLabel("📊 Code Changes Summary").apply {
+            font = Font(font.name, Font.BOLD, 14)
+            border = BorderFactory.createEmptyBorder(10, 0, 5, 0)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        }
+        targetPanel.add(titleLabel)
+        
+        // Format info
+        val formatLabel = JLabel("Current view: $formatInfo").apply {
+            font = Font(font.name, Font.ITALIC, 11)
+            foreground = Color(150, 150, 150)
+            border = BorderFactory.createEmptyBorder(0, 0, 15, 0)
+            alignmentX = JComponent.LEFT_ALIGNMENT
+        }
+        targetPanel.add(formatLabel)
+        
+        // Display each change summary
+        summaries.forEachIndexed { index, changeSummary ->
+            val changePanel = JPanel().apply {
+                layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                border = BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color(100, 100, 100)),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                )
+                background = Color(60, 63, 65)
+                alignmentX = JComponent.LEFT_ALIGNMENT
+                maximumSize = java.awt.Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE)
+            }
+            
+            // File info
+            val fileName = changeSummary.filePath.substringAfterLast("/")
+            changePanel.add(JLabel("📄 $fileName").apply {
+                font = Font(font.name, Font.BOLD, 12)
+                foreground = Color(187, 134, 252) // Purple color
+                border = BorderFactory.createEmptyBorder(0, 0, 5, 0)
+            })
+            
+            // Line range
+            changePanel.add(JLabel("Lines ${changeSummary.startLine}-${changeSummary.endLine}").apply {
+                font = Font(font.name, Font.ITALIC, 10)
+                foreground = Color(128, 128, 128)
+                border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+            })
+            
+            // Summary title
+            if (changeSummary.summary.title.isNotEmpty()) {
+                changePanel.add(JLabel(changeSummary.summary.title).apply {
+                    font = Font(font.name, Font.BOLD, 12)
+                    foreground = Color.WHITE
+                    border = BorderFactory.createEmptyBorder(0, 0, 8, 0)
+                })
+            }
+            
+            // Summary text with interactive mappings using current settings
+            val summaryText = getSummaryText(changeSummary.summary, currentDetailLevel, currentIsStructured)
+            val mappingKey = "${currentDetailLevel}_${if (currentIsStructured) "structured" else "unstructured"}"
+            val mappings = getMappingsForChangeSummary(changeSummary.mappings, mappingKey)
+            
+            if (mappings.isNotEmpty()) {
+                val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings)
+                interactivePanel.background = Color(60, 63, 65)
+                changePanel.add(interactivePanel)
+            } else {
+                changePanel.add(JLabel(summaryText).apply {
+                    font = Font(font.name, Font.PLAIN, 11)
+                    foreground = Color(200, 200, 200)
+                    border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+                })
+            }
+            
+            targetPanel.add(changePanel)
+            
+            // Add spacing between changes
+            if (index < summaries.size - 1) {
+                targetPanel.add(Box.createVerticalStrut(15))
+            }
+        }
+        
+        // Make panel visible and revalidate
+        targetPanel.isVisible = true
+        targetPanel.revalidate()
+        targetPanel.repaint()
+        
+        // Scroll to bottom to show summaries
+        SwingUtilities.invokeLater {
+            val scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, targetPanel) as? JScrollPane
+            scrollPane?.let {
+                val vertical = it.verticalScrollBar
+                vertical.value = vertical.maximum
+            }
+        }
+    }
+    
+    /**
+     * Prepare log panel for new generation (clear previous logs and summaries)
      */
     private fun showJunieLogPanel() {
-        // Remove old summary panel if exists
-        summaryPanel?.let { mainPanel.remove(it) }
-        summaryPanel = null
-        
-        // Remove old log panel if exists
-        junieLogPanel?.let { mainPanel.remove(it) }
-        
-        // Create new log panel
-        junieLogPanel = JPanel(BorderLayout()).apply {
-            border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        SwingUtilities.invokeLater {
+            // Clear logs
+            junieLogTextArea.text = ""
+            
+            // Clear stored summaries
+            currentChangeSummaries = emptyList()
+            
+            // Hide and clear previous summaries
+            changeSummaryPanel?.isVisible = false
+            changeSummaryPanel?.removeAll()
+            
+            // Scroll to top
+            val scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, junieLogPanel) as? JScrollPane
+            scrollPane?.let {
+                it.verticalScrollBar.value = 0
+            }
         }
-        
-        val titleLabel = JLabel("🤖 Junie Code Generation Log").apply {
-            font = Font(font.name, Font.BOLD, 14)
-            border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
-        }
-        
-        val scrollPane = JScrollPane(junieLogTextArea).apply {
-            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
-            horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-            border = BorderFactory.createLineBorder(Color.LIGHT_GRAY)
-            preferredSize = java.awt.Dimension(600, 400)
-        }
-        
-        junieLogPanel?.add(titleLabel, BorderLayout.NORTH)
-        junieLogPanel?.add(scrollPane, BorderLayout.CENTER)
-        
-        mainPanel.add(junieLogPanel!!, BorderLayout.CENTER)
-        mainPanel.revalidate()
-        mainPanel.repaint()
     }
 }
+
+/**
+ * Result of summary generation for a code change
+ */
+data class ChangeSummaryResult(
+    val filePath: String,
+    val startLine: Int,
+    val endLine: Int,
+    val code: String,
+    val summary: CodeSummary,
+    val mappings: SummaryMappings,
+    val detailLevel: String = "medium",
+    val isStructured: Boolean = false
+)
