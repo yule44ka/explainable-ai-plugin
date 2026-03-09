@@ -690,7 +690,7 @@ class MyToolWindow(private val project: Project) {
     private fun createInteractiveSummaryPanel(summaryText: String, mappings: List<SummaryMapping>): JPanel {
         println("[createInteractiveSummaryPanel] Creating panel with ${mappings.size} mappings")
         mappings.forEachIndexed { idx, mapping ->
-            println("  Mapping $idx: '${mapping.summaryComponent}' -> ${mapping.codeSegments.size} segments")
+            println("  Mapping $idx: '${mapping.explanationComponent}' -> ${mapping.codeSegments.size} segments")
             mapping.codeSegments.forEach { seg ->
                 println("    - Line ${seg.line}: '${seg.code}'")
             }
@@ -702,12 +702,12 @@ class MyToolWindow(private val project: Project) {
         }
         
         var currentIndex = 0
-        val sortedMappings = mappings.sortedBy { summaryText.indexOf(it.summaryComponent) }
+        val sortedMappings = mappings.sortedBy { summaryText.indexOf(it.explanationComponent) }
         
         sortedMappings.forEachIndexed { index, mapping ->
-            val componentStart = summaryText.indexOf(mapping.summaryComponent, currentIndex)
+            val componentStart = summaryText.indexOf(mapping.explanationComponent, currentIndex)
             if (componentStart == -1) {
-                println("[createInteractiveSummaryPanel] WARNING: Component not found: '${mapping.summaryComponent}'")
+                println("[createInteractiveSummaryPanel] WARNING: Component not found: '${mapping.explanationComponent}'")
                 return@forEachIndexed
             }
             
@@ -722,7 +722,7 @@ class MyToolWindow(private val project: Project) {
             
             // Add clickable component with color highlighting
             val color = mappingColors[index % mappingColors.size]
-            val componentLabel = JLabel(mapping.summaryComponent).apply {
+            val componentLabel = JLabel(mapping.explanationComponent).apply {
                 font = Font(font.name, Font.PLAIN, 12)
                 background = color
                 isOpaque = true
@@ -735,7 +735,7 @@ class MyToolWindow(private val project: Project) {
                 
                 addMouseListener(object : MouseAdapter() {
                     override fun mouseClicked(e: MouseEvent) {
-                        println("[MouseClick] Clicked on: '${mapping.summaryComponent}'")
+                        println("[MouseClick] Clicked on: '${mapping.explanationComponent}'")
                         println("[MouseClick] Code segments: ${mapping.codeSegments.size}")
                         highlightCodeInEditor(mapping.codeSegments, color)
                     }
@@ -751,7 +751,7 @@ class MyToolWindow(private val project: Project) {
             }
             
             panel.add(componentLabel)
-            currentIndex = componentStart + mapping.summaryComponent.length
+            currentIndex = componentStart + mapping.explanationComponent.length
         }
         
         // Add remaining text (if any)
