@@ -57,9 +57,9 @@ class JunieCliService(private val project: Project) {
             
             println("[JunieCliService] Executing command: ${commandLine.commandLineString}")
             println("[JunieCliService] Working directory: $projectPath")
-            onOutputLine("🚀 Starting Junie CLI...")
-            onOutputLine("📍 Working directory: $projectPath")
-            onOutputLine("💬 Prompt: $prompt")
+            onOutputLine("Starting Junie CLI...")
+            onOutputLine("Working directory: $projectPath")
+            onOutputLine("Prompt: $prompt")
             onOutputLine("─".repeat(50))
             
             // Create process handler to stream output
@@ -92,7 +92,7 @@ class JunieCliService(private val project: Project) {
                     exitCode = event.exitCode
                     println("[JunieCliService] Process terminated with exit code: $exitCode")
                     onOutputLine("─".repeat(50))
-                    onOutputLine("✓ Process completed with exit code: $exitCode")
+                    onOutputLine("Process completed with exit code: $exitCode")
                 }
             })
             

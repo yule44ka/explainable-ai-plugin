@@ -922,7 +922,7 @@ class MyToolWindow(private val project: Project) {
         showJunieLogPanel()
         
         SwingUtilities.invokeLater {
-            junieLogTextArea.append("📸 Capturing snapshot of open files...\n")
+            junieLogTextArea.append("Capturing snapshot of open files...\n")
         }
         
         // Capture snapshot of current files before generation
@@ -933,8 +933,8 @@ class MyToolWindow(private val project: Project) {
         val openFileCount = fileEditorManager.openFiles.size
         
         SwingUtilities.invokeLater {
-            junieLogTextArea.append("✅ Captured snapshot of $openFileCount file(s)\n")
-            junieLogTextArea.append("🚀 Starting Junie code generation...\n\n")
+            junieLogTextArea.append("Captured snapshot of $openFileCount file(s)\n")
+            junieLogTextArea.append("Starting Junie code generation...\n\n")
         }
         
         // Run generation in background
@@ -945,7 +945,6 @@ class MyToolWindow(private val project: Project) {
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
                     indicator.text = "Executing Junie CLI..."
-                    
                     runBlocking {
                         result = junieCliService.generateCode(prompt) { line ->
                             // Update UI in real-time with each output line (strip ANSI codes)
@@ -962,8 +961,8 @@ class MyToolWindow(private val project: Project) {
                 override fun onSuccess() {
                     result?.onSuccess { message ->
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("\n✅ $message\n")
-                            junieLogTextArea.append("\n🔍 Detecting code changes...\n")
+                            junieLogTextArea.append("\n $message\n")
+                            junieLogTextArea.append("\n Detecting code changes...\n")
                         }
                         openAIService.showSuccessNotification(message)
                         
@@ -971,7 +970,7 @@ class MyToolWindow(private val project: Project) {
                         processCodeChanges()
                     }?.onFailure { error ->
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("\n❌ Error: ${error.message}\n")
+                            junieLogTextArea.append("\n Error: ${error.message}\n")
                         }
                         openAIService.showErrorNotification("Failed to generate code: ${error.message}")
                     }
@@ -979,7 +978,7 @@ class MyToolWindow(private val project: Project) {
                 
                 override fun onThrowable(error: Throwable) {
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("\n❌ Error: ${error.message}\n")
+                        junieLogTextArea.append("\n Error: ${error.message}\n")
                     }
                     openAIService.showErrorNotification("Failed to generate code: ${error.message}")
                 }
@@ -987,7 +986,7 @@ class MyToolWindow(private val project: Project) {
                 override fun onFinished() {
                     result?.onFailure { error ->
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("\n❌ Error: ${error.message}\n")
+                            junieLogTextArea.append("\n Error: ${error.message}\n")
                         }
                         openAIService.showErrorNotification("Failed to generate code: ${error.message}")
                     }
@@ -1010,7 +1009,7 @@ class MyToolWindow(private val project: Project) {
                     indicator.fraction = 0.0
                     
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("⏳ Waiting for file system to sync...\n")
+                        junieLogTextArea.append("Waiting for file system to sync...\n")
                     }
                     
                     // Wait for Junie to finish writing files
@@ -1023,7 +1022,7 @@ class MyToolWindow(private val project: Project) {
                         val vfs = com.intellij.openapi.vfs.VirtualFileManager.getInstance()
                         
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("🔄 Refreshing virtual file system...\n")
+                            junieLogTextArea.append("Refreshing virtual file system...\n")
                         }
                         
                         // Refresh VFS to pick up file system changes
@@ -1032,7 +1031,7 @@ class MyToolWindow(private val project: Project) {
                         // Reload all open files from disk
                         val openFiles = fileEditorManager.openFiles
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("📂 Reloading ${openFiles.size} open files from disk...\n")
+                            junieLogTextArea.append("Reloading ${openFiles.size} open files from disk...\n")
                         }
                         
                         openFiles.forEach { virtualFile ->
@@ -1049,7 +1048,7 @@ class MyToolWindow(private val project: Project) {
                     }
                     
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("🔍 Analyzing changes...\n")
+                        junieLogTextArea.append("Analyzing changes...\n")
                     }
                     
                     // Small delay to ensure documents are fully reloaded
@@ -1059,12 +1058,12 @@ class MyToolWindow(private val project: Project) {
                     fileChanges = codeChangeDetector.detectChanges()
                     
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("📊 Found ${fileChanges.size} file(s) with changes\n")
+                        junieLogTextArea.append("Found ${fileChanges.size} file(s) with changes\n")
                     }
                     
                     if (fileChanges.isEmpty()) {
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("ℹ️ No changes detected\n")
+                            junieLogTextArea.append("No changes detected\n")
                         }
                         return
                     }
@@ -1083,10 +1082,9 @@ class MyToolWindow(private val project: Project) {
                     }
                     val isStructured = generationFormatTypeCombo.selectedIndex == 1
                     val summaryKey = "${detailLevel}_${if (isStructured) "structured" else "unstructured"}"
-                    
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("⚙️ Using model: $selectedModel\n")
-                        junieLogTextArea.append("📊 Detail level: ${detailLevel.replaceFirstChar { it.uppercase() }}, Format: ${if (isStructured) "Bullet Points" else "Paragraph"}\n")
+                        junieLogTextArea.append("Using model: $selectedModel\n")
+                        junieLogTextArea.append("Detail level: ${detailLevel.replaceFirstChar { it.uppercase() }}, Format: ${if (isStructured) "Bullet Points" else "Paragraph"}\n")
                     }
                     
                     // Generate summaries for each changed segment
@@ -1095,13 +1093,12 @@ class MyToolWindow(private val project: Project) {
                     
                     fileChanges.forEach { fileChange ->
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("\n📄 Processing ${fileChange.filePath.substringAfterLast("/")}\n")
+                            junieLogTextArea.append("\n Processing ${fileChange.filePath.substringAfterLast("/")}\n")
                         }
                         
                         fileChange.changedSegments.forEach { segment ->
                             indicator.fraction = processedSegments.toDouble() / totalSegments
                             indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments..."
-                            
                             runBlocking {
                                 // Only process ADDED or MODIFIED segments with substantial code
                                 if ((segment.changeType == com.example.explainableaiplugin.services.ChangeType.ADDED || 
@@ -1110,7 +1107,7 @@ class MyToolWindow(private val project: Project) {
                                     segment.newCode.trim().lines().size >= 3) {
                                     
                                     SwingUtilities.invokeLater {
-                                        junieLogTextArea.append("  • Lines ${segment.startLine}-${segment.endLine}: Generating summary...\n")
+                                        junieLogTextArea.append(" • Lines ${segment.startLine}-${segment.endLine}: Generating summary...\n")
                                     }
                                     
                                     // Generate summary for this segment
@@ -1122,8 +1119,8 @@ class MyToolWindow(private val project: Project) {
                                     
                                     summaryResult.onSuccess { summary ->
                                         SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("    ✅ Summary generated\n")
-                                            junieLogTextArea.append("    🔗 Building mappings for all formats...\n")
+                                            junieLogTextArea.append("Summary generated\n")
+                                            junieLogTextArea.append("Building mappings for all formats...\n")
                                         }
                                         
                                         // Build mappings for all 6 summary types (like in Code Summary tab)
@@ -1154,7 +1151,7 @@ class MyToolWindow(private val project: Project) {
                                         }
                                         
                                         SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("    ✅ Mappings built for ${mappingResults.size} formats\n")
+                                            junieLogTextArea.append("Mappings built for ${mappingResults.size} formats\n")
                                         }
                                         
                                         // Create SummaryMappings with all mappings
@@ -1179,7 +1176,7 @@ class MyToolWindow(private val project: Project) {
                                         ))
                                     }.onFailure { e ->
                                         SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("    ❌ Failed: ${e.message}\n")
+                                            junieLogTextArea.append("Failed: ${e.message}\n")
                                         }
                                     }
                                 }
@@ -1194,8 +1191,8 @@ class MyToolWindow(private val project: Project) {
                 
                 override fun onSuccess() {
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("\n✨ Generated ${changeSummaries.size} summaries\n")
-                        junieLogTextArea.append("💡 You can now change Detail Level or Format above to view different summaries\n")
+                        junieLogTextArea.append("\n Generated ${changeSummaries.size} summaries\n")
+                        junieLogTextArea.append("You can now change Detail Level or Format above to view different summaries\n")
                     }
                     
                     if (changeSummaries.isNotEmpty()) {
@@ -1213,7 +1210,7 @@ class MyToolWindow(private val project: Project) {
                 
                 override fun onThrowable(error: Throwable) {
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("\n❌ Error processing changes: ${error.message}\n")
+                        junieLogTextArea.append("\n Error processing changes: ${error.message}\n")
                     }
                     codeChangeDetector.clearSnapshots()
                 }
@@ -1249,10 +1246,10 @@ class MyToolWindow(private val project: Project) {
         // Get current settings from comboboxes
         val currentDetailLevel = when (generationDetailLevelCombo.selectedIndex) {
             0 -> "low"
-            1 -> "medium"
-            2 -> "high"
-            else -> "medium"
-        }
+                        1 -> "medium"
+                        2 -> "high"
+                        else -> "medium"
+                    }
         val currentIsStructured = generationFormatTypeCombo.selectedIndex == 1
         
         // Title with current settings
@@ -1356,9 +1353,7 @@ class MyToolWindow(private val project: Project) {
     private fun showJunieLogPanel() {
         SwingUtilities.invokeLater {
             // Clear logs
-            junieLogTextArea.text = ""
-            
-            // Clear stored summaries
+            junieLogTextArea.text = "" // Clear stored summaries
             currentChangeSummaries = emptyList()
             
             // Hide and clear previous summaries

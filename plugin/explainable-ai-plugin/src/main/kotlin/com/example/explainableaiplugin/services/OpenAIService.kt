@@ -187,7 +187,7 @@ class OpenAIService(private val project: Project) {
     suspend fun explainCode(code: String): Result<String> {
         return sendPrompt(
             prompt = "Explain the following code:\n\n$code",
-            systemMessage = "You are a helpful coding assistant that explains code clearly and concisely."
+            systemMessage = "You are a helpful coding assistant that explains code clearly and concisely. Do not use emojis."
         )
     }
     
@@ -197,7 +197,7 @@ class OpenAIService(private val project: Project) {
     suspend fun analyzeCode(code: String): Result<String> {
         return sendPrompt(
             prompt = "Analyze the following code and identify potential issues, bugs, or improvements:\n\n$code",
-            systemMessage = "You are an expert code reviewer. Provide constructive feedback on code quality, potential bugs, and improvements."
+            systemMessage = "You are an expert code reviewer. Provide constructive feedback on code quality, potential bugs, and improvements. Do not use emojis."
         )
     }
     
@@ -207,7 +207,7 @@ class OpenAIService(private val project: Project) {
     suspend fun suggestImprovements(code: String): Result<String> {
         return sendPrompt(
             prompt = "Suggest improvements for the following code:\n\n$code",
-            systemMessage = "You are an expert programmer. Suggest specific improvements for code readability, performance, and best practices."
+            systemMessage = "You are an expert programmer. Suggest specific improvements for code readability, performance, and best practices. Do not use emojis."
         )
     }
     
@@ -254,6 +254,7 @@ IMPORTANT:
 - For medium_structured and high_structured, if there are logical groupings, you should use two-level bullets ("•" and "◦"). For the second-level bullet ("◦"), always indent with 2 spaces before the "◦".
 - The file context below is provided ONLY for reference to help understand the code's environment.
 - Your explanation MUST focus ONLY on the specific code snippet provided.
+- Do NOT use emojis anywhere in your response.
 - Return your response as a JSON object with keys: title, low_unstructured, low_structured, medium_unstructured, medium_structured, high_unstructured, high_structured.
 
 File Context (for reference only):
@@ -325,6 +326,7 @@ IMPORTANT:
 2. Extract explanationComponents in the exact order they appear in the explanation text.
 3. Do NOT hallucinate or invent explanation components that do not appear in the explanation.
 4. FULL COVERAGE REQUIRED: Every line of the code MUST be covered by at least one mapping. Go through all lines of code and ensure each line appears in at least one codeSegments entry. Do not leave any line unmapped.
+5. Do NOT use emojis anywhere in your response.
 
 For each explanationComponent, extract one or more relevant code segments from the code that best match the meaning of the explanation component.
 - For each code segment, return both the code fragment (as a string) and its line number.
