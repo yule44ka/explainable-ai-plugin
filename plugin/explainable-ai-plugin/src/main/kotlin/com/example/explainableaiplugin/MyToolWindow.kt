@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.ui.JBColor
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import kotlinx.coroutines.runBlocking
@@ -121,7 +122,7 @@ class MyToolWindow(private val project: Project) {
             val setupPanel = panel {
                 if (!isOpenAIConfigured) {
                     row {
-                        label("⚠️ OpenAI API key is not configured")
+                        label("OpenAI API key is not configured")
                     }
                     row {
                         text("To use AI features, please configure your OpenAI API key.")
@@ -130,7 +131,7 @@ class MyToolWindow(private val project: Project) {
                 
                 if (!isJunieConfigured) {
                     row {
-                        label("⚠️ Junie API Key is not configured")
+                        label("Junie API Key is not configured")
                     }
                     row {
                         text("To use Junie features, please configure your Junie API Key.")
@@ -153,11 +154,11 @@ class MyToolWindow(private val project: Project) {
             
             // Create Summary tab
             summaryTabPanel = createSummaryTab()
-            tabbedPane.addTab("📝 Code Summary", null, summaryTabPanel, "Generate and view code summaries")
+            tabbedPane.addTab("Code Summary", null, summaryTabPanel, "Generate and view code summaries")
             
             // Create Code Generation tab
             generationTabPanel = createCodeGenerationTab()
-            tabbedPane.addTab("✨ Code Generation", null, generationTabPanel, "Generate code with Junie AI")
+            tabbedPane.addTab("Code Generation", null, generationTabPanel, "Generate code with Junie AI")
             
             mainPanel.add(tabbedPane, BorderLayout.CENTER)
             
@@ -182,7 +183,7 @@ class MyToolWindow(private val project: Project) {
         // Control panel for summary
         val controlPanel = panel {
             row {
-                label("📝 Code Summary Generator").applyToComponent {
+                label("Code Summary Generator").applyToComponent {
                     font = Font(font.name, Font.BOLD, 14)
                 }
             }
@@ -237,7 +238,7 @@ class MyToolWindow(private val project: Project) {
             }
             
             row {
-                button("🚀 Generate Summary") {
+                button("Generate Summary") {
                     generateSummaryFromEditor()
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
@@ -247,11 +248,11 @@ class MyToolWindow(private val project: Project) {
             separator()
             
             row {
-                button("⚙️ Settings") {
+                button("Settings") {
                     ShowSettingsUtil.getInstance().showSettingsDialog(
                         project,
                         "Explainable AI"
-                    )
+                        )
                 }.applyToComponent {
                     font = Font(font.name, Font.PLAIN, 10)
                 }
@@ -306,7 +307,7 @@ class MyToolWindow(private val project: Project) {
         // Control panel for code generation
         val controlPanel = panel {
             row {
-                label("🤖 Junie Code Generation").applyToComponent {
+                label("Junie Code Generation").applyToComponent {
                     font = Font(font.name, Font.BOLD, 14)
                 }
             }
@@ -322,11 +323,11 @@ class MyToolWindow(private val project: Project) {
                 label("Prompt:")
                 cell(promptTextField).applyToComponent {
                     toolTipText = "Describe what code you want to generate or modify"
-                }
+                    }
             }
             
             row {
-                button("✨ Generate Code") {
+                button("Generate Code") {
                     generateCodeWithJunie(promptTextField.text)
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
@@ -336,7 +337,7 @@ class MyToolWindow(private val project: Project) {
             separator()
             
             row {
-                label("📊 Summary Settings for Code Changes").applyToComponent {
+                label("Summary Settings for Code Changes").applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
                 }
             }
@@ -396,11 +397,11 @@ class MyToolWindow(private val project: Project) {
             separator()
             
             row {
-                button("⚙️ Settings") {
+                button("Settings") {
                     ShowSettingsUtil.getInstance().showSettingsDialog(
                         project,
                         "Explainable AI"
-                    )
+                        )
                 }.applyToComponent {
                     font = Font(font.name, Font.PLAIN, 10)
                 }
@@ -445,7 +446,7 @@ class MyToolWindow(private val project: Project) {
             alignmentX = JComponent.LEFT_ALIGNMENT
         }
         
-        val logTitleLabel = JLabel("📋 Generation Log").apply {
+        val logTitleLabel = JLabel("Generation Log").apply {
             font = Font(font.name, Font.BOLD, 12)
             border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
         }
@@ -518,7 +519,7 @@ class MyToolWindow(private val project: Project) {
         val document = editor.document
         val fileContext = document.text
         
-        // Get selected model (extract model name from "model | price" format)
+        // Get selected model (extract model name from "model | price"format)
         val selectedModelWithPrice = modelCombo.selectedItem as? String
         val selectedModel = selectedModelWithPrice?.split(" | ")?.firstOrNull()?.trim() ?: openAIService.getModel()
         
@@ -533,7 +534,6 @@ class MyToolWindow(private val project: Project) {
                     indicator.isIndeterminate = false
                     indicator.fraction = 0.0
                     indicator.text = "Generating summary with $selectedModel..."
-                    
                     runBlocking {
                         // Stage 1: Generate summary
                         val summaryResult = openAIService.generateCodeSummary(selectedText, fileContext, selectedModel)
@@ -541,7 +541,6 @@ class MyToolWindow(private val project: Project) {
                             summary = it
                             indicator.fraction = 0.3
                             indicator.text = "Building mappings..."
-                            
                             // Stage 2: Build mappings for all 6 summary types
                             val mappingKeys = listOf(
                                 "low_unstructured" to it.low_unstructured,
@@ -618,10 +617,10 @@ class MyToolWindow(private val project: Project) {
         // Determine which summary to show based on selected options
         val detailLevel = when (detailLevelCombo.selectedIndex) {
             0 -> "low"
-            1 -> "medium"
-            2 -> "high"
-            else -> "medium"
-        }
+                        1 -> "medium"
+                        2 -> "high"
+                        else -> "medium"
+                    }
         
         val isStructured = formatTypeCombo.selectedIndex == 1
         
@@ -631,7 +630,7 @@ class MyToolWindow(private val project: Project) {
         
         // Title
         if (summary.title.isNotEmpty()) {
-            targetPanel.add(JLabel("📝 " + summary.title).apply {
+            targetPanel.add(JLabel(" " + summary.title).apply {
                 font = Font(font.name, Font.BOLD, 14)
                 border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
                 alignmentX = JComponent.LEFT_ALIGNMENT
@@ -690,9 +689,9 @@ class MyToolWindow(private val project: Project) {
     private fun createInteractiveSummaryPanel(summaryText: String, mappings: List<SummaryMapping>): JPanel {
         println("[createInteractiveSummaryPanel] Creating panel with ${mappings.size} mappings")
         mappings.forEachIndexed { idx, mapping ->
-            println("  Mapping $idx: '${mapping.explanationComponent}' -> ${mapping.codeSegments.size} segments")
+            println("Mapping $idx: '${mapping.explanationComponent}' -> ${mapping.codeSegments.size} segments")
             mapping.codeSegments.forEach { seg ->
-                println("    - Line ${seg.line}: '${seg.code}'")
+                println(" - Line ${seg.line}: '${seg.code}'")
             }
         }
         
@@ -776,7 +775,7 @@ class MyToolWindow(private val project: Project) {
         
         println("[highlightCodeInEditor] Highlighting ${codeSegments.size} segments with color $color")
         codeSegments.forEach { segment ->
-            println("  - Line ${segment.line}: '${segment.code}'")
+            println(" - Line ${segment.line}: '${segment.code}'")
         }
         
         val markupModel = editor.markupModel
@@ -1254,7 +1253,7 @@ class MyToolWindow(private val project: Project) {
         
         // Title with current settings
         val formatInfo = "${currentDetailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (currentIsStructured) "Bullet Points" else "Paragraph"}"
-        val titleLabel = JLabel("📊 Code Changes Summary").apply {
+        val titleLabel = JLabel("Code Changes Summary").apply {
             font = Font(font.name, Font.BOLD, 14)
             border = BorderFactory.createEmptyBorder(10, 0, 5, 0)
             alignmentX = JComponent.LEFT_ALIGNMENT
@@ -1285,7 +1284,7 @@ class MyToolWindow(private val project: Project) {
             
             // File info
             val fileName = changeSummary.filePath.substringAfterLast("/")
-            changePanel.add(JLabel("📄 $fileName").apply {
+            changePanel.add(JLabel(" $fileName").apply {
                 font = Font(font.name, Font.BOLD, 12)
                 foreground = JBColor(Color(100, 60, 180), Color(187, 134, 252))
                 border = BorderFactory.createEmptyBorder(0, 0, 5, 0)
