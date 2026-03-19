@@ -396,13 +396,19 @@ $summaryText
                     }
                 }
                 
-                // Filter mappings where explanationComponent is not found in summaryText
-                correctedMappings.filter { mapping ->
-                    if (!summaryText.contains(mapping.explanationComponent)) {
-                        println("[buildSummaryMapping] explanationComponent not found in summary: ${mapping.explanationComponent}")
-                        false
+                correctedMappings.mapNotNull { mapping ->
+                    val exactMatch = summaryText.contains(mapping.explanationComponent)
+                    if (exactMatch) {
+                        mapping
                     } else {
-                        true
+                        val fuzzy = findFuzzyMatchInText(summaryText, mapping.explanationComponent)
+                        if (fuzzy != null) {
+                            println("[buildSummaryMapping] fuzzy-remapped \"${mapping.explanationComponent}\" → \"$fuzzy\"")
+                            SummaryMapping(explanationComponent = fuzzy, codeSegments = mapping.codeSegments)
+                        } else {
+                            println("[buildSummaryMapping] explanationComponent not found in summary (dropped): ${mapping.explanationComponent}")
+                            null
+                        }
                     }
                 }
             }
@@ -455,3 +461,76 @@ data class SummaryMappings(
     val high_unstructured: List<SummaryMapping> = emptyList(),
     val high_structured: List<SummaryMapping> = emptyList()
 )
+
+// -----------------------------------------------------------------------------
+// Fuzzy matching utilities (mirrors findBestMatch logic in messageHandler.ts)
+// -----------------------------------------------------------------------------
+
+private const val FUZZY_MATCH_THRESHOLD = 0.75
+private const val FUZZY_MAX_PATTERN_LENGTH = 300
+
+/**
+ * Tries to find [pattern] inside [text] using three strategies:
+ *  1. Exact substring match
+ *  2. Case-insensitive substring match
+ *  3. Sliding-window normalised Levenshtein similarity (only for patterns
+ *     shorter than [FUZZY_MAX_PATTERN_LENGTH])
+ *
+ * Returns the actual matching substring from [text] so callers can replace a
+ * paraphrased explanationComponent with the real text from the summary.
+ * Returns null when no match with acceptable quality is found.
+ */
+fun findFuzzyMatchInText(text: String, pattern: String, threshold: Double = FUZZY_MATCH_THRESHOLD): String? {
+    if (pattern.isEmpty()) return null
+
+    // 1. Exact match
+    if (text.contains(pattern)) return pattern
+
+    // 2. Case-insensitive match
+    val lowerText = text.lowercase()
+    val lowerPattern = pattern.lowercase()
+    val ciIdx = lowerText.indexOf(lowerPattern)
+    if (ciIdx != -1) return text.substring(ciIdx, ciIdx + pattern.length)
+
+    // 3. Sliding-window similarity (skip for very long patterns — too costly)
+    if (pattern.length > FUZZY_MAX_PATTERN_LENGTH || pattern.length > text.length) return null
+
+    val windowSize = pattern.length
+    var bestScore = 0.0
+    var bestWindow: String? = null
+
+    for (i in 0..text.length - windowSize) {
+        val window = text.substring(i, i + windowSize)
+        val score = stringSimilarity(window, pattern)
+        if (score > bestScore) {
+            bestScore = score
+            bestWindow = window
+        }
+    }
+
+    return if (bestScore >= threshold) bestWindow else null
+}
+
+private fun stringSimilarity(a: String, b: String): Double {
+    val maxLen = maxOf(a.length, b.length)
+    if (maxLen == 0) return 1.0
+    return 1.0 - levenshteinDistance(a, b).toDouble() / maxLen
+}
+
+private fun levenshteinDistance(a: String, b: String): Int {
+    val m = a.length
+    val n = b.length
+    val dp = Array(m + 1) { IntArray(n + 1) }
+    for (i in 0..m) dp[i][0] = i
+    for (j in 0..n) dp[0][j] = j
+    for (i in 1..m) {
+        for (j in 1..n) {
+            dp[i][j] = if (a[i - 1] == b[j - 1]) {
+                dp[i - 1][j - 1]
+            } else {
+                1 + minOf(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+            }
+        }
+    }
+    return dp[m][n]
+}
