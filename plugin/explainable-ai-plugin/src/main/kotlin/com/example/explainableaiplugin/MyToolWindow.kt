@@ -57,8 +57,8 @@ class MyToolWindow(private val project: Project) {
         lineWrap = true
         wrapStyleWord = true
         font = Font("Monospaced", Font.PLAIN, 11)
-        background = Color(43, 43, 43)
-        foreground = Color(169, 183, 198)
+        background = JBColor(Color(250, 250, 250), Color(43, 43, 43))
+        foreground = JBColor(Color(50, 50, 50), Color(169, 183, 198))
     }
     private var currentSummary: CodeSummary? = null
     private var currentMappings: SummaryMappings? = null
@@ -642,7 +642,7 @@ class MyToolWindow(private val project: Project) {
         val formatLabel = "${detailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (isStructured) "Bullet Points" else "Paragraph"}"
         targetPanel.add(JLabel(formatLabel).apply {
             font = Font(font.name, Font.ITALIC, 11)
-            foreground = java.awt.Color.GRAY
+            foreground = Color.GRAY
             border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
             alignmentX = JComponent.LEFT_ALIGNMENT
         })
@@ -1267,7 +1267,7 @@ class MyToolWindow(private val project: Project) {
         // Format info
         val formatLabel = JLabel("Current view: $formatInfo").apply {
             font = Font(font.name, Font.ITALIC, 11)
-            foreground = Color(150, 150, 150)
+            foreground = JBColor(Color(120, 120, 120), Color(150, 150, 150))
             border = BorderFactory.createEmptyBorder(0, 0, 15, 0)
             alignmentX = JComponent.LEFT_ALIGNMENT
         }
@@ -1278,10 +1278,10 @@ class MyToolWindow(private val project: Project) {
             val changePanel = JPanel().apply {
                 layout = BoxLayout(this, BoxLayout.Y_AXIS)
                 border = BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color(100, 100, 100)),
+                    BorderFactory.createLineBorder(JBColor(Color(210, 210, 210), Color(100, 100, 100))),
                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
                 )
-                background = Color(60, 63, 65)
+                background = JBColor(Color(245, 247, 249), Color(60, 63, 65))
                 alignmentX = JComponent.LEFT_ALIGNMENT
                 maximumSize = java.awt.Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE)
             }
@@ -1290,7 +1290,7 @@ class MyToolWindow(private val project: Project) {
             val fileName = changeSummary.filePath.substringAfterLast("/")
             changePanel.add(JLabel("📄 $fileName").apply {
                 font = Font(font.name, Font.BOLD, 12)
-                foreground = Color(187, 134, 252) // Purple color
+                foreground = JBColor(Color(100, 60, 180), Color(187, 134, 252))
                 border = BorderFactory.createEmptyBorder(0, 0, 5, 0)
             })
             
@@ -1305,7 +1305,7 @@ class MyToolWindow(private val project: Project) {
             if (changeSummary.summary.title.isNotEmpty()) {
                 changePanel.add(JLabel(changeSummary.summary.title).apply {
                     font = Font(font.name, Font.BOLD, 12)
-                    foreground = Color.WHITE
+                    foreground = JBColor(Color(30, 30, 30), Color.WHITE)
                     border = BorderFactory.createEmptyBorder(0, 0, 8, 0)
                 })
             }
@@ -1317,12 +1317,12 @@ class MyToolWindow(private val project: Project) {
             
             if (mappings.isNotEmpty()) {
                 val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings)
-                interactivePanel.background = Color(60, 63, 65)
+                interactivePanel.background = JBColor(Color(245, 247, 249), Color(60, 63, 65))
                 changePanel.add(interactivePanel)
             } else {
                 changePanel.add(JLabel(summaryText).apply {
                     font = Font(font.name, Font.PLAIN, 11)
-                    foreground = Color(200, 200, 200)
+                    foreground = JBColor(Color(80, 80, 80), Color(200, 200, 200))
                     border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
                 })
             }
