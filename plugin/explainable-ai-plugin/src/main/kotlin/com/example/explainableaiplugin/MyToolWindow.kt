@@ -104,7 +104,7 @@ class MyToolWindow(private val project: Project) {
         Color(199, 206, 234, 128), // periwinkle
         Color(181, 234, 215, 128)  // mint
     )
-    
+
     fun getContent(): JComponent {
         updateContent()
         return mainPanel
@@ -721,14 +721,17 @@ class MyToolWindow(private val project: Project) {
             
             // Add clickable component with color highlighting
             val color = mappingColors[index % mappingColors.size]
+            val labelColor = Color(color.red, color.green, color.blue)
+            val baseBorder = BorderFactory.createLineBorder(labelColor, 1)
+            val labelBorder = BorderFactory.createCompoundBorder(
+                baseBorder,
+                BorderFactory.createEmptyBorder(2, 4, 2, 4)
+            )
             val componentLabel = JLabel(mapping.explanationComponent).apply {
                 font = Font(font.name, Font.PLAIN, 12)
-                background = color
+                background = labelColor
                 isOpaque = true
-                border = BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(color.darker(), 1),
-                    BorderFactory.createEmptyBorder(2, 4, 2, 4)
-                )
+                border = labelBorder
                 cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
                 alignmentX = JComponent.LEFT_ALIGNMENT
                 
@@ -736,15 +739,19 @@ class MyToolWindow(private val project: Project) {
                     override fun mouseClicked(e: MouseEvent) {
                         println("[MouseClick] Clicked on: '${mapping.explanationComponent}'")
                         println("[MouseClick] Code segments: ${mapping.codeSegments.size}")
-                        highlightCodeInEditor(mapping.codeSegments, color)
+                        highlightCodeInEditor(mapping.codeSegments, labelColor)
                     }
-                    
+
                     override fun mouseEntered(e: MouseEvent) {
-                        background = color.brighter()
+                        background = labelColor
+                        border = labelBorder
+                        repaint()
                     }
-                    
+
                     override fun mouseExited(e: MouseEvent) {
-                        background = color
+                        background = labelColor
+                        border = labelBorder
+                        repaint()
                     }
                 })
             }
