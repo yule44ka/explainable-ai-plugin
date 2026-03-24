@@ -62,6 +62,12 @@ tasks {
     test {
         useJUnitPlatform()
     }
+
+    // Disable bytecode instrumentation — Microsoft JDK on macOS lacks the
+    // "Packages" directory the task expects, causing a build failure.
+    instrumentCode {
+        enabled = false
+    }
 }
 
 kotlin {
