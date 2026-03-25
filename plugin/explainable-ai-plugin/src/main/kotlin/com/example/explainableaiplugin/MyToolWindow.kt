@@ -32,6 +32,7 @@ import java.awt.Font
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
+import javax.swing.text.DefaultHighlighter
 
 class MyToolWindowFactory : ToolWindowFactory {
     override fun shouldBeAvailable(project: Project) = true
@@ -722,81 +723,93 @@ class MyToolWindow(private val project: Project) {
                 println(" - Line ${seg.line}: '${seg.code}'")
             }
         }
-        
-        val panel = JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+
+        data class MappingRange(
+            val start: Int,
+            val endExclusive: Int,
+            val mapping: SummaryMapping,
+            val color: Color
+        )
+
+        val textArea = JTextArea().apply {
+            isEditable = false
+            lineWrap = true
+            wrapStyleWord = true
+            text = summaryText
+            font = Font(font.name, Font.PLAIN, 12)
             border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            cursor = Cursor.getDefaultCursor()
+            alignmentX = JComponent.LEFT_ALIGNMENT
+            maximumSize = java.awt.Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+            columns = 1
+            isOpaque = false
+        }.apply {
+            highlighter.removeAllHighlights()
         }
-        
+
+        val mappingRanges = mutableListOf<MappingRange>()
         var currentIndex = 0
-        val sortedMappings = mappings.sortedBy { summaryText.indexOf(it.explanationComponent) }
-        
+        val sortedMappings = mappings.sortedBy { summaryText.indexOf(it.explanationComponent, currentIndex) }
+
         sortedMappings.forEachIndexed { index, mapping ->
             val componentStart = summaryText.indexOf(mapping.explanationComponent, currentIndex)
             if (componentStart == -1) {
                 println("[createInteractiveSummaryPanel] WARNING: Component not found: '${mapping.explanationComponent}'")
                 return@forEachIndexed
             }
-            
-            // Add text before component (if any)
-            if (componentStart > currentIndex) {
-                val beforeText = summaryText.substring(currentIndex, componentStart)
-                panel.add(JLabel(beforeText).apply {
-                    font = Font(font.name, Font.PLAIN, 12)
-                    alignmentX = JComponent.LEFT_ALIGNMENT
-                })
-            }
-            
-            // Add clickable component with color highlighting
-            val color = mappingColors[index % mappingColors.size]
-            val labelColor = Color(color.red, color.green, color.blue)
-            val baseBorder = BorderFactory.createLineBorder(labelColor, 1)
-            val labelBorder = BorderFactory.createCompoundBorder(
-                baseBorder,
-                BorderFactory.createEmptyBorder(2, 4, 2, 4)
+
+            val labelColor = mappingColors[index % mappingColors.size].let { Color(it.red, it.green, it.blue) }
+            val painter = DefaultHighlighter.DefaultHighlightPainter(labelColor)
+            textArea.highlighter.addHighlight(
+                componentStart,
+                componentStart + mapping.explanationComponent.length,
+                painter
             )
-            val componentLabel = JLabel(mapping.explanationComponent).apply {
-                font = Font(font.name, Font.PLAIN, 12)
-                background = labelColor
-                isOpaque = true
-                border = labelBorder
-                cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-                alignmentX = JComponent.LEFT_ALIGNMENT
-                
-                addMouseListener(object : MouseAdapter() {
-                    override fun mouseClicked(e: MouseEvent) {
-                        println("[MouseClick] Clicked on: '${mapping.explanationComponent}'")
-                        println("[MouseClick] Code segments: ${mapping.codeSegments.size}")
-                        highlightCodeInEditor(mapping.codeSegments, labelColor)
-                    }
 
-                    override fun mouseEntered(e: MouseEvent) {
-                        background = labelColor
-                        border = labelBorder
-                        repaint()
-                    }
+            mappingRanges.add(
+                MappingRange(
+                    start = componentStart,
+                    endExclusive = componentStart + mapping.explanationComponent.length,
+                    mapping = mapping,
+                    color = labelColor
+                )
+            )
 
-                    override fun mouseExited(e: MouseEvent) {
-                        background = labelColor
-                        border = labelBorder
-                        repaint()
-                    }
-                })
-            }
-            
-            panel.add(componentLabel)
             currentIndex = componentStart + mapping.explanationComponent.length
         }
-        
-        // Add remaining text (if any)
-        if (currentIndex < summaryText.length) {
-            val remainingText = summaryText.substring(currentIndex)
-            panel.add(JLabel(remainingText).apply {
-                font = Font(font.name, Font.PLAIN, 12)
-                alignmentX = JComponent.LEFT_ALIGNMENT
-            })
+
+        val interactionHandler = object : MouseAdapter() {
+            private fun findMappingAtPosition(position: Int): MappingRange? {
+                return mappingRanges.firstOrNull { position >= it.start && position < it.endExclusive }
+            }
+
+            override fun mouseClicked(e: MouseEvent) {
+                val position = textArea.viewToModel2D(e.point)
+                val hit = findMappingAtPosition(position) ?: return
+                println("[MouseClick] Clicked on: '${hit.mapping.explanationComponent}'")
+                println("[MouseClick] Code segments: ${hit.mapping.codeSegments.size}")
+                highlightCodeInEditor(hit.mapping.codeSegments, hit.color)
+            }
+
+            override fun mouseMoved(e: MouseEvent) {
+                val position = textArea.viewToModel2D(e.point)
+                val isMapping = findMappingAtPosition(position) != null
+                textArea.cursor = Cursor.getPredefinedCursor(
+                    if (isMapping) Cursor.HAND_CURSOR else Cursor.DEFAULT_CURSOR
+                )
+            }
         }
-        
+
+        textArea.addMouseListener(interactionHandler)
+        textArea.addMouseMotionListener(interactionHandler)
+
+        val panel = JPanel(BorderLayout()).apply {
+            isOpaque = false
+            alignmentX = JComponent.LEFT_ALIGNMENT
+            maximumSize = java.awt.Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+            add(textArea, BorderLayout.CENTER)
+        }
+
         println("[createInteractiveSummaryPanel] Panel created successfully")
         return panel
     }
