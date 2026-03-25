@@ -65,6 +65,7 @@ class MyToolWindow(private val project: Project) {
     private var currentMappings: SummaryMappings? = null
     private var originalCode: String? = null
     private var startLine: Int = 1
+    private val extraScrollTailPx = 900
     
     // Store all generated change summaries for interactive viewing
     private var currentChangeSummaries: List<ChangeSummaryResult> = emptyList()
@@ -108,6 +109,28 @@ class MyToolWindow(private val project: Project) {
     fun getContent(): JComponent {
         updateContent()
         return mainPanel
+    }
+
+    private fun configureVerticalScroll(scrollPane: JScrollPane) {
+        scrollPane.verticalScrollBar.unitIncrement = 24
+        scrollPane.verticalScrollBar.blockIncrement = 120
+    }
+
+    private fun addExtraScrollTail(container: JPanel) {
+        val tail = Box.createVerticalStrut(extraScrollTailPx).apply {
+            maximumSize = java.awt.Dimension(Int.MAX_VALUE, extraScrollTailPx)
+        }
+        container.add(tail)
+    }
+
+    private fun forwardMouseWheelToParent(child: JScrollPane, parent: JScrollPane) {
+        child.addMouseWheelListener { e ->
+            val bar = parent.verticalScrollBar
+            val delta = e.unitsToScroll * bar.unitIncrement
+            val max = bar.maximum - bar.visibleAmount
+            bar.value = (bar.value + delta).coerceIn(bar.minimum, max)
+            e.consume()
+        }
     }
     
     private fun updateContent() {
@@ -286,6 +309,7 @@ class MyToolWindow(private val project: Project) {
         
         // Store reference for later use
         summaryTabPanel = summaryContainer
+        addExtraScrollTail(mainContainer)
         
         // Wrap in scroll pane
         val scrollPane = JScrollPane(mainContainer).apply {
@@ -293,6 +317,7 @@ class MyToolWindow(private val project: Project) {
             horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
             border = null
         }
+        configureVerticalScroll(scrollPane)
         
         tabPanel.add(scrollPane, BorderLayout.CENTER)
         return tabPanel
@@ -476,6 +501,7 @@ class MyToolWindow(private val project: Project) {
         }
         
         contentContainer.add(changeSummaryPanel!!)
+        addExtraScrollTail(contentContainer)
         
         // Wrap everything in a scroll pane
         val mainScrollPane = JScrollPane(contentContainer).apply {
@@ -483,6 +509,8 @@ class MyToolWindow(private val project: Project) {
             horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
             border = null
         }
+        configureVerticalScroll(mainScrollPane)
+        forwardMouseWheelToParent(logTextScrollPane, mainScrollPane)
         
         parentPanel.add(mainScrollPane, BorderLayout.CENTER)
     }
