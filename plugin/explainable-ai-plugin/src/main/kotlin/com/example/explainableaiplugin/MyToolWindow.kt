@@ -49,10 +49,10 @@ class MyToolWindow(private val project: Project) {
     private val junieCliService = JunieCliService.getInstance(project)
     private val codeChangeDetector = CodeChangeDetector.getInstance(project)
     private val mainPanel = JPanel(BorderLayout())
-    private var summaryPanel: JPanel? = null
     private var junieLogPanel: JPanel? = null
     private var changeSummaryPanel: JPanel? = null
     private var summaryTabPanel: JPanel? = null
+    private var summaryContentPanel: JPanel? = null
     private var generationTabPanel: JPanel? = null
     private val junieLogTextArea = JTextArea().apply {
         isEditable = false
@@ -177,8 +177,9 @@ class MyToolWindow(private val project: Project) {
             val tabbedPane = JTabbedPane()
             
             // Create Summary tab
-            summaryTabPanel = createSummaryTab()
-            tabbedPane.addTab("Code Summary", null, summaryTabPanel, "Generate and view code summaries")
+            val codeSummaryTab = createSummaryTab()
+            summaryTabPanel = codeSummaryTab
+            tabbedPane.addTab("Code Summary", null, codeSummaryTab, "Generate and view code summaries")
             
             // Create Code Generation tab
             generationTabPanel = createCodeGenerationTab()
@@ -309,7 +310,7 @@ class MyToolWindow(private val project: Project) {
         mainContainer.add(summaryContainer)
         
         // Store reference for later use
-        summaryTabPanel = summaryContainer
+        summaryContentPanel = summaryContainer
         addExtraScrollTail(mainContainer)
         
         // Wrap in scroll pane
@@ -638,7 +639,7 @@ class MyToolWindow(private val project: Project) {
     
     private fun displayCurrentSummary() {
         val summary = currentSummary ?: return
-        val targetPanel = summaryTabPanel ?: return
+        val targetPanel = summaryContentPanel ?: return
         
         // Clear previous content
         targetPanel.removeAll()
