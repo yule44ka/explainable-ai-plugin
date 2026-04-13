@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.nio.file.Files
 import java.nio.charset.StandardCharsets
 
 /**
@@ -47,12 +48,16 @@ class JunieCliService(private val project: Project) {
                 )
             }
             
+            val jsonOutputFile = Files.createTempFile("junie-output-", ".json")
+            
             // Build command line for Junie CLI
             val commandLine = GeneralCommandLine()
                 .withWorkDirectory(projectPath)
                 .withEnvironment("JUNIE_API_KEY", token)
                 .withExePath("junie")
             
+            commandLine.addParameter("--output-format=json")
+            commandLine.addParameter("--json-output-file=${jsonOutputFile.toAbsolutePath()}")
             commandLine.addParameter(prompt)
             
             println("[JunieCliService] Executing command: ${commandLine.commandLineString}")
@@ -79,11 +84,11 @@ class JunieCliService(private val project: Project) {
                         // Add to full output
                         fullOutput.append(text)
                         
+                        val outputPrefix = outputTypeLabel(outputType)
+                        
                         // Send to UI callback in real-time
                         text.lines().forEach { line ->
-                            if (line.isNotBlank()) {
-                                onOutputLine(line)
-                            }
+                            onOutputLine("[$outputPrefix] $line")
                         }
                     }
                 }
@@ -105,10 +110,13 @@ class JunieCliService(private val project: Project) {
             val outputText = fullOutput.toString()
             println("[JunieCliService] Full output:\n$outputText")
             
+            val jsonOutputText = appendJsonOutputFile(jsonOutputFile, onOutputLine)
+            val searchableOutput = outputText + "\n" + jsonOutputText
+            
             // Check if Junie completed successfully based on output content
-            val hasSuccessfulAuth = outputText.contains("Successfully authenticated")
-            val hasEditedFiles = outputText.contains("Edited files") || outputText.contains("Updated ")
-            val hasOperations = outputText.contains("●")
+            val hasSuccessfulAuth = searchableOutput.contains("Successfully authenticated")
+            val hasEditedFiles = searchableOutput.contains("Edited files") || searchableOutput.contains("Updated ")
+            val hasOperations = searchableOutput.contains("●")
             
             when {
                 exitCode == 0 -> {
@@ -126,6 +134,28 @@ class JunieCliService(private val project: Project) {
             e.printStackTrace()
             Result.failure(e)
         }
+    }
+    
+    private fun outputTypeLabel(outputType: Key<*>): String {
+        return when (outputType) {
+            ProcessOutputTypes.STDOUT -> "stdout"
+            ProcessOutputTypes.STDERR -> "stderr"
+            ProcessOutputTypes.SYSTEM -> "system"
+            else -> outputType.toString()
+        }
+    }
+    
+    private fun appendJsonOutputFile(jsonOutputFile: java.nio.file.Path, onOutputLine: (String) -> Unit): String {
+        if (!Files.exists(jsonOutputFile) || Files.size(jsonOutputFile) == 0L) return ""
+        
+        val jsonOutputLines = Files.readAllLines(jsonOutputFile, StandardCharsets.UTF_8)
+        onOutputLine("─".repeat(50))
+        onOutputLine("Junie JSON output file: ${jsonOutputFile.toAbsolutePath()}")
+        onOutputLine("Junie JSON output:")
+        jsonOutputLines.forEach { line ->
+            onOutputLine("[json] $line")
+        }
+        return jsonOutputLines.joinToString("\n")
     }
     
     /**

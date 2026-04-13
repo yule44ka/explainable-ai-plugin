@@ -6,6 +6,9 @@ import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.*
 
+private const val DEFAULT_MODEL = "gpt-5.4"
+private val PREVIOUS_DEFAULT_MODELS = setOf("gpt-4.1-nano", "gpt-4.1")
+
 /**
  * Service for managing OpenAI API settings.
  * Uses PasswordSafe API for secure token storage.
@@ -16,10 +19,9 @@ import com.intellij.openapi.components.*
     storages = [Storage("openai-settings.xml")]
 )
 class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
-    
     data class State(
         var apiEndpoint: String = "https://api.openai.com/v1",
-        var model: String = "gpt-4.1-nano",
+        var model: String = DEFAULT_MODEL,
         var temperature: Double = 0.7,
         var maxTokens: Int = 2000
     )
@@ -50,6 +52,9 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     
     override fun loadState(state: State) {
         this.state = state
+        if (this.state.model in PREVIOUS_DEFAULT_MODELS) {
+            this.state.model = DEFAULT_MODEL
+        }
     }
     
     /**

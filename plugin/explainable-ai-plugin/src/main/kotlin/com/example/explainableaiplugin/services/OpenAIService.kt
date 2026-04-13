@@ -144,7 +144,7 @@ class OpenAIService(private val project: Project) {
     fun getModel(): String = settings.model
     fun getTemperature(): Double = settings.temperature
     fun getMaxTokens(): Int = settings.maxTokens
-    
+
     /**
      * Create OpenAI client with current settings
      */
@@ -222,15 +222,18 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Generate multi-level summary for selected code
-     * @param code Selected code for analysis
+     * Generate multi-level summary for selected code or diff
+     * @param contentToExplain Selected code or diff for analysis
      * @param fileContext Full file context for better understanding
+     * @param isDiffInput Whether the main input is a diff rather than a code snippet
      * @param model Model to use for generation (if null, uses default from settings)
      * @return CodeSummary object with different levels of detail
      */
     suspend fun generateCodeSummary(
-        code: String, 
+        contentToExplain: String,
         fileContext: String, 
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
         model: String? = null
     ): Result<CodeSummary> = withContext(Dispatchers.IO) {
         val client = createClient() 
@@ -239,9 +242,18 @@ class OpenAIService(private val project: Project) {
             )
         
         val modelToUse = model ?: getModel()
+        val normalizedAgentTrace = agentTrace?.trim().orEmpty()
+        val explainedEntity = if (isDiffInput) "code diff" else "code snippet"
+        val additionalContext = buildString {
+            if (normalizedAgentTrace.isNotEmpty()) {
+                appendLine()
+                appendLine("Agent Trace:")
+                appendLine(normalizedAgentTrace)
+            }
+        }.trimEnd()
         
         val prompt = """
-You are an expert code explainer. For the following code, generate 6 explanations of the whole code, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
+You are an expert code explainer. For the following $explainedEntity, generate 6 explanations of the whole input, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
 - low_unstructured: One-sentence, low-detail, paragraph style.
 - low_structured: 2-3 short bullet points, low-detail, as a single string. Each bullet must start with "•" and be separated by \n. Never return an array.
 - medium_unstructured: 2-3 sentences, medium-detail, paragraph style.
@@ -250,18 +262,22 @@ You are an expert code explainer. For the following code, generate 6 explanation
 - high_structured: 4-8 bullet points, high-detail, as a single string. Use "•" for first-level bullets, and ENCOURAGE the use of two-level bullets (use "◦" for the second level, and indent the second-level bullet with 2 spaces before the "◦") when logical groupings exist. Bullets must be separated by \n. Never return an array.
 
 IMPORTANT:
-- You MUST cover the ENTIRE code in the explanation — every part of the code (every function, block, statement, or significant line) must be addressed and explained. Do not skip any part.
+- You MUST cover the ENTIRE $explainedEntity in the explanation — every relevant part must be addressed and explained. Do not skip any part.
+- You MUST explain only the provided $explainedEntity, not the entire file.
 - For medium_structured and high_structured, if there are logical groupings, you should use two-level bullets ("•" and "◦"). For the second-level bullet ("◦"), always indent with 2 spaces before the "◦".
-- The file context below is provided ONLY for reference to help understand the code's environment.
-- Your explanation MUST focus ONLY on the specific code snippet provided.
+- The file context and agent trace below are provided for reference to help understand the code's environment, why the code changed, and what the agent was doing.
+- Use the agent trace to improve the explanation with relevant intent and sequence of changes when it helps, but do NOT turn the answer into a log recap.
+- Your explanation MUST focus ONLY on the specific $explainedEntity provided.
 - Do NOT use emojis anywhere in your response.
 - Return your response as a JSON object with keys: title, low_unstructured, low_structured, medium_unstructured, medium_structured, high_unstructured, high_structured.
 
 File Context (for reference only):
 $fileContext
 
-Code to explain:
-$code
+$additionalContext
+
+Input to explain:
+$contentToExplain
         """.trimIndent()
         
         try {

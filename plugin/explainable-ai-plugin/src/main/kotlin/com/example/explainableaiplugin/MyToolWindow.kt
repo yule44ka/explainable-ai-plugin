@@ -77,9 +77,12 @@ class MyToolWindow(private val project: Project) {
     
     // Model pricing data
     private val modelPricing = mapOf(
+        "gpt-5.4" to "$2.50",
+        "gpt-5.4-mini" to "$0.75",
         "gpt-4.1" to "$2.00",
         "gpt-4.1-mini" to "$0.40",
         "gpt-4.1-nano" to "$0.10",
+        "o3" to "$2.00",
         "gpt-4o" to "$2.50",
         "gpt-4o-mini" to "$0.15"
     )
@@ -566,7 +569,11 @@ class MyToolWindow(private val project: Project) {
                     indicator.text = "Generating summary with $selectedModel..."
                     runBlocking {
                         // Stage 1: Generate summary
-                        val summaryResult = openAIService.generateCodeSummary(selectedText, fileContext, selectedModel)
+                        val summaryResult = openAIService.generateCodeSummary(
+                            contentToExplain = selectedText,
+                            fileContext = fileContext,
+                            model = selectedModel
+                        )
                         summaryResult.onSuccess { 
                             summary = it
                             indicator.fraction = 0.3
@@ -944,6 +951,64 @@ class MyToolWindow(private val project: Project) {
                    .replace(Regex("\\x1b\\[[0-9;]*m"), "")
                    .replace(Regex("\\[([0-9]{1,3}(;[0-9]{1,3})*)?m"), "")
     }
+
+    private fun buildDiffContext(segment: com.example.explainableaiplugin.services.ChangedSegment): String {
+        val oldCode = segment.oldCode.trimEnd()
+        val newCode = segment.newCode.trimEnd()
+        return buildString {
+            appendLine("Change Type: ${segment.changeType}")
+            appendLine("Line Range: ${segment.startLine}-${segment.endLine}")
+            appendLine("--- Old Code ---")
+            appendLine(if (oldCode.isNotEmpty()) oldCode else "[empty]")
+            appendLine("+++ New Code +++")
+            appendLine(if (newCode.isNotEmpty()) newCode else "[empty]")
+        }.trim()
+    }
+
+    private fun buildAgentTraceContext(): String {
+        val pluginLogPrefixes = listOf(
+            "Capturing snapshot of open files...",
+            "Captured snapshot of",
+            "Starting Junie code generation...",
+            "Starting Junie CLI...",
+            "Working directory:",
+            "Prompt:",
+            "Process completed with exit code:",
+            "Code generation completed successfully!",
+            "Detecting code changes...",
+            "Waiting for file system to sync...",
+            "Refreshing virtual file system...",
+            "Reloading ",
+            "Analyzing changes...",
+            "Found ",
+            "No changes detected",
+            "Using model:",
+            "Detail level:",
+            "Processing ",
+            "Summary generated",
+            "Building mappings",
+            "Mappings built",
+            "Summary with trace failed",
+            "Failed:",
+            "Generated ",
+            "You can now change Detail Level",
+            "Error:"
+        )
+
+        return junieLogTextArea.text
+            .lineSequence()
+            .map { stripAnsiCodes(it).trimEnd() }
+            .filterNot { line ->
+                val trimmedLine = line.trim()
+                trimmedLine.isEmpty() ||
+                    trimmedLine.matches(Regex("[-─]{10,}")) ||
+                    trimmedLine.startsWith("• Lines ") ||
+                    trimmedLine.startsWith("Lines ") ||
+                    pluginLogPrefixes.any { prefix -> trimmedLine.startsWith(prefix) }
+            }
+            .joinToString("\n")
+            .trim()
+    }
     
     /**
      * Generate code using Junie CLI
@@ -1138,6 +1203,7 @@ class MyToolWindow(private val project: Project) {
                     // Generate summaries for each changed segment
                     var processedSegments = 0
                     val totalSegments = fileChanges.sumOf { it.changedSegments.size }
+                    val agentTraceContext = buildAgentTraceContext()
                     
                     fileChanges.forEach { fileChange ->
                         SwingUtilities.invokeLater {
@@ -1159,11 +1225,32 @@ class MyToolWindow(private val project: Project) {
                                     }
                                     
                                     // Generate summary for this segment
-                                    val summaryResult = openAIService.generateCodeSummary(
-                                        segment.newCode,
-                                        segment.newCode, // Use segment as context
-                                        selectedModel
+                                    val diffContext = buildDiffContext(segment)
+                                    val fileContext = buildString {
+                                        appendLine("File: ${fileChange.filePath}")
+                                        appendLine("Changed lines: ${segment.startLine}-${segment.endLine}")
+                                        appendLine()
+                                        append(segment.newCode)
+                                    }.trim()
+                                    val summaryResultWithTrace = openAIService.generateCodeSummary(
+                                        contentToExplain = diffContext,
+                                        fileContext = fileContext,
+                                        isDiffInput = true,
+                                        agentTrace = agentTraceContext,
+                                        model = selectedModel
                                     )
+                                    val summaryResult = summaryResultWithTrace.recoverCatching {
+                                        println("[processCodeChanges] Summary with trace failed, retrying without trace: ${it.message}")
+                                        SwingUtilities.invokeLater {
+                                            junieLogTextArea.append("Summary with trace failed, retrying without trace...\n")
+                                        }
+                                        openAIService.generateCodeSummary(
+                                            contentToExplain = diffContext,
+                                            fileContext = fileContext,
+                                            isDiffInput = true,
+                                            model = selectedModel
+                                        ).getOrThrow()
+                                    }
                                     
                                     summaryResult.onSuccess { summary ->
                                         SwingUtilities.invokeLater {
@@ -1185,9 +1272,9 @@ class MyToolWindow(private val project: Project) {
                                         mappingKeys.forEach { (key, summaryText) ->
                                             if (summaryText.isNotEmpty()) {
                                                 val mappingResult = openAIService.buildSummaryMapping(
-                                                    segment.newCode,
+                                                    diffContext,
                                                     summaryText,
-                                                    segment.startLine,
+                                                    1,
                                                     selectedModel
                                                 )
                                                 mappingResult.onSuccess { mapping ->
@@ -1216,7 +1303,7 @@ class MyToolWindow(private val project: Project) {
                                             filePath = fileChange.filePath,
                                             startLine = segment.startLine,
                                             endLine = segment.endLine,
-                                            code = segment.newCode,
+                                            code = diffContext,
                                             summary = summary,
                                             mappings = summaryMappings,
                                             detailLevel = detailLevel,

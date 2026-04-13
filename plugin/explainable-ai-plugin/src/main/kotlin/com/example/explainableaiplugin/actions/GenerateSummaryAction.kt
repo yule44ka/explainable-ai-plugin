@@ -61,7 +61,10 @@ class GenerateSummaryAction : AnAction() {
                     indicator.text = "Sending request to OpenAI..."
                     
                     runBlocking {
-                        val result = openAIService.generateCodeSummary(selectedText, fileContext)
+                        val result = openAIService.generateCodeSummary(
+                            contentToExplain = selectedText,
+                            fileContext = fileContext
+                        )
                         result.onSuccess { 
                             summary = it 
                         }.onFailure { 
