@@ -565,10 +565,6 @@ class MyToolWindow(private val project: Project) {
         val document = editor.document
         val fileContext = document.text
         
-        // Get selected model (extract model name from "model | price"format)
-        val selectedModelWithPrice = modelCombo.selectedItem as? String
-        val selectedModel = selectedModelWithPrice?.split(" | ")?.firstOrNull()?.trim() ?: openAIService.getModel()
-        
         // Run generation in background
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Generating Code Summary...", true) {
@@ -579,18 +575,17 @@ class MyToolWindow(private val project: Project) {
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = false
                     indicator.fraction = 0.0
-                    indicator.text = "Generating summary with $selectedModel..."
+                    indicator.text = "Generating summary with Junie..."
                     runBlocking {
                         // Stage 1: Generate summary
-                        val summaryResult = openAIService.generateCodeSummary(
+                        val summaryResult = junieCliService.generateCodeSummary(
                             contentToExplain = selectedText,
-                            fileContext = fileContext,
-                            model = selectedModel
+                            fileContext = fileContext
                         )
                         summaryResult.onSuccess { 
                             summary = it
                             indicator.fraction = 0.3
-                            indicator.text = "Building mappings..."
+                            indicator.text = "Building mappings with Junie..."
                             // Stage 2: Build mappings for all 6 summary types
                             val mappingKeys = listOf(
                                 "low_unstructured" to it.low_unstructured,
@@ -604,11 +599,10 @@ class MyToolWindow(private val project: Project) {
                             val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
                             mappingKeys.forEachIndexed { index, (key, summaryText) ->
                                 if (summaryText.isNotEmpty()) {
-                                    val mappingResult = openAIService.buildSummaryMapping(
+                                    val mappingResult = junieCliService.buildSummaryMapping(
                                         selectedText, 
                                         summaryText, 
-                                        startLine,
-                                        selectedModel
+                                        startLine
                                     )
                                     mappingResult.onSuccess { mapping ->
                                         mappingResults[key] = mapping
@@ -1201,11 +1195,6 @@ class MyToolWindow(private val project: Project) {
                         return
                     }
                     
-                    // Get selected model from generation tab
-                    val selectedModelWithPrice = generationModelCombo.selectedItem as? String
-                    val selectedModel = selectedModelWithPrice?.split(" | ")?.firstOrNull()?.trim() 
-                        ?: openAIService.getModel()
-                    
                     // Get detail level and format from generation tab
                     val detailLevel = when (generationDetailLevelCombo.selectedIndex) {
                         0 -> "low"
@@ -1214,9 +1203,8 @@ class MyToolWindow(private val project: Project) {
                         else -> "medium"
                     }
                     val isStructured = generationFormatTypeCombo.selectedIndex == 1
-                    val summaryKey = "${detailLevel}_${if (isStructured) "structured" else "unstructured"}"
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("Using model: $selectedModel\n")
+                        junieLogTextArea.append("Using Junie for summaries and mappings\n")
                         junieLogTextArea.append("Detail level: ${detailLevel.replaceFirstChar { it.uppercase() }}, Format: ${if (isStructured) "Bullet Points" else "Paragraph"}\n")
                     }
                     
@@ -1232,7 +1220,7 @@ class MyToolWindow(private val project: Project) {
                         
                         fileChange.changedSegments.forEach { segment ->
                             indicator.fraction = processedSegments.toDouble() / totalSegments
-                            indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments..."
+                            indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments with Junie..."
                             runBlocking {
                                 // Process any segment that has actual content in old/new state
                                 val hasContentToSummarize =
@@ -1251,29 +1239,22 @@ class MyToolWindow(private val project: Project) {
                                         appendLine()
                                         append(segment.newCode)
                                     }.trim()
-                                    val summaryResultWithTrace = openAIService.generateCodeSummary(
+                                    val summaryResult = junieCliService.generateCodeSummary(
                                         contentToExplain = diffContext,
                                         fileContext = fileContext,
                                         isDiffInput = true,
                                         agentTrace = agentTraceContext,
-                                        model = selectedModel
-                                    )
-                                    val summaryResult = summaryResultWithTrace.recoverCatching {
-                                        println("[processCodeChanges] Summary with trace failed, retrying without trace: ${it.message}")
-                                        SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("Summary with trace failed, retrying without trace...\n")
+                                        onOutputLine = { line ->
+                                            SwingUtilities.invokeLater {
+                                                junieLogTextArea.append(stripAnsiCodes(line) + "\n")
+                                                junieLogTextArea.caretPosition = junieLogTextArea.document.length
+                                            }
                                         }
-                                        openAIService.generateCodeSummary(
-                                            contentToExplain = diffContext,
-                                            fileContext = fileContext,
-                                            isDiffInput = true,
-                                            model = selectedModel
-                                        ).getOrThrow()
-                                    }
+                                    )
                                     
                                     summaryResult.onSuccess { summary ->
                                         SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("Summary generated\n")
+                                            junieLogTextArea.append("Summary generated via Junie\n")
                                             junieLogTextArea.append("Building mappings for all formats...\n")
                                         }
                                         
@@ -1292,11 +1273,10 @@ class MyToolWindow(private val project: Project) {
                                         val mappingStartLine = segment.startLine
                                         mappingKeys.forEach { (key, summaryText) ->
                                             if (summaryText.isNotEmpty()) {
-                                                val mappingResult = openAIService.buildSummaryMapping(
+                                                val mappingResult = junieCliService.buildSummaryMapping(
                                                     mappingSourceCode,
                                                     summaryText,
-                                                    mappingStartLine,
-                                                    selectedModel
+                                                    mappingStartLine
                                                 )
                                                 mappingResult.onSuccess { mapping ->
                                                     mappingResults[key] = mapping

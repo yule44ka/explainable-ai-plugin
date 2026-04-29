@@ -1,6 +1,7 @@
 package com.example.explainableaiplugin.actions
 
 import com.example.explainableaiplugin.services.OpenAIService
+import com.example.explainableaiplugin.services.JunieCliService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -44,9 +45,10 @@ class GenerateSummaryAction : AnAction() {
         val fileContext = document.text
         
         val openAIService = OpenAIService.getInstance(project)
+        val junieCliService = JunieCliService.getInstance(project)
         
-        if (!openAIService.isConfigured()) {
-            openAIService.showConfigurationWarning()
+        if (!openAIService.isJunieTokenConfigured()) {
+            openAIService.showJunieConfigurationWarning()
             return
         }
         
@@ -58,10 +60,10 @@ class GenerateSummaryAction : AnAction() {
                 
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
-                    indicator.text = "Sending request to OpenAI..."
+                    indicator.text = "Sending request to Junie..."
                     
                     runBlocking {
-                        val result = openAIService.generateCodeSummary(
+                        val result = junieCliService.generateCodeSummary(
                             contentToExplain = selectedText,
                             fileContext = fileContext
                         )
