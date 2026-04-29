@@ -78,6 +78,7 @@ class MyToolWindow(private val project: Project) {
     
     // Model pricing data
     private val modelPricing = mapOf(
+        "gpt-5.5" to "$5.00",
         "gpt-5.4" to "$2.50",
         "gpt-5.4-mini" to "$0.75",
         "gpt-4.1" to "$2.00",
