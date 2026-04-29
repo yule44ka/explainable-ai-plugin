@@ -10,6 +10,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.nio.file.Files
 import java.nio.charset.StandardCharsets
 
@@ -33,11 +37,6 @@ class JunieCliService(private val project: Project) {
      */
     suspend fun generateCode(prompt: String, onOutputLine: (String) -> Unit): Result<String> = withContext(Dispatchers.IO) {
         val token = settings.getJunieToken()
-        if (token.isNullOrEmpty()) {
-            return@withContext Result.failure(
-                IllegalStateException("Junie API Key not configured. Please set it in Settings -> Tools -> Explainable AI")
-            )
-        }
         
         try {
             // Get project base path
@@ -53,8 +52,10 @@ class JunieCliService(private val project: Project) {
             // Build command line for Junie CLI
             val commandLine = GeneralCommandLine()
                 .withWorkDirectory(projectPath)
-                .withEnvironment("JUNIE_API_KEY", token)
                 .withExePath("junie")
+            if (!token.isNullOrBlank()) {
+                commandLine.withEnvironment("JUNIE_API_KEY", token)
+            }
             
             commandLine.addParameter("--output-format=json")
             commandLine.addParameter("--json-output-file=${jsonOutputFile.toAbsolutePath()}")
@@ -126,7 +127,9 @@ class JunieCliService(private val project: Project) {
                     Result.success("Code generation completed successfully!")
                 }
                 else -> {
-                    Result.failure(RuntimeException("Junie CLI failed with exit code $exitCode"))
+                    val detailedError = extractJunieErrorMessage(jsonOutputText)
+                    val message = detailedError ?: "Junie CLI failed with exit code $exitCode"
+                    Result.failure(RuntimeException(message))
                 }
             }
         } catch (e: Exception) {
@@ -156,6 +159,24 @@ class JunieCliService(private val project: Project) {
             onOutputLine("[json] $line")
         }
         return jsonOutputLines.joinToString("\n")
+    }
+
+    private fun extractJunieErrorMessage(jsonOutputText: String): String? {
+        if (jsonOutputText.isBlank()) return null
+
+        return runCatching {
+            val root = Json.parseToJsonElement(jsonOutputText).jsonObject
+            val errors = root["errors"]?.jsonArray
+                ?.mapNotNull { element ->
+                    runCatching { element.jsonPrimitive.content }
+                        .getOrNull()
+                        ?.trim()
+                        ?.takeIf { it.isNotEmpty() }
+                }
+                .orEmpty()
+
+            errors.joinToString("\n\n").ifBlank { null }
+        }.getOrNull()
     }
     
     /**

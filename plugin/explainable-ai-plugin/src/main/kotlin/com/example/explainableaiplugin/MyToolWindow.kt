@@ -29,6 +29,7 @@ import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Font
+import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
@@ -118,6 +119,17 @@ class MyToolWindow(private val project: Project) {
     private fun configureVerticalScroll(scrollPane: JScrollPane) {
         scrollPane.verticalScrollBar.unitIncrement = 24
         scrollPane.verticalScrollBar.blockIncrement = 120
+    }
+
+    private fun scrollToComponentTop(component: JComponent) {
+        SwingUtilities.invokeLater {
+            val scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, component) as? JScrollPane
+                ?: return@invokeLater
+            val viewport = scrollPane.viewport
+            val view = viewport.view ?: return@invokeLater
+            val boundsInView = SwingUtilities.convertRectangle(component.parent, component.bounds, view)
+            viewport.viewPosition = Point(viewport.viewPosition.x, boundsInView.y.coerceAtLeast(0))
+        }
     }
 
     private fun addExtraScrollTail(container: JPanel) {
@@ -647,6 +659,7 @@ class MyToolWindow(private val project: Project) {
     private fun displayCurrentSummary() {
         val summary = currentSummary ?: return
         val targetPanel = summaryContentPanel ?: return
+        var summaryAnchor: JComponent? = null
         
         // Clear previous content
         targetPanel.removeAll()
@@ -671,17 +684,22 @@ class MyToolWindow(private val project: Project) {
                 font = Font(font.name, Font.BOLD, 14)
                 border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
                 alignmentX = JComponent.LEFT_ALIGNMENT
-            })
+            }.also { summaryAnchor = it })
         }
         
         // Show selected format
-        val formatLabel = "${detailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (isStructured) "Bullet Points" else "Paragraph"}"
-        targetPanel.add(JLabel(formatLabel).apply {
+        val formatLabelComponent = JLabel(
+            "${detailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (isStructured) "Bullet Points" else "Paragraph"}"
+        ).apply {
             font = Font(font.name, Font.ITALIC, 11)
             foreground = Color.GRAY
             border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
             alignmentX = JComponent.LEFT_ALIGNMENT
-        })
+        }
+        targetPanel.add(formatLabelComponent)
+        if (summaryAnchor == null) {
+            summaryAnchor = formatLabelComponent
+        }
         
         // Display summary with interactive mapping
         if (mappings.isNotEmpty()) {
@@ -704,6 +722,7 @@ class MyToolWindow(private val project: Project) {
         
         targetPanel.revalidate()
         targetPanel.repaint()
+        summaryAnchor?.let { scrollToComponentTop(it) }
     }
     
     private fun getMappingsForKey(key: String): List<SummaryMapping> {
@@ -1214,11 +1233,10 @@ class MyToolWindow(private val project: Project) {
                             indicator.fraction = processedSegments.toDouble() / totalSegments
                             indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments..."
                             runBlocking {
-                                // Only process ADDED or MODIFIED segments with substantial code
-                                if ((segment.changeType == com.example.explainableaiplugin.services.ChangeType.ADDED || 
-                                     segment.changeType == com.example.explainableaiplugin.services.ChangeType.MODIFIED) &&
-                                    segment.newCode.trim().isNotEmpty() &&
-                                    segment.newCode.trim().lines().size >= 3) {
+                                // Process any segment that has actual content in old/new state
+                                val hasContentToSummarize =
+                                    segment.newCode.trim().isNotEmpty() || segment.oldCode.trim().isNotEmpty()
+                                if (hasContentToSummarize) {
                                     
                                     SwingUtilities.invokeLater {
                                         junieLogTextArea.append(" • Lines ${segment.startLine}-${segment.endLine}: Generating summary...\n")
@@ -1269,12 +1287,14 @@ class MyToolWindow(private val project: Project) {
                                         )
                                         
                                         val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
+                                        val mappingSourceCode = segment.newCode.trim().ifEmpty { segment.oldCode.trim() }
+                                        val mappingStartLine = segment.startLine
                                         mappingKeys.forEach { (key, summaryText) ->
                                             if (summaryText.isNotEmpty()) {
                                                 val mappingResult = openAIService.buildSummaryMapping(
-                                                    diffContext,
+                                                    mappingSourceCode,
                                                     summaryText,
-                                                    1,
+                                                    mappingStartLine,
                                                     selectedModel
                                                 )
                                                 mappingResult.onSuccess { mapping ->
@@ -1313,6 +1333,10 @@ class MyToolWindow(private val project: Project) {
                                         SwingUtilities.invokeLater {
                                             junieLogTextArea.append("Failed: ${e.message}\n")
                                         }
+                                    }
+                                } else {
+                                    SwingUtilities.invokeLater {
+                                        junieLogTextArea.append(" • Lines ${segment.startLine}-${segment.endLine}: Skipped empty change segment\n")
                                     }
                                 }
                             }
@@ -1472,14 +1496,7 @@ class MyToolWindow(private val project: Project) {
         targetPanel.revalidate()
         targetPanel.repaint()
         
-        // Scroll to bottom to show summaries
-        SwingUtilities.invokeLater {
-            val scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, targetPanel) as? JScrollPane
-            scrollPane?.let {
-                val vertical = it.verticalScrollBar
-                vertical.value = vertical.maximum
-            }
-        }
+        scrollToComponentTop(titleLabel)
     }
     
     /**

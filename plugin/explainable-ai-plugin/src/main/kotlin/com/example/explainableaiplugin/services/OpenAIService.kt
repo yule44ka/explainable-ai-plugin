@@ -382,8 +382,7 @@ $summaryText
             )
             
             result.mapCatching { response ->
-                // Parse JSON response
-                val jsonResponse = response.trim().removePrefix("```json").removeSuffix("```").trim()
+                val jsonResponse = extractJsonArray(response)
                 val json = kotlinx.serialization.json.Json { 
                     ignoreUnknownKeys = true 
                     isLenient = true
@@ -433,6 +432,30 @@ $summaryText
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun extractJsonArray(rawResponse: String): String {
+        val trimmed = rawResponse.trim()
+
+        // Prefer fenced JSON payload if present
+        val fencedMatch = Regex("```(?:json)?\\s*([\\s\\S]*?)\\s*```", RegexOption.IGNORE_CASE)
+            .find(trimmed)
+        if (fencedMatch != null) {
+            val fencedPayload = fencedMatch.groupValues[1].trim()
+            if (fencedPayload.startsWith("[") && fencedPayload.endsWith("]")) {
+                return fencedPayload
+            }
+        }
+
+        // Fallback: pick the outermost JSON array in the response
+        val start = trimmed.indexOf('[')
+        val end = trimmed.lastIndexOf(']')
+        if (start != -1 && end > start) {
+            return trimmed.substring(start, end + 1).trim()
+        }
+
+        // Last fallback keeps previous behavior to surface parse error to caller
+        return trimmed.removePrefix("```json").removeSuffix("```").trim()
     }
 }
 

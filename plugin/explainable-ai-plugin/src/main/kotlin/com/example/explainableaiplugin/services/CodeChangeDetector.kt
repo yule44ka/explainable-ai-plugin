@@ -1,12 +1,12 @@
 package com.example.explainableaiplugin.services
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
-import com.intellij.openapi.editor.Document
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Computable
 
 /**
  * Service to detect code changes between snapshots
@@ -26,25 +26,14 @@ class CodeChangeDetector(private val project: Project) {
      */
     fun captureSnapshot() {
         fileSnapshots.clear()
-        
-        val fileDocumentManager = FileDocumentManager.getInstance()
-        val fileEditorManager = FileEditorManager.getInstance(project)
-        
-        // Get all open files in editors
-        val openFiles = fileEditorManager.openFiles
-        
-        println("[CodeChangeDetector] Capturing snapshots for ${openFiles.size} open files")
-        
-        openFiles.forEach { virtualFile ->
-            val document = fileDocumentManager.getDocument(virtualFile)
-            if (document != null) {
-                val filePath = virtualFile.path
-                val content = document.text
-                fileSnapshots[filePath] = content
-                println("[CodeChangeDetector] Captured snapshot for: $filePath (${content.length} chars)")
-            } else {
-                println("[CodeChangeDetector] WARNING: No document for file: ${virtualFile.path}")
-            }
+
+        val currentFiles = readOpenFiles()
+
+        println("[CodeChangeDetector] Capturing snapshots for ${currentFiles.size} open files")
+
+        currentFiles.forEach { (filePath, content) ->
+            fileSnapshots[filePath] = content
+            println("[CodeChangeDetector] Captured snapshot for: $filePath (${content.length} chars)")
         }
         
         println("[CodeChangeDetector] Total snapshots captured: ${fileSnapshots.size}")
@@ -57,26 +46,11 @@ class CodeChangeDetector(private val project: Project) {
      */
     fun detectChanges(): List<FileChange> {
         val changes = mutableListOf<FileChange>()
-        
-        val fileDocumentManager = FileDocumentManager.getInstance()
-        val fileEditorManager = FileEditorManager.getInstance(project)
-        
+
         println("[CodeChangeDetector] Starting change detection...")
         println("[CodeChangeDetector] Snapshots to check: ${fileSnapshots.size}")
-        
-        // Get current open files
-        val openFiles = fileEditorManager.openFiles
-        println("[CodeChangeDetector] Currently open files: ${openFiles.size}")
-        
-        // Build map of current file contents
-        val currentFiles = openFiles.mapNotNull { virtualFile ->
-            val document = fileDocumentManager.getDocument(virtualFile)
-            if (document != null) {
-                virtualFile.path to document.text
-            } else {
-                null
-            }
-        }.toMap()
+
+        val currentFiles = readOpenFiles()
         
         println("[CodeChangeDetector] Current files with documents: ${currentFiles.size}")
         
@@ -125,6 +99,26 @@ class CodeChangeDetector(private val project: Project) {
         }
         
         return changes
+    }
+
+    private fun readOpenFiles(): Map<String, String> {
+        return ApplicationManager.getApplication().runReadAction(Computable {
+            val fileDocumentManager = FileDocumentManager.getInstance()
+            val fileEditorManager = FileEditorManager.getInstance(project)
+            val openFiles = fileEditorManager.openFiles
+
+            println("[CodeChangeDetector] Currently open files: ${openFiles.size}")
+
+            openFiles.mapNotNull { virtualFile ->
+                val document = fileDocumentManager.getDocument(virtualFile)
+                if (document != null) {
+                    virtualFile.path to document.text
+                } else {
+                    println("[CodeChangeDetector] WARNING: No document for file: ${virtualFile.path}")
+                    null
+                }
+            }.toMap()
+        })
     }
     
     /**
