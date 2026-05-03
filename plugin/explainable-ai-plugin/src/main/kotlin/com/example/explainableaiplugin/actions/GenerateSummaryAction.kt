@@ -2,6 +2,8 @@ package com.example.explainableaiplugin.actions
 
 import com.example.explainableaiplugin.services.OpenAIService
 import com.example.explainableaiplugin.services.JunieCliService
+import com.example.explainableaiplugin.services.CodeSummary
+import com.example.explainableaiplugin.services.CodeSummaryWithMappings
 import com.example.explainableaiplugin.settings.ExplanationProvider
 import com.example.explainableaiplugin.settings.OpenAISettings
 import com.intellij.openapi.actionSystem.AnAction
@@ -45,6 +47,8 @@ class GenerateSummaryAction : AnAction() {
         // Get full file text for context
         val document = editor.document
         val fileContext = document.text
+        val sourceFilePath = FileDocumentManager.getInstance().getFile(document)?.path
+        val startLine = editor.selectionModel.selectionStartPosition?.line?.plus(1) ?: 1
         
         val openAIService = OpenAIService.getInstance(project)
         val junieCliService = JunieCliService.getInstance(project)
@@ -69,27 +73,31 @@ class GenerateSummaryAction : AnAction() {
         // Run in background with progress indicator
         ProgressManager.getInstance().run(
             object : Task.Backgroundable(project, "Generating Code Summary with AI...", true) {
-                var summary: com.example.explainableaiplugin.services.CodeSummary? = null
+                var summaryWithMappings: CodeSummaryWithMappings? = null
                 var error: Throwable? = null
                 
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
-                    indicator.text = "Sending request to ${provider.displayName}..."
+                    indicator.text = "Generating summary and mappings with ${provider.displayName}..."
                     
                     runBlocking {
                         val result = when (provider) {
-                            ExplanationProvider.JUNIE -> junieCliService.generateCodeSummary(
-                                contentToExplain = selectedText,
-                                fileContext = fileContext
-                            )
-                            ExplanationProvider.OPENAI_API -> openAIService.generateCodeSummary(
+                            ExplanationProvider.JUNIE -> junieCliService.generateCodeSummaryWithMappings(
                                 contentToExplain = selectedText,
                                 fileContext = fileContext,
+                                mappingCode = selectedText,
+                                realStartLine = startLine
+                            )
+                            ExplanationProvider.OPENAI_API -> openAIService.generateCodeSummaryWithMappings(
+                                contentToExplain = selectedText,
+                                fileContext = fileContext,
+                                mappingCode = selectedText,
+                                realStartLine = startLine,
                                 model = settings.model
                             )
                         }
                         result.onSuccess { 
-                            summary = it 
+                            summaryWithMappings = it
                         }.onFailure { 
                             error = it 
                         }
@@ -97,12 +105,12 @@ class GenerateSummaryAction : AnAction() {
                 }
                 
                 override fun onSuccess() {
-                    summary?.let { summaryData ->
+                    summaryWithMappings?.let { summaryData ->
                         // Open Tool Window and update its content
                         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("AI assistant")
                         toolWindow?.show {
                             // Update Tool Window content
-                            updateToolWindowWithSummary(project, summaryData)
+                            updateToolWindowWithSummary(project, summaryData, sourceFilePath)
                         }
                     }
                 }
@@ -125,11 +133,14 @@ class GenerateSummaryAction : AnAction() {
      */
     private fun updateToolWindowWithSummary(
         project: com.intellij.openapi.project.Project,
-        summary: com.example.explainableaiplugin.services.CodeSummary
+        summaryWithMappings: CodeSummaryWithMappings,
+        sourceFilePath: String?
     ) {
         // This function will be called from MyToolWindow to update UI
         // Save summary in project service for access from Tool Window
-        project.putUserData(SUMMARY_KEY, summary)
+        project.putUserData(SUMMARY_KEY, summaryWithMappings.summary)
+        project.putUserData(SUMMARY_WITH_MAPPINGS_KEY, summaryWithMappings)
+        sourceFilePath?.let { project.putUserData(SUMMARY_FILE_PATH_KEY, it) }
         
         // Trigger Tool Window update
         val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("AI assistant")
@@ -139,6 +150,8 @@ class GenerateSummaryAction : AnAction() {
     }
     
     companion object {
-        val SUMMARY_KEY = com.intellij.openapi.util.Key.create<com.example.explainableaiplugin.services.CodeSummary>("CODE_SUMMARY")
+        val SUMMARY_KEY = com.intellij.openapi.util.Key.create<CodeSummary>("CODE_SUMMARY")
+        val SUMMARY_WITH_MAPPINGS_KEY = com.intellij.openapi.util.Key.create<CodeSummaryWithMappings>("CODE_SUMMARY_WITH_MAPPINGS")
+        val SUMMARY_FILE_PATH_KEY = com.intellij.openapi.util.Key.create<String>("CODE_SUMMARY_FILE_PATH")
     }
 }

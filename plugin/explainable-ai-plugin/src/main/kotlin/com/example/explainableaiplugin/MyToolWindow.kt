@@ -6,15 +6,19 @@ import com.example.explainableaiplugin.services.CodeSummaryWithMappings
 import com.example.explainableaiplugin.services.OpenAIService
 import com.example.explainableaiplugin.services.JunieCliService
 import com.example.explainableaiplugin.services.CodeChangeDetector
+import com.example.explainableaiplugin.services.CommentLineShift
+import com.example.explainableaiplugin.services.ExplanationCommentInserter
 import com.example.explainableaiplugin.services.FileChange
 import com.example.explainableaiplugin.services.SummaryMappings
 import com.example.explainableaiplugin.services.SummaryMapping
 import com.example.explainableaiplugin.settings.ExplanationProvider
 import com.example.explainableaiplugin.settings.OpenAISettings
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.editor.markup.HighlighterLayer
 import com.intellij.openapi.editor.markup.HighlighterTargetArea
 import com.intellij.openapi.editor.markup.TextAttributes
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.progress.ProgressIndicator
@@ -24,6 +28,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.JBColor
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
@@ -55,6 +61,7 @@ class MyToolWindow(private val project: Project) {
     private val openAIService = OpenAIService.getInstance(project)
     private val junieCliService = JunieCliService.getInstance(project)
     private val codeChangeDetector = CodeChangeDetector.getInstance(project)
+    private val explanationCommentInserter = ExplanationCommentInserter.getInstance(project)
     private val settings = OpenAISettings.getInstance()
     private val mainPanel = JPanel(BorderLayout())
     private var junieLogPanel: JPanel? = null
@@ -72,6 +79,7 @@ class MyToolWindow(private val project: Project) {
     }
     private var currentSummary: CodeSummary? = null
     private var currentMappings: SummaryMappings? = null
+    private var currentSummaryFilePath: String? = null
     private var originalCode: String? = null
     private var startLine: Int = 1
     private val extraScrollTailPx = 900
@@ -201,9 +209,20 @@ class MyToolWindow(private val project: Project) {
             mainPanel.add(tabbedPane, BorderLayout.CENTER)
             
             // Check if there's a saved summary
+            val summaryWithMappings = project.getUserData(GenerateSummaryAction.SUMMARY_WITH_MAPPINGS_KEY)
             val summary = project.getUserData(GenerateSummaryAction.SUMMARY_KEY)
-            if (summary != null) {
-                currentSummary = summary
+            when {
+                summaryWithMappings != null -> {
+                    currentSummary = summaryWithMappings.summary
+                    currentMappings = summaryWithMappings.mappings
+                    currentSummaryFilePath = project.getUserData(GenerateSummaryAction.SUMMARY_FILE_PATH_KEY)
+                }
+                summary != null -> {
+                    currentSummary = summary
+                    currentSummaryFilePath = project.getUserData(GenerateSummaryAction.SUMMARY_FILE_PATH_KEY)
+                }
+            }
+            if (currentSummary != null) {
                 displayCurrentSummary()
             }
         }
@@ -291,6 +310,15 @@ class MyToolWindow(private val project: Project) {
                     generateSummaryFromEditor()
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
+                }
+            }
+
+            row {
+                button("Add Explanation Comments") {
+                    insertSummaryExplanationComments()
+                }.applyToComponent {
+                    toolTipText = "Insert high-detail bullet explanations as comments before mapped code chunks"
+                    font = Font(font.name, Font.PLAIN, 12)
                 }
             }
             
@@ -382,6 +410,15 @@ class MyToolWindow(private val project: Project) {
                     generateCodeWithJunie(promptTextField.text)
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
+                }
+            }
+
+            row {
+                button("Add Explanation Comments") {
+                    insertGenerationExplanationComments()
+                }.applyToComponent {
+                    toolTipText = "Insert high-detail bullet explanations as comments before changed code chunks"
+                    font = Font(font.name, Font.PLAIN, 12)
                 }
             }
             
@@ -740,6 +777,7 @@ class MyToolWindow(private val project: Project) {
         // Get full file text for context
         val document = editor.document
         val fileContext = document.text
+        val sourceFilePath = FileDocumentManager.getInstance().getFile(document)?.path
         val provider = selectedExplanationProvider(explanationProviderCombo)
         val model = selectedModel(modelCombo)
 
@@ -782,7 +820,15 @@ class MyToolWindow(private val project: Project) {
                     summary?.let { summaryData ->
                         currentSummary = summaryData
                         currentMappings = mappings
+                        currentSummaryFilePath = sourceFilePath
                         project.putUserData(GenerateSummaryAction.SUMMARY_KEY, summaryData)
+                        mappings?.let {
+                            project.putUserData(
+                                GenerateSummaryAction.SUMMARY_WITH_MAPPINGS_KEY,
+                                CodeSummaryWithMappings(summary = summaryData, mappings = it)
+                            )
+                        }
+                        sourceFilePath?.let { project.putUserData(GenerateSummaryAction.SUMMARY_FILE_PATH_KEY, it) }
                         displayCurrentSummary()
                         openAIService.showSuccessNotification("Summary and mappings generated successfully!")
                     }
@@ -848,7 +894,7 @@ class MyToolWindow(private val project: Project) {
         
         // Display summary with interactive mapping
         if (mappings.isNotEmpty()) {
-            val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings)
+            val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings, currentSummaryFilePath)
             interactivePanel.alignmentX = JComponent.LEFT_ALIGNMENT
             targetPanel.add(interactivePanel)
         } else {
@@ -874,6 +920,129 @@ class MyToolWindow(private val project: Project) {
         val mappings = currentMappings ?: return emptyList()
         return getMappingsForChangeSummary(mappings, key)
     }
+
+    private fun insertSummaryExplanationComments() {
+        val filePath = currentSummaryFilePath
+        if (filePath == null) {
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Generate a summary from an editor file first",
+                "Error",
+                JOptionPane.WARNING_MESSAGE
+            )
+            return
+        }
+
+        val mappings = currentMappings?.high_structured.orEmpty()
+        if (mappings.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Generate a summary with mappings first",
+                "No High-Detail Bullet Mapping",
+                JOptionPane.WARNING_MESSAGE
+            )
+            return
+        }
+
+        val result = explanationCommentInserter.insertHighDetailBulletCommentsWithResult(filePath, mappings)
+        currentMappings = currentMappings?.let { shiftSummaryMappings(it, result.lineShifts) }
+        currentMappings?.let { shiftedMappings ->
+            currentSummary?.let { summary ->
+                project.putUserData(
+                    GenerateSummaryAction.SUMMARY_WITH_MAPPINGS_KEY,
+                    CodeSummaryWithMappings(summary = summary, mappings = shiftedMappings)
+                )
+            }
+        }
+        displayCurrentSummary()
+        openAIService.showSuccessNotification("Added ${result.insertedCount} AI explanation comment block(s)")
+    }
+
+    private fun insertGenerationExplanationComments() {
+        if (currentChangeSummaries.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Generate code and summaries first",
+                "No Generated Explanations",
+                JOptionPane.WARNING_MESSAGE
+            )
+            return
+        }
+
+        val shiftsByFile = mutableMapOf<String, List<CommentLineShift>>()
+        var insertedCount = 0
+        currentChangeSummaries
+            .groupBy { it.filePath }
+            .forEach { (filePath, summariesForFile) ->
+                val mappings = summariesForFile.flatMap { it.mappings.high_structured }
+                if (mappings.isNotEmpty()) {
+                    val result = explanationCommentInserter.insertHighDetailBulletCommentsWithResult(
+                        filePath = filePath,
+                        mappings = mappings
+                    )
+                    insertedCount += result.insertedCount
+                    shiftsByFile[filePath] = result.lineShifts
+                }
+            }
+
+        if (shiftsByFile.isNotEmpty()) {
+            currentChangeSummaries = currentChangeSummaries.map { changeSummary ->
+                val shifts = shiftsByFile[changeSummary.filePath].orEmpty()
+                if (shifts.isEmpty()) {
+                    changeSummary
+                } else {
+                    changeSummary.copy(mappings = shiftSummaryMappings(changeSummary.mappings, shifts))
+                }
+            }
+            displayGenerationSummaries()
+        }
+
+        if (insertedCount == 0) {
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "No high-detail bullet mappings are available for insertion",
+                "No High-Detail Bullet Mapping",
+                JOptionPane.WARNING_MESSAGE
+            )
+        } else {
+            openAIService.showSuccessNotification("Added $insertedCount AI explanation comment block(s)")
+        }
+    }
+
+    private fun shiftSummaryMappings(
+        mappings: SummaryMappings,
+        shifts: List<CommentLineShift>
+    ): SummaryMappings {
+        if (shifts.isEmpty()) return mappings
+
+        return SummaryMappings(
+            low_unstructured = shiftMappings(mappings.low_unstructured, shifts),
+            low_structured = shiftMappings(mappings.low_structured, shifts),
+            medium_unstructured = shiftMappings(mappings.medium_unstructured, shifts),
+            medium_structured = shiftMappings(mappings.medium_structured, shifts),
+            high_unstructured = shiftMappings(mappings.high_unstructured, shifts),
+            high_structured = shiftMappings(mappings.high_structured, shifts)
+        )
+    }
+
+    private fun shiftMappings(
+        mappings: List<SummaryMapping>,
+        shifts: List<CommentLineShift>
+    ): List<SummaryMapping> {
+        return mappings.map { mapping ->
+            mapping.copy(
+                codeSegments = mapping.codeSegments.map { segment ->
+                    segment.copy(line = shiftedLine(segment.line, shifts))
+                }
+            )
+        }
+    }
+
+    private fun shiftedLine(line: Int, shifts: List<CommentLineShift>): Int {
+        return line + shifts
+            .filter { shift -> shift.originalLine <= line }
+            .sumOf { it.addedLines }
+    }
     
     private fun getMappingsForChangeSummary(mappings: SummaryMappings, key: String): List<SummaryMapping> {
         return when (key) {
@@ -887,7 +1056,11 @@ class MyToolWindow(private val project: Project) {
         }
     }
     
-    private fun createInteractiveSummaryPanel(summaryText: String, mappings: List<SummaryMapping>): JPanel {
+    private fun createInteractiveSummaryPanel(
+        summaryText: String,
+        mappings: List<SummaryMapping>,
+        filePath: String? = null
+    ): JPanel {
         println("[createInteractiveSummaryPanel] Creating panel with ${mappings.size} mappings")
         mappings.forEachIndexed { idx, mapping ->
             println("Mapping $idx: '${mapping.explanationComponent}' -> ${mapping.codeSegments.size} segments")
@@ -960,7 +1133,7 @@ class MyToolWindow(private val project: Project) {
                 val hit = findMappingAtPosition(position) ?: return
                 println("[MouseClick] Clicked on: '${hit.mapping.explanationComponent}'")
                 println("[MouseClick] Code segments: ${hit.mapping.codeSegments.size}")
-                highlightCodeInEditor(hit.mapping.codeSegments, hit.color)
+                highlightCodeInEditor(hit.mapping.codeSegments, hit.color, filePath)
             }
 
             override fun mouseMoved(e: MouseEvent) {
@@ -986,8 +1159,12 @@ class MyToolWindow(private val project: Project) {
         return panel
     }
     
-    private fun highlightCodeInEditor(codeSegments: List<com.example.explainableaiplugin.services.CodeSegment>, color: Color) {
-        val editor = FileEditorManager.getInstance(project).selectedTextEditor
+    private fun highlightCodeInEditor(
+        codeSegments: List<com.example.explainableaiplugin.services.CodeSegment>,
+        color: Color,
+        filePath: String? = null
+    ) {
+        val editor = editorForHighlight(filePath)
         if (editor == null) {
             println("[highlightCodeInEditor] No active editor")
             return
@@ -1018,59 +1195,19 @@ class MyToolWindow(private val project: Project) {
             val lineNumber = segment.line - 1
             println("[highlightCodeInEditor] Processing segment at line ${segment.line} (0-based: $lineNumber)")
             
-            if (lineNumber >= 0 && lineNumber < editor.document.lineCount) {
-                val lineStartOffset = editor.document.getLineStartOffset(lineNumber)
-                val lineEndOffset = editor.document.getLineEndOffset(lineNumber)
-                val lineText = editor.document.getText(
-                    com.intellij.openapi.util.TextRange(lineStartOffset, lineEndOffset)
+            val range = findCodeSegmentRange(editor.document, lineNumber, segment.code)
+            if (range != null) {
+                markupModel.addRangeHighlighter(
+                    range.first,
+                    range.second,
+                    HighlighterLayer.SELECTION + 1,
+                    textAttributes,
+                    HighlighterTargetArea.EXACT_RANGE
                 )
-                
-                println("[highlightCodeInEditor] Line $lineNumber text: '$lineText'")
-                println("[highlightCodeInEditor] Looking for: '${segment.code}'")
-                
-                // Try to find code in line
-                var segmentIndex = lineText.indexOf(segment.code)
-                
-                // If exact match not found, try without leading/trailing spaces
-                if (segmentIndex == -1) {
-                    val trimmedCode = segment.code.trim()
-                    segmentIndex = lineText.indexOf(trimmedCode)
-                    if (segmentIndex != -1) {
-                        println("[highlightCodeInEditor] Found trimmed match at index $segmentIndex")
-                        val startOffset = lineStartOffset + segmentIndex
-                        val endOffset = startOffset + trimmedCode.length
-                        
-                        markupModel.addRangeHighlighter(
-                            startOffset,
-                            endOffset,
-                            HighlighterLayer.SELECTION + 1,
-                            textAttributes,
-                            HighlighterTargetArea.EXACT_RANGE
-                        )
-                        highlightCount++
-                        println("[highlightCodeInEditor] Added highlight at $startOffset-$endOffset")
-                    }
-                } else {
-                    println("[highlightCodeInEditor] Found exact match at index $segmentIndex")
-                    val startOffset = lineStartOffset + segmentIndex
-                    val endOffset = startOffset + segment.code.length
-                    
-                    markupModel.addRangeHighlighter(
-                        startOffset,
-                        endOffset,
-                        HighlighterLayer.SELECTION + 1,
-                        textAttributes,
-                        HighlighterTargetArea.EXACT_RANGE
-                    )
-                    highlightCount++
-                    println("[highlightCodeInEditor] Added highlight at $startOffset-$endOffset")
-                }
-                
-                if (segmentIndex == -1) {
-                    println("[highlightCodeInEditor] WARNING: Could not find segment in line!")
-                }
+                highlightCount++
+                println("[highlightCodeInEditor] Added highlight at ${range.first}-${range.second}")
             } else {
-                println("[highlightCodeInEditor] WARNING: Line number $lineNumber out of bounds (total lines: ${editor.document.lineCount})")
+                println("[highlightCodeInEditor] WARNING: Could not find segment in document!")
             }
         }
         
@@ -1086,6 +1223,59 @@ class MyToolWindow(private val project: Project) {
                 println("[highlightCodeInEditor] Scrolled to line ${firstLine + 1}")
             }
         }
+    }
+
+    private fun editorForHighlight(filePath: String?): com.intellij.openapi.editor.Editor? {
+        if (filePath.isNullOrBlank()) {
+            return FileEditorManager.getInstance(project).selectedTextEditor
+        }
+
+        val file = LocalFileSystem.getInstance().findFileByPath(filePath)
+            ?: return FileEditorManager.getInstance(project).selectedTextEditor
+
+        return FileEditorManager.getInstance(project).openTextEditor(
+            OpenFileDescriptor(project, file),
+            true
+        )
+    }
+
+    private fun findCodeSegmentRange(
+        document: com.intellij.openapi.editor.Document,
+        preferredLineIndex: Int,
+        code: String
+    ): Pair<Int, Int>? {
+        val candidates = listOf(code, code.trim()).distinct().filter { it.isNotEmpty() }
+        val preferredLines = buildList {
+            if (preferredLineIndex in 0 until document.lineCount) add(preferredLineIndex)
+            val windowStart = (preferredLineIndex - 5).coerceAtLeast(0)
+            val windowEnd = (preferredLineIndex + 5).coerceAtMost(document.lineCount - 1)
+            for (line in windowStart..windowEnd) {
+                if (line !in this) add(line)
+            }
+        }
+
+        preferredLines.forEach { line ->
+            val lineStartOffset = document.getLineStartOffset(line)
+            val lineEndOffset = document.getLineEndOffset(line)
+            val lineText = document.getText(com.intellij.openapi.util.TextRange(lineStartOffset, lineEndOffset))
+            candidates.forEach { candidate ->
+                val index = lineText.indexOf(candidate)
+                if (index != -1) {
+                    val startOffset = lineStartOffset + index
+                    return startOffset to startOffset + candidate.length
+                }
+            }
+        }
+
+        val fullText = document.text
+        candidates.forEach { candidate ->
+            val index = fullText.indexOf(candidate)
+            if (index != -1) {
+                return index to index + candidate.length
+            }
+        }
+
+        return null
     }
     
     private fun getSummaryText(summary: CodeSummary, detailLevel: String, isStructured: Boolean): String {
@@ -1578,7 +1768,7 @@ class MyToolWindow(private val project: Project) {
             val mappings = getMappingsForChangeSummary(changeSummary.mappings, mappingKey)
             
             if (mappings.isNotEmpty()) {
-                val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings)
+                val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings, changeSummary.filePath)
                 interactivePanel.background = JBColor(Color(245, 247, 249), Color(60, 63, 65))
                 changePanel.add(interactivePanel)
             } else {

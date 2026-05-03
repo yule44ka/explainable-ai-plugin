@@ -494,6 +494,42 @@ $summaryText
         }
     }
 
+    suspend fun generateCodeSummaryWithMappings(
+        contentToExplain: String,
+        fileContext: String,
+        mappingCode: String,
+        realStartLine: Int = 1,
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
+        model: String? = null
+    ): Result<CodeSummaryWithMappings> {
+        val summary = generateCodeSummary(
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = agentTrace,
+            model = model
+        ).getOrElse { throwable ->
+            return Result.failure(throwable)
+        }
+
+        val highStructuredMappings = buildSummaryMapping(
+            code = mappingCode,
+            summaryText = summary.high_structured,
+            realStartLine = realStartLine,
+            model = model
+        ).getOrElse { throwable ->
+            return Result.failure(throwable)
+        }
+
+        return Result.success(
+            CodeSummaryWithMappings(
+                summary = summary,
+                mappings = SummaryMappings(high_structured = highStructuredMappings)
+            )
+        )
+    }
+
     private fun extractJsonArray(rawResponse: String): String {
         val trimmed = rawResponse.trim()
 

@@ -130,11 +130,10 @@ IMPORTANT:
 - Return ONLY a JSON object with keys: title, low_unstructured, low_structured, medium_unstructured, medium_structured, high_unstructured, high_structured.
 - Do NOT wrap the JSON in markdown fences.
 - Do NOT add any commentary before or after the JSON.
-- Do NOT print the final JSON in chat output, status output, markdown summary, or task summary.
-- Instead, write the final JSON payload exactly to this absolute file path and overwrite the file contents:
+- Also write the final JSON payload exactly to this absolute file path and overwrite the file contents when possible:
 ${responseFile.toAbsolutePath()}
 - Write plain UTF-8 text containing only the JSON object.
-- Output the JSON between these exact marker lines:
+- Always output the same JSON between these exact marker lines so the caller can parse it even if file writing is unavailable:
 $SUMMARY_START_MARKER
 [your JSON here]
 $SUMMARY_END_MARKER
@@ -208,11 +207,10 @@ For each explanationComponent, extract one or more relevant code segments from t
 - After building all mappings, verify that every line of the code appears in at least one codeSegments entry. If any lines are missing, add them to the most relevant existing explanationComponent.
 - Return ONLY a JSON array and nothing else.
 - Do NOT wrap the JSON in markdown fences.
-- Do NOT print the final JSON in chat output, status output, markdown summary, or task summary.
-- Instead, write the final JSON payload exactly to this absolute file path and overwrite the file contents:
+- Also write the final JSON payload exactly to this absolute file path and overwrite the file contents when possible:
 ${responseFile.toAbsolutePath()}
 - Write plain UTF-8 text containing only the JSON array.
-- Output the JSON between these exact marker lines:
+- Always output the same JSON between these exact marker lines so the caller can parse it even if file writing is unavailable:
 $MAPPING_START_MARKER
 [your JSON here]
 $MAPPING_END_MARKER
@@ -387,10 +385,10 @@ IMPORTANT:
 }
 - Do NOT wrap the JSON in markdown fences.
 - Do NOT add commentary before or after the JSON.
-- Instead, write the final JSON payload exactly to this absolute file path and overwrite the file contents:
+- Also write the final JSON payload exactly to this absolute file path and overwrite the file contents when possible:
 ${responseFile.toAbsolutePath()}
 - Write plain UTF-8 text containing only the JSON object.
-- Output the JSON between these exact marker lines:
+- Always output the same JSON between these exact marker lines so the caller can parse it even if file writing is unavailable:
 $SUMMARY_WITH_MAPPINGS_START_MARKER
 [your JSON here]
 $SUMMARY_WITH_MAPPINGS_END_MARKER
@@ -432,11 +430,92 @@ $codeWithLineNumbers
         }.fold(
             onSuccess = { Result.success(it) },
             onFailure = { throwable ->
-                val detailedError = extractJunieErrorMessage(executionResult.jsonOutputText)
-                    ?: throwable.message
-                    ?: "Junie summary and mapping generation failed"
-                Result.failure(RuntimeException(detailedError, throwable))
+                println(
+                    "[JunieCliService] Combined summary-with-mappings response failed; " +
+                        "falling back to separate summary and mapping calls: ${throwable.message}"
+                )
+                generateCodeSummaryWithSeparateMappings(
+                    contentToExplain = contentToExplain,
+                    fileContext = fileContext,
+                    mappingCode = mappingCode,
+                    realStartLine = realStartLine,
+                    isDiffInput = isDiffInput,
+                    agentTrace = agentTrace,
+                    onOutputLine = onOutputLine
+                ).fold(
+                    onSuccess = { Result.success(it) },
+                    onFailure = { fallbackThrowable ->
+                        val detailedError = extractJunieErrorMessage(executionResult.jsonOutputText)
+                            ?: fallbackThrowable.message
+                            ?: throwable.message
+                            ?: "Junie summary and mapping generation failed"
+                        Result.failure(RuntimeException(detailedError, fallbackThrowable))
+                    }
+                )
             }
+        )
+    }
+
+    private suspend fun generateCodeSummaryWithSeparateMappings(
+        contentToExplain: String,
+        fileContext: String,
+        mappingCode: String,
+        realStartLine: Int,
+        isDiffInput: Boolean,
+        agentTrace: String?,
+        onOutputLine: (String) -> Unit
+    ): Result<CodeSummaryWithMappings> {
+        onOutputLine("Combined summary-with-mappings JSON was not parseable; retrying with separate summary and mapping calls...")
+
+        val summary = generateCodeSummary(
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = agentTrace,
+            onOutputLine = onOutputLine
+        ).getOrElse { throwable ->
+            return Result.failure(throwable)
+        }
+
+        val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
+        val mappingInputs = listOf(
+            "low_unstructured" to summary.low_unstructured,
+            "low_structured" to summary.low_structured,
+            "medium_unstructured" to summary.medium_unstructured,
+            "medium_structured" to summary.medium_structured,
+            "high_unstructured" to summary.high_unstructured,
+            "high_structured" to summary.high_structured
+        )
+
+        mappingInputs.forEach { (key, summaryText) ->
+            if (summaryText.isNotBlank()) {
+                onOutputLine("Building $key mapping...")
+                buildSummaryMapping(
+                    code = mappingCode,
+                    summaryText = summaryText,
+                    realStartLine = realStartLine,
+                    onOutputLine = onOutputLine
+                ).onSuccess { mappings ->
+                    mappingResults[key] = mappings
+                }.onFailure { throwable ->
+                    println("[JunieCliService] Failed to build fallback mapping for $key: ${throwable.message}")
+                    onOutputLine("Failed to build $key mapping: ${throwable.message}")
+                }
+            }
+        }
+
+        return Result.success(
+            CodeSummaryWithMappings(
+                summary = summary,
+                mappings = SummaryMappings(
+                    low_unstructured = mappingResults["low_unstructured"] ?: emptyList(),
+                    low_structured = mappingResults["low_structured"] ?: emptyList(),
+                    medium_unstructured = mappingResults["medium_unstructured"] ?: emptyList(),
+                    medium_structured = mappingResults["medium_structured"] ?: emptyList(),
+                    high_unstructured = mappingResults["high_unstructured"] ?: emptyList(),
+                    high_structured = mappingResults["high_structured"] ?: emptyList()
+                )
+            )
         )
     }
 
@@ -751,8 +830,8 @@ $codeWithLineNumbers
     private fun waitForResponseFile(
         path: Path,
         isValidPayload: (String) -> Boolean,
-        attempts: Int = 120,
-        delayMs: Long = 500
+        attempts: Int = 8,
+        delayMs: Long = 250
     ): String? {
         repeat(attempts) {
             readResponseFile(path)?.let { payload ->
@@ -801,6 +880,7 @@ $codeWithLineNumbers
                             val content = value.jsonPrimitive.content
                             extractBetweenMarkers(content, SUMMARY_START_MARKER, SUMMARY_END_MARKER)
                                 ?: extractJsonObjectWithSummaryKeys(content)
+                                ?: extractSummaryFromEmbeddedJson(content)
                         }.getOrNull()
                     }
                 }
@@ -832,6 +912,7 @@ $codeWithLineNumbers
                                 SUMMARY_WITH_MAPPINGS_START_MARKER,
                                 SUMMARY_WITH_MAPPINGS_END_MARKER
                             ) ?: extractJsonObjectWithSummaryWithMappingsKeys(content)
+                                ?: extractSummaryWithMappingsFromEmbeddedJson(content)
                         }.getOrNull()
                     }
                 }
@@ -861,6 +942,7 @@ $codeWithLineNumbers
                             val content = value.jsonPrimitive.content
                             extractBetweenMarkers(content, MAPPING_START_MARKER, MAPPING_END_MARKER)
                                 ?: extractTopLevelJsonArray(content)
+                                ?: extractArrayFromEmbeddedJson(content)
                         }.getOrNull()
                     }
                 }
