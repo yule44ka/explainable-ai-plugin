@@ -8,6 +8,8 @@ import com.example.explainableaiplugin.services.CodeChangeDetector
 import com.example.explainableaiplugin.services.FileChange
 import com.example.explainableaiplugin.services.SummaryMappings
 import com.example.explainableaiplugin.services.SummaryMapping
+import com.example.explainableaiplugin.settings.ExplanationProvider
+import com.example.explainableaiplugin.settings.OpenAISettings
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.markup.HighlighterLayer
 import com.intellij.openapi.editor.markup.HighlighterTargetArea
@@ -49,6 +51,7 @@ class MyToolWindow(private val project: Project) {
     private val openAIService = OpenAIService.getInstance(project)
     private val junieCliService = JunieCliService.getInstance(project)
     private val codeChangeDetector = CodeChangeDetector.getInstance(project)
+    private val settings = OpenAISettings.getInstance()
     private val mainPanel = JPanel(BorderLayout())
     private var junieLogPanel: JPanel? = null
     private var changeSummaryPanel: JPanel? = null
@@ -75,6 +78,7 @@ class MyToolWindow(private val project: Project) {
     // Comboboxes for Code Summary tab
     private val detailLevelCombo = ComboBox(arrayOf("Low Detail", "Medium Detail", "High Detail"))
     private val formatTypeCombo = ComboBox(arrayOf("Paragraph", "Bullet Points"))
+    private val explanationProviderCombo = ComboBox(ExplanationProvider.entries.map { it.displayName }.toTypedArray())
     
     // Model pricing data
     private val modelPricing = mapOf(
@@ -96,6 +100,7 @@ class MyToolWindow(private val project: Project) {
     private val generationModelCombo = ComboBox(modelPricing.map { (model, price) -> "$model | $price" }.toTypedArray())
     private val generationDetailLevelCombo = ComboBox(arrayOf("Low Detail", "Medium Detail", "High Detail"))
     private val generationFormatTypeCombo = ComboBox(arrayOf("Paragraph", "Bullet Points"))
+    private val generationExplanationProviderCombo = ComboBox(ExplanationProvider.entries.map { it.displayName }.toTypedArray())
     
     // Color palette for mapping (should match NaturalEdit)
     private val mappingColors = listOf(
@@ -156,28 +161,16 @@ class MyToolWindow(private val project: Project) {
         val isOpenAIConfigured = openAIService.isConfigured()
         val isJunieConfigured = openAIService.isJunieTokenConfigured()
         
-        // Check if both API key and Junie token are configured
-        if (!isOpenAIConfigured || !isJunieConfigured) {
+        // Show the main UI if at least one explanation provider is configured.
+        if (!isOpenAIConfigured && !isJunieConfigured) {
             // Show panel suggesting configuration
             val setupPanel = panel {
-                if (!isOpenAIConfigured) {
-                    row {
-                        label("OpenAI API key is not configured")
-                    }
-                    row {
-                        text("To use AI features, please configure your OpenAI API key.")
-                    }
+                row {
+                    label("AI credentials are not configured")
                 }
-                
-                if (!isJunieConfigured) {
-                    row {
-                        label("Junie API Key is not configured")
-                    }
-                    row {
-                        text("To use Junie features, please configure your Junie API Key.")
-                    }
+                row {
+                    text("Configure an OpenAI API key or Junie API Key to use explanations.")
                 }
-                
                 row {
                     button("Open Settings") {
                         ShowSettingsUtil.getInstance().showSettingsDialog(
@@ -189,7 +182,7 @@ class MyToolWindow(private val project: Project) {
             }
             mainPanel.add(setupPanel, BorderLayout.CENTER)
         } else {
-            // Both credentials configured - show main interface with tabs
+            // At least one provider is configured - show main interface with tabs.
             val tabbedPane = JTabbedPane()
             
             // Create Summary tab
@@ -234,6 +227,17 @@ class MyToolWindow(private val project: Project) {
             }
             
             separator()
+
+            row {
+                label("Explanation Provider:")
+                cell(explanationProviderCombo).applyToComponent {
+                    selectedIndex = settings.explanationProvider.ordinal
+                    toolTipText = "Use Junie or legacy OpenAI API calls for summaries and mappings"
+                    addActionListener {
+                        settings.explanationProvider = selectedExplanationProvider(explanationProviderCombo)
+                    }
+                }
+            }
             
             row {
                 label("Model:")
@@ -390,6 +394,17 @@ class MyToolWindow(private val project: Project) {
             }
             
             separator()
+
+            row {
+                label("Explanation Provider:")
+                cell(generationExplanationProviderCombo).applyToComponent {
+                    selectedIndex = settings.explanationProvider.ordinal
+                    toolTipText = "Use Junie or legacy OpenAI API calls for summaries and mappings"
+                    addActionListener {
+                        settings.explanationProvider = selectedExplanationProvider(generationExplanationProviderCombo)
+                    }
+                }
+            }
             
             row {
                 label("Model:")
@@ -532,6 +547,83 @@ class MyToolWindow(private val project: Project) {
         
         parentPanel.add(mainScrollPane, BorderLayout.CENTER)
     }
+
+    private fun selectedExplanationProvider(comboBox: ComboBox<String>): ExplanationProvider {
+        val selected = comboBox.selectedItem as? String
+        return ExplanationProvider.fromValue(selected)
+    }
+
+    private fun selectedModel(comboBox: ComboBox<String>): String {
+        return (comboBox.selectedItem as? String)
+            ?.substringBefore(" | ")
+            ?.takeIf { it.isNotBlank() }
+            ?: openAIService.getModel()
+    }
+
+    private fun isProviderConfigured(provider: ExplanationProvider): Boolean {
+        return when (provider) {
+            ExplanationProvider.JUNIE -> openAIService.isJunieTokenConfigured()
+            ExplanationProvider.OPENAI_API -> openAIService.isConfigured()
+        }
+    }
+
+    private fun showProviderConfigurationWarning(provider: ExplanationProvider) {
+        when (provider) {
+            ExplanationProvider.JUNIE -> openAIService.showJunieConfigurationWarning()
+            ExplanationProvider.OPENAI_API -> openAIService.showConfigurationWarning()
+        }
+    }
+
+    private suspend fun generateCodeSummaryWithProvider(
+        provider: ExplanationProvider,
+        contentToExplain: String,
+        fileContext: String,
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
+        model: String? = null,
+        onOutputLine: (String) -> Unit = {}
+    ): Result<CodeSummary> {
+        return when (provider) {
+            ExplanationProvider.JUNIE -> junieCliService.generateCodeSummary(
+                contentToExplain = contentToExplain,
+                fileContext = fileContext,
+                isDiffInput = isDiffInput,
+                agentTrace = agentTrace,
+                onOutputLine = onOutputLine
+            )
+            ExplanationProvider.OPENAI_API -> openAIService.generateCodeSummary(
+                contentToExplain = contentToExplain,
+                fileContext = fileContext,
+                isDiffInput = isDiffInput,
+                agentTrace = agentTrace,
+                model = model
+            )
+        }
+    }
+
+    private suspend fun buildSummaryMappingWithProvider(
+        provider: ExplanationProvider,
+        code: String,
+        summaryText: String,
+        realStartLine: Int = 1,
+        model: String? = null,
+        onOutputLine: (String) -> Unit = {}
+    ): Result<List<SummaryMapping>> {
+        return when (provider) {
+            ExplanationProvider.JUNIE -> junieCliService.buildSummaryMapping(
+                code = code,
+                summaryText = summaryText,
+                realStartLine = realStartLine,
+                onOutputLine = onOutputLine
+            )
+            ExplanationProvider.OPENAI_API -> openAIService.buildSummaryMapping(
+                code = code,
+                summaryText = summaryText,
+                realStartLine = realStartLine,
+                model = model
+            )
+        }
+    }
     
     private fun generateSummaryFromEditor() {
         // Get current editor
@@ -564,6 +656,13 @@ class MyToolWindow(private val project: Project) {
         // Get full file text for context
         val document = editor.document
         val fileContext = document.text
+        val provider = selectedExplanationProvider(explanationProviderCombo)
+        val model = selectedModel(modelCombo)
+
+        if (!isProviderConfigured(provider)) {
+            showProviderConfigurationWarning(provider)
+            return
+        }
         
         // Run generation in background
         ProgressManager.getInstance().run(
@@ -575,17 +674,19 @@ class MyToolWindow(private val project: Project) {
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = false
                     indicator.fraction = 0.0
-                    indicator.text = "Generating summary with Junie..."
+                    indicator.text = "Generating summary with ${provider.displayName}..."
                     runBlocking {
                         // Stage 1: Generate summary
-                        val summaryResult = junieCliService.generateCodeSummary(
+                        val summaryResult = generateCodeSummaryWithProvider(
+                            provider = provider,
                             contentToExplain = selectedText,
-                            fileContext = fileContext
+                            fileContext = fileContext,
+                            model = model
                         )
                         summaryResult.onSuccess { 
                             summary = it
                             indicator.fraction = 0.3
-                            indicator.text = "Building mappings with Junie..."
+                            indicator.text = "Building mappings with ${provider.displayName}..."
                             // Stage 2: Build mappings for all 6 summary types
                             val mappingKeys = listOf(
                                 "low_unstructured" to it.low_unstructured,
@@ -599,10 +700,12 @@ class MyToolWindow(private val project: Project) {
                             val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
                             mappingKeys.forEachIndexed { index, (key, summaryText) ->
                                 if (summaryText.isNotEmpty()) {
-                                    val mappingResult = junieCliService.buildSummaryMapping(
-                                        selectedText, 
-                                        summaryText, 
-                                        startLine
+                                    val mappingResult = buildSummaryMappingWithProvider(
+                                        provider = provider,
+                                        code = selectedText,
+                                        summaryText = summaryText,
+                                        realStartLine = startLine,
+                                        model = model
                                     )
                                     mappingResult.onSuccess { mapping ->
                                         mappingResults[key] = mapping
@@ -1203,8 +1306,17 @@ class MyToolWindow(private val project: Project) {
                         else -> "medium"
                     }
                     val isStructured = generationFormatTypeCombo.selectedIndex == 1
+                    val provider = selectedExplanationProvider(generationExplanationProviderCombo)
+                    val model = selectedModel(generationModelCombo)
+                    if (!isProviderConfigured(provider)) {
+                        SwingUtilities.invokeLater {
+                            junieLogTextArea.append("${provider.displayName} is not configured for summaries\n")
+                        }
+                        showProviderConfigurationWarning(provider)
+                        return
+                    }
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("Using Junie for summaries and mappings\n")
+                        junieLogTextArea.append("Using ${provider.displayName} for summaries and mappings\n")
                         junieLogTextArea.append("Detail level: ${detailLevel.replaceFirstChar { it.uppercase() }}, Format: ${if (isStructured) "Bullet Points" else "Paragraph"}\n")
                     }
                     
@@ -1220,7 +1332,7 @@ class MyToolWindow(private val project: Project) {
                         
                         fileChange.changedSegments.forEach { segment ->
                             indicator.fraction = processedSegments.toDouble() / totalSegments
-                            indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments with Junie..."
+                            indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments with ${provider.displayName}..."
                             runBlocking {
                                 // Process any segment that has actual content in old/new state
                                 val hasContentToSummarize =
@@ -1239,11 +1351,14 @@ class MyToolWindow(private val project: Project) {
                                         appendLine()
                                         append(segment.newCode)
                                     }.trim()
-                                    val summaryResult = junieCliService.generateCodeSummary(
+
+                                    val summaryResult = generateCodeSummaryWithProvider(
+                                        provider = provider,
                                         contentToExplain = diffContext,
                                         fileContext = fileContext,
                                         isDiffInput = true,
                                         agentTrace = agentTraceContext,
+                                        model = model,
                                         onOutputLine = { line ->
                                             SwingUtilities.invokeLater {
                                                 junieLogTextArea.append(stripAnsiCodes(line) + "\n")
@@ -1254,7 +1369,7 @@ class MyToolWindow(private val project: Project) {
                                     
                                     summaryResult.onSuccess { summary ->
                                         SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("Summary generated via Junie\n")
+                                            junieLogTextArea.append("Summary generated via ${provider.displayName}\n")
                                             junieLogTextArea.append("Building mappings for all formats...\n")
                                         }
                                         
@@ -1273,10 +1388,12 @@ class MyToolWindow(private val project: Project) {
                                         val mappingStartLine = segment.startLine
                                         mappingKeys.forEach { (key, summaryText) ->
                                             if (summaryText.isNotEmpty()) {
-                                                val mappingResult = junieCliService.buildSummaryMapping(
-                                                    mappingSourceCode,
-                                                    summaryText,
-                                                    mappingStartLine
+                                                val mappingResult = buildSummaryMappingWithProvider(
+                                                    provider = provider,
+                                                    code = mappingSourceCode,
+                                                    summaryText = summaryText,
+                                                    realStartLine = mappingStartLine,
+                                                    model = model
                                                 )
                                                 mappingResult.onSuccess { mapping ->
                                                     mappingResults[key] = mapping

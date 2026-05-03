@@ -251,6 +251,15 @@ class OpenAIService(private val project: Project) {
                 appendLine(normalizedAgentTrace)
             }
         }.trimEnd()
+
+        logSummaryGenerationContext(
+            provider = "OpenAI API",
+            model = modelToUse,
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = normalizedAgentTrace
+        )
         
         val prompt = """
 You are an expert code explainer. For the following $explainedEntity, generate 6 explanations of the whole input, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
@@ -279,6 +288,12 @@ $additionalContext
 Input to explain:
 $contentToExplain
         """.trimIndent()
+
+        logModelPrompt(
+            source = "OpenAIService.generateCodeSummary",
+            model = modelToUse,
+            prompt = prompt
+        )
         
         try {
             val result = client.sendPrompt(
@@ -297,6 +312,45 @@ $contentToExplain
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun logSummaryGenerationContext(
+        provider: String,
+        model: String,
+        contentToExplain: String,
+        fileContext: String,
+        isDiffInput: Boolean,
+        agentTrace: String
+    ) {
+        println(
+            buildString {
+                appendLine("[OpenAIService] Summary generation context")
+                appendLine("Provider: $provider")
+                appendLine("Model: $model")
+                appendLine("Input type: ${if (isDiffInput) "code diff" else "code snippet"}")
+                appendLine("--- Content to explain ---")
+                appendLine(contentToExplain)
+                appendLine("--- File context ---")
+                appendLine(fileContext)
+                if (agentTrace.isNotEmpty()) {
+                    appendLine("--- Agent trace ---")
+                    appendLine(agentTrace)
+                }
+                appendLine("--- End summary context ---")
+            }
+        )
+    }
+
+    private fun logModelPrompt(source: String, model: String, prompt: String) {
+        println(
+            buildString {
+                appendLine("[$source] Full prompt sent to model")
+                appendLine("Model: $model")
+                appendLine("--- Prompt start ---")
+                appendLine(prompt)
+                appendLine("--- Prompt end ---")
+            }
+        )
     }
     
     /**
@@ -371,6 +425,12 @@ $codeWithLineNumbers
 Explanation:
 $summaryText
         """.trimIndent()
+
+        logModelPrompt(
+            source = "OpenAIService.buildSummaryMapping",
+            model = modelToUse,
+            prompt = prompt
+        )
         
         try {
             val result = client.sendPrompt(

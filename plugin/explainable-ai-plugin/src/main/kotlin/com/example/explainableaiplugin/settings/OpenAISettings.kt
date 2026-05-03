@@ -9,6 +9,17 @@ import com.intellij.openapi.components.*
 private const val DEFAULT_MODEL = "gpt-5.4"
 private val PREVIOUS_DEFAULT_MODELS = setOf("gpt-4.1-nano", "gpt-4.1")
 
+enum class ExplanationProvider(val displayName: String) {
+    JUNIE("Junie"),
+    OPENAI_API("OpenAI API");
+
+    companion object {
+        fun fromValue(value: String?): ExplanationProvider {
+            return entries.firstOrNull { it.name == value || it.displayName == value } ?: JUNIE
+        }
+    }
+}
+
 /**
  * Service for managing OpenAI API settings.
  * Uses PasswordSafe API for secure token storage.
@@ -23,7 +34,8 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
         var apiEndpoint: String = "https://api.openai.com/v1",
         var model: String = DEFAULT_MODEL,
         var temperature: Double = 0.7,
-        var maxTokens: Int = 2000
+        var maxTokens: Int = 2000,
+        var explanationProvider: String = ExplanationProvider.JUNIE.name
     )
     
     private var state = State()
@@ -144,5 +156,11 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
         get() = state.maxTokens
         set(value) {
             state.maxTokens = value.coerceIn(1, 32000)
+        }
+
+    var explanationProvider: ExplanationProvider
+        get() = ExplanationProvider.fromValue(state.explanationProvider)
+        set(value) {
+            state.explanationProvider = value.name
         }
 }

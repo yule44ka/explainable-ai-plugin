@@ -31,6 +31,8 @@ class JunieCliService(private val project: Project) {
     private val json = Json { ignoreUnknownKeys = true; isLenient = true }
     
     companion object {
+        private const val JUNIE_CODE_MODEL = "gemini-3-flash-preview"
+        private const val JUNIE_EXPLANATION_MODEL = "gemini-3.1-flash-lite-preview"
         private const val SUMMARY_START_MARKER = "BEGIN_EXPLAINABLE_AI_SUMMARY_JSON"
         private const val SUMMARY_END_MARKER = "END_EXPLAINABLE_AI_SUMMARY_JSON"
         private const val MAPPING_START_MARKER = "BEGIN_EXPLAINABLE_AI_MAPPING_JSON"
@@ -47,7 +49,11 @@ class JunieCliService(private val project: Project) {
      */
     suspend fun generateCode(prompt: String, onOutputLine: (String) -> Unit): Result<String> = withContext(Dispatchers.IO) {
         try {
-            val executionResult = executeJuniePrompt(prompt, onOutputLine).getOrThrow()
+            val executionResult = executeJuniePrompt(
+                prompt = prompt,
+                model = JUNIE_CODE_MODEL,
+                onOutputLine = onOutputLine
+            ).getOrThrow()
             val outputText = executionResult.outputText
             val jsonOutputText = executionResult.jsonOutputText
             val searchableOutput = outputText + "\n" + jsonOutputText
@@ -95,6 +101,13 @@ class JunieCliService(private val project: Project) {
             }
         }.trimEnd()
 
+        logSummaryGenerationContext(
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = normalizedAgentTrace
+        )
+
         val prompt = """
 You are an expert code explainer. For the following $explainedEntity, generate 6 explanations of the whole input, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
 - low_unstructured: One-sentence, low-detail, paragraph style.
@@ -133,7 +146,17 @@ Input to explain:
 $contentToExplain
         """.trimIndent()
 
-        val executionResult = executeJuniePrompt(prompt, onOutputLine).getOrElse { throwable ->
+        logModelPrompt(
+            source = "JunieCliService.generateCodeSummary",
+            model = JUNIE_EXPLANATION_MODEL,
+            prompt = prompt
+        )
+
+        val executionResult = executeJuniePrompt(
+            prompt = prompt,
+            model = JUNIE_EXPLANATION_MODEL,
+            onOutputLine = onOutputLine
+        ).getOrElse { throwable ->
             return@withContext Result.failure(throwable)
         }
 
@@ -210,7 +233,17 @@ Explanation:
 $summaryText
         """.trimIndent()
 
-        val executionResult = executeJuniePrompt(prompt, onOutputLine).getOrElse { throwable ->
+        logModelPrompt(
+            source = "JunieCliService.buildSummaryMapping",
+            model = JUNIE_EXPLANATION_MODEL,
+            prompt = prompt
+        )
+
+        val executionResult = executeJuniePrompt(
+            prompt = prompt,
+            model = JUNIE_EXPLANATION_MODEL,
+            onOutputLine = onOutputLine
+        ).getOrElse { throwable ->
             return@withContext Result.failure(throwable)
         }
 
@@ -265,7 +298,48 @@ $summaryText
         )
     }
 
-    private fun executeJuniePrompt(prompt: String, onOutputLine: (String) -> Unit): Result<JunieExecutionResult> {
+    private fun logSummaryGenerationContext(
+        contentToExplain: String,
+        fileContext: String,
+        isDiffInput: Boolean,
+        agentTrace: String
+    ) {
+        println(
+            buildString {
+                appendLine("[JunieCliService] Summary generation context")
+                appendLine("Provider: Junie")
+                appendLine("Model: $JUNIE_EXPLANATION_MODEL")
+                appendLine("Input type: ${if (isDiffInput) "code diff" else "code snippet"}")
+                appendLine("--- Content to explain ---")
+                appendLine(contentToExplain)
+                appendLine("--- File context ---")
+                appendLine(fileContext)
+                if (agentTrace.isNotEmpty()) {
+                    appendLine("--- Agent trace ---")
+                    appendLine(agentTrace)
+                }
+                appendLine("--- End summary context ---")
+            }
+        )
+    }
+
+    private fun logModelPrompt(source: String, model: String, prompt: String) {
+        println(
+            buildString {
+                appendLine("[$source] Full prompt sent to model")
+                appendLine("Model: $model")
+                appendLine("--- Prompt start ---")
+                appendLine(prompt)
+                appendLine("--- Prompt end ---")
+            }
+        )
+    }
+
+    private fun executeJuniePrompt(
+        prompt: String,
+        model: String,
+        onOutputLine: (String) -> Unit
+    ): Result<JunieExecutionResult> {
         val token = settings.getJunieToken()
         val projectPath = project.basePath
             ?: return Result.failure(IllegalStateException("Project path not found"))
@@ -281,13 +355,13 @@ $summaryText
 
             commandLine.addParameter("--output-format=json")
             commandLine.addParameter("--json-output-file=${jsonOutputFile.toAbsolutePath()}")
+            commandLine.addParameter("--model=$model")
             commandLine.addParameter(prompt)
 
             println("[JunieCliService] Executing command: ${commandLine.commandLineString}")
             println("[JunieCliService] Working directory: $projectPath")
             onOutputLine("Starting Junie CLI...")
             onOutputLine("Working directory: $projectPath")
-            onOutputLine("Prompt: $prompt")
             onOutputLine("─".repeat(50))
 
             val processHandler = OSProcessHandler(commandLine.withCharset(StandardCharsets.UTF_8))
@@ -472,8 +546,12 @@ $summaryText
 
     private fun readResponseFile(path: Path): String? {
         if (!Files.exists(path) || Files.size(path) == 0L) return null
-        return normalizeJsonPayload(Files.readString(path, StandardCharsets.UTF_8))
-            .takeIf { it.isNotEmpty() }
+        val payload = normalizeJsonPayload(Files.readString(path, StandardCharsets.UTF_8))
+        if (payload.isEmpty()) return null
+
+        return extractBetweenMarkers(payload, SUMMARY_START_MARKER, SUMMARY_END_MARKER)
+            ?: extractBetweenMarkers(payload, MAPPING_START_MARKER, MAPPING_END_MARKER)
+            ?: payload
     }
 
     private fun waitForResponseFile(

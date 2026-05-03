@@ -29,6 +29,9 @@ class OpenAISettingsConfigurable : Configurable {
     private val modelField = JBTextField()
     private val temperatureField = JBTextField()
     private val maxTokensField = JBTextField()
+    private val explanationProviderCombo = javax.swing.JComboBox(
+        ExplanationProvider.entries.map { it.displayName }.toTypedArray()
+    )
     
     override fun getDisplayName(): String = "Explainable AI"
     
@@ -71,6 +74,11 @@ class OpenAISettingsConfigurable : Configurable {
             
             group("Advanced Settings") {
                 separator()
+
+                row("Explanation Provider:") {
+                    cell(explanationProviderCombo)
+                        .comment("Choose Junie or the legacy OpenAI API calls for explanations and mappings")
+                }
                 
                 row("API Endpoint:") {
                     cell(apiEndpointField)
@@ -157,6 +165,7 @@ class OpenAISettingsConfigurable : Configurable {
         
         return newApiKey != currentApiKey ||
                 newJunieToken != currentJunieToken ||
+                ExplanationProvider.entries[explanationProviderCombo.selectedIndex] != settings.explanationProvider ||
                 apiEndpointField.text != settings.apiEndpoint ||
                 modelField.text != settings.model ||
                 temperatureField.text != settings.temperature.toString() ||
@@ -176,6 +185,7 @@ class OpenAISettingsConfigurable : Configurable {
         
         settings.apiEndpoint = apiEndpointField.text
         settings.model = modelField.text
+        settings.explanationProvider = ExplanationProvider.entries[explanationProviderCombo.selectedIndex]
         
         try {
             settings.temperature = temperatureField.text.toDouble()
@@ -201,6 +211,7 @@ class OpenAISettingsConfigurable : Configurable {
         modelField.text = settings.model
         temperatureField.text = settings.temperature.toString()
         maxTokensField.text = settings.maxTokens.toString()
+        explanationProviderCombo.selectedIndex = settings.explanationProvider.ordinal
     }
     
     override fun disposeUIResources() {

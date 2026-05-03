@@ -2,6 +2,8 @@ package com.example.explainableaiplugin.actions
 
 import com.example.explainableaiplugin.services.OpenAIService
 import com.example.explainableaiplugin.services.JunieCliService
+import com.example.explainableaiplugin.settings.ExplanationProvider
+import com.example.explainableaiplugin.settings.OpenAISettings
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -46,10 +48,22 @@ class GenerateSummaryAction : AnAction() {
         
         val openAIService = OpenAIService.getInstance(project)
         val junieCliService = JunieCliService.getInstance(project)
+        val settings = OpenAISettings.getInstance()
+        val provider = settings.explanationProvider
         
-        if (!openAIService.isJunieTokenConfigured()) {
-            openAIService.showJunieConfigurationWarning()
-            return
+        when (provider) {
+            ExplanationProvider.JUNIE -> {
+                if (!openAIService.isJunieTokenConfigured()) {
+                    openAIService.showJunieConfigurationWarning()
+                    return
+                }
+            }
+            ExplanationProvider.OPENAI_API -> {
+                if (!openAIService.isConfigured()) {
+                    openAIService.showConfigurationWarning()
+                    return
+                }
+            }
         }
         
         // Run in background with progress indicator
@@ -60,13 +74,20 @@ class GenerateSummaryAction : AnAction() {
                 
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
-                    indicator.text = "Sending request to Junie..."
+                    indicator.text = "Sending request to ${provider.displayName}..."
                     
                     runBlocking {
-                        val result = junieCliService.generateCodeSummary(
-                            contentToExplain = selectedText,
-                            fileContext = fileContext
-                        )
+                        val result = when (provider) {
+                            ExplanationProvider.JUNIE -> junieCliService.generateCodeSummary(
+                                contentToExplain = selectedText,
+                                fileContext = fileContext
+                            )
+                            ExplanationProvider.OPENAI_API -> openAIService.generateCodeSummary(
+                                contentToExplain = selectedText,
+                                fileContext = fileContext,
+                                model = settings.model
+                            )
+                        }
                         result.onSuccess { 
                             summary = it 
                         }.onFailure { 
