@@ -554,6 +554,7 @@ data class SummaryMapping(
 /**
  * Container for all summary mappings
  */
+@kotlinx.serialization.Serializable
 data class SummaryMappings(
     val low_unstructured: List<SummaryMapping> = emptyList(),
     val low_structured: List<SummaryMapping> = emptyList(),
@@ -561,6 +562,12 @@ data class SummaryMappings(
     val medium_structured: List<SummaryMapping> = emptyList(),
     val high_unstructured: List<SummaryMapping> = emptyList(),
     val high_structured: List<SummaryMapping> = emptyList()
+)
+
+@kotlinx.serialization.Serializable
+data class CodeSummaryWithMappings(
+    val summary: CodeSummary = CodeSummary(),
+    val mappings: SummaryMappings = SummaryMappings()
 )
 
 // -----------------------------------------------------------------------------

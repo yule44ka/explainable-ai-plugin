@@ -2,6 +2,7 @@ package com.example.explainableaiplugin
 
 import com.example.explainableaiplugin.actions.GenerateSummaryAction
 import com.example.explainableaiplugin.services.CodeSummary
+import com.example.explainableaiplugin.services.CodeSummaryWithMappings
 import com.example.explainableaiplugin.services.OpenAIService
 import com.example.explainableaiplugin.services.JunieCliService
 import com.example.explainableaiplugin.services.CodeChangeDetector
@@ -34,6 +35,9 @@ import java.awt.Font
 import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Path
 import javax.swing.*
 import javax.swing.text.DefaultHighlighter
 
@@ -624,6 +628,86 @@ class MyToolWindow(private val project: Project) {
             )
         }
     }
+
+    private suspend fun generateCodeSummaryAndMappingsWithProvider(
+        provider: ExplanationProvider,
+        contentToExplain: String,
+        fileContext: String,
+        mappingCode: String,
+        realStartLine: Int = 1,
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
+        model: String? = null,
+        onOutputLine: (String) -> Unit = {}
+    ): Result<CodeSummaryWithMappings> {
+        if (provider == ExplanationProvider.JUNIE) {
+            return junieCliService.generateCodeSummaryWithMappings(
+                contentToExplain = contentToExplain,
+                fileContext = fileContext,
+                mappingCode = mappingCode,
+                realStartLine = realStartLine,
+                isDiffInput = isDiffInput,
+                agentTrace = agentTrace,
+                onOutputLine = onOutputLine
+            )
+        }
+
+        val summaryResult = generateCodeSummaryWithProvider(
+            provider = provider,
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = agentTrace,
+            model = model,
+            onOutputLine = onOutputLine
+        )
+
+        val summary = summaryResult.getOrElse { throwable ->
+            return Result.failure(throwable)
+        }
+
+        val mappingKeys = listOf(
+            "low_unstructured" to summary.low_unstructured,
+            "low_structured" to summary.low_structured,
+            "medium_unstructured" to summary.medium_unstructured,
+            "medium_structured" to summary.medium_structured,
+            "high_unstructured" to summary.high_unstructured,
+            "high_structured" to summary.high_structured
+        )
+
+        val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
+        mappingKeys.forEach { (key, summaryText) ->
+            if (summaryText.isNotEmpty()) {
+                val mappingResult = buildSummaryMappingWithProvider(
+                    provider = provider,
+                    code = mappingCode,
+                    summaryText = summaryText,
+                    realStartLine = realStartLine,
+                    model = model,
+                    onOutputLine = onOutputLine
+                )
+                mappingResult.onSuccess { mapping ->
+                    mappingResults[key] = mapping
+                }.onFailure { e ->
+                    println("[generateCodeSummaryAndMappingsWithProvider] Failed to build mapping for $key: ${e.message}")
+                }
+            }
+        }
+
+        return Result.success(
+            CodeSummaryWithMappings(
+                summary = summary,
+                mappings = SummaryMappings(
+                    low_unstructured = mappingResults["low_unstructured"] ?: emptyList(),
+                    low_structured = mappingResults["low_structured"] ?: emptyList(),
+                    medium_unstructured = mappingResults["medium_unstructured"] ?: emptyList(),
+                    medium_structured = mappingResults["medium_structured"] ?: emptyList(),
+                    high_unstructured = mappingResults["high_unstructured"] ?: emptyList(),
+                    high_structured = mappingResults["high_structured"] ?: emptyList()
+                )
+            )
+        )
+    }
     
     private fun generateSummaryFromEditor() {
         // Get current editor
@@ -676,55 +760,18 @@ class MyToolWindow(private val project: Project) {
                     indicator.fraction = 0.0
                     indicator.text = "Generating summary with ${provider.displayName}..."
                     runBlocking {
-                        // Stage 1: Generate summary
-                        val summaryResult = generateCodeSummaryWithProvider(
+                        val summaryWithMappingsResult = generateCodeSummaryAndMappingsWithProvider(
                             provider = provider,
                             contentToExplain = selectedText,
                             fileContext = fileContext,
+                            mappingCode = selectedText,
+                            realStartLine = startLine,
                             model = model
                         )
-                        summaryResult.onSuccess { 
-                            summary = it
-                            indicator.fraction = 0.3
-                            indicator.text = "Building mappings with ${provider.displayName}..."
-                            // Stage 2: Build mappings for all 6 summary types
-                            val mappingKeys = listOf(
-                                "low_unstructured" to it.low_unstructured,
-                                "low_structured" to it.low_structured,
-                                "medium_unstructured" to it.medium_unstructured,
-                                "medium_structured" to it.medium_structured,
-                                "high_unstructured" to it.high_unstructured,
-                                "high_structured" to it.high_structured
-                            )
-                            
-                            val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
-                            mappingKeys.forEachIndexed { index, (key, summaryText) ->
-                                if (summaryText.isNotEmpty()) {
-                                    val mappingResult = buildSummaryMappingWithProvider(
-                                        provider = provider,
-                                        code = selectedText,
-                                        summaryText = summaryText,
-                                        realStartLine = startLine,
-                                        model = model
-                                    )
-                                    mappingResult.onSuccess { mapping ->
-                                        mappingResults[key] = mapping
-                                    }.onFailure { e ->
-                                        println("[MyToolWindow] Failed to build mapping for $key: ${e.message}")
-                                    }
-                                }
-                                indicator.fraction = 0.3 + (0.7 * (index + 1) / mappingKeys.size)
-                            }
-                            
-                            // Create SummaryMappings object
-                            mappings = SummaryMappings(
-                                low_unstructured = mappingResults["low_unstructured"] ?: emptyList(),
-                                low_structured = mappingResults["low_structured"] ?: emptyList(),
-                                medium_unstructured = mappingResults["medium_unstructured"] ?: emptyList(),
-                                medium_structured = mappingResults["medium_structured"] ?: emptyList(),
-                                high_unstructured = mappingResults["high_unstructured"] ?: emptyList(),
-                                high_structured = mappingResults["high_structured"] ?: emptyList()
-                            )
+                        summaryWithMappingsResult.onSuccess {
+                            summary = it.summary
+                            mappings = it.mappings
+                            indicator.fraction = 1.0
                         }.onFailure { 
                             error = it 
                         }
@@ -1351,11 +1398,15 @@ class MyToolWindow(private val project: Project) {
                                         appendLine()
                                         append(segment.newCode)
                                     }.trim()
+                                    val mappingSourceCode = segment.newCode.trim().ifEmpty { segment.oldCode.trim() }
+                                    val mappingStartLine = segment.startLine
 
-                                    val summaryResult = generateCodeSummaryWithProvider(
+                                    val summaryWithMappingsResult = generateCodeSummaryAndMappingsWithProvider(
                                         provider = provider,
                                         contentToExplain = diffContext,
                                         fileContext = fileContext,
+                                        mappingCode = mappingSourceCode,
+                                        realStartLine = mappingStartLine,
                                         isDiffInput = true,
                                         agentTrace = agentTraceContext,
                                         model = model,
@@ -1367,55 +1418,12 @@ class MyToolWindow(private val project: Project) {
                                         }
                                     )
                                     
-                                    summaryResult.onSuccess { summary ->
+                                    summaryWithMappingsResult.onSuccess { summaryWithMappings ->
+                                        val summary = summaryWithMappings.summary
                                         SwingUtilities.invokeLater {
                                             junieLogTextArea.append("Summary generated via ${provider.displayName}\n")
-                                            junieLogTextArea.append("Building mappings for all formats...\n")
+                                            junieLogTextArea.append("Mappings generated for all formats\n")
                                         }
-                                        
-                                        // Build mappings for all 6 summary types (like in Code Summary tab)
-                                        val mappingKeys = listOf(
-                                            "low_unstructured" to summary.low_unstructured,
-                                            "low_structured" to summary.low_structured,
-                                            "medium_unstructured" to summary.medium_unstructured,
-                                            "medium_structured" to summary.medium_structured,
-                                            "high_unstructured" to summary.high_unstructured,
-                                            "high_structured" to summary.high_structured
-                                        )
-                                        
-                                        val mappingResults = mutableMapOf<String, List<SummaryMapping>>()
-                                        val mappingSourceCode = segment.newCode.trim().ifEmpty { segment.oldCode.trim() }
-                                        val mappingStartLine = segment.startLine
-                                        mappingKeys.forEach { (key, summaryText) ->
-                                            if (summaryText.isNotEmpty()) {
-                                                val mappingResult = buildSummaryMappingWithProvider(
-                                                    provider = provider,
-                                                    code = mappingSourceCode,
-                                                    summaryText = summaryText,
-                                                    realStartLine = mappingStartLine,
-                                                    model = model
-                                                )
-                                                mappingResult.onSuccess { mapping ->
-                                                    mappingResults[key] = mapping
-                                                }.onFailure { e ->
-                                                    println("[processCodeChanges] Failed to build mapping for $key: ${e.message}")
-                                                }
-                                            }
-                                        }
-                                        
-                                        SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("Mappings built for ${mappingResults.size} formats\n")
-                                        }
-                                        
-                                        // Create SummaryMappings with all mappings
-                                        val summaryMappings = SummaryMappings(
-                                            low_unstructured = mappingResults["low_unstructured"] ?: emptyList(),
-                                            low_structured = mappingResults["low_structured"] ?: emptyList(),
-                                            medium_unstructured = mappingResults["medium_unstructured"] ?: emptyList(),
-                                            medium_structured = mappingResults["medium_structured"] ?: emptyList(),
-                                            high_unstructured = mappingResults["high_unstructured"] ?: emptyList(),
-                                            high_structured = mappingResults["high_structured"] ?: emptyList()
-                                        )
                                         
                                         changeSummaries.add(ChangeSummaryResult(
                                             filePath = fileChange.filePath,
@@ -1423,7 +1431,7 @@ class MyToolWindow(private val project: Project) {
                                             endLine = segment.endLine,
                                             code = diffContext,
                                             summary = summary,
-                                            mappings = summaryMappings,
+                                            mappings = summaryWithMappings.mappings,
                                             detailLevel = detailLevel,
                                             isStructured = isStructured
                                         ))

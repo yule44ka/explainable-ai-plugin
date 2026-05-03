@@ -37,6 +37,8 @@ class JunieCliService(private val project: Project) {
         private const val SUMMARY_END_MARKER = "END_EXPLAINABLE_AI_SUMMARY_JSON"
         private const val MAPPING_START_MARKER = "BEGIN_EXPLAINABLE_AI_MAPPING_JSON"
         private const val MAPPING_END_MARKER = "END_EXPLAINABLE_AI_MAPPING_JSON"
+        private const val SUMMARY_WITH_MAPPINGS_START_MARKER = "BEGIN_EXPLAINABLE_AI_SUMMARY_WITH_MAPPINGS_JSON"
+        private const val SUMMARY_WITH_MAPPINGS_END_MARKER = "END_EXPLAINABLE_AI_SUMMARY_WITH_MAPPINGS_JSON"
 
         fun getInstance(project: Project): JunieCliService = project.service()
     }
@@ -298,6 +300,146 @@ $summaryText
         )
     }
 
+    suspend fun generateCodeSummaryWithMappings(
+        contentToExplain: String,
+        fileContext: String,
+        mappingCode: String,
+        realStartLine: Int = 1,
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
+        onOutputLine: (String) -> Unit = {}
+    ): Result<CodeSummaryWithMappings> = withContext(Dispatchers.IO) {
+        val responseFile = Files.createTempFile("junie-summary-with-mappings-response-", ".json")
+        val normalizedAgentTrace = agentTrace?.trim().orEmpty()
+        val explainedEntity = if (isDiffInput) "code diff" else "code snippet"
+        val additionalContext = buildString {
+            if (normalizedAgentTrace.isNotEmpty()) {
+                appendLine()
+                appendLine("Agent Trace:")
+                appendLine(normalizedAgentTrace)
+            }
+        }.trimEnd()
+        val codeWithLineNumbers = mappingCode.split("\n")
+            .mapIndexed { idx, line -> "${idx + realStartLine}: $line" }
+            .joinToString("\n")
+
+        logSummaryGenerationContext(
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = normalizedAgentTrace
+        )
+
+        val prompt = """
+You are an expert code explainer and code-to-explanation mapper. For the following $explainedEntity, generate explanations and mappings in ONE response.
+
+Generate 6 explanations of the whole input, one for each combination of detail level (low, medium, high) and structure (unstructured paragraph, structured bullets):
+- low_unstructured: One-sentence, low-detail, paragraph style.
+- low_structured: 2-3 short bullet points, low-detail, as a single string. Each bullet must start with "•" and be separated by \n. Never return an array.
+- medium_unstructured: 2-3 sentences, medium-detail, paragraph style.
+- medium_structured: 3-5 bullet points, medium-detail, as a single string. Use "•" for first-level bullets and "◦" for second-level bullets when useful. Bullets must be separated by \n. Never return an array.
+- high_unstructured: 3-4 sentences, high-detail, paragraph style.
+- high_structured: 4-8 bullet points, high-detail, as a single string. Use "•" for first-level bullets and "◦" for second-level bullets when useful. Bullets must be separated by \n. Never return an array.
+
+For EACH of the 6 explanation strings, also build mappings from explanation components to code segments.
+
+Mapping rules:
+1. Each explanationComponent MUST be an exact substring of the corresponding explanation string.
+2. Extract explanationComponents in the exact order they appear in that explanation string.
+3. Do NOT hallucinate explanation components that do not appear in the explanation.
+4. Every line of the numbered mapping code MUST be covered by at least one mapping for each explanation format.
+5. For each code segment, return both the code fragment and the exact line number shown before the colon.
+6. Prefer complete code statements when they clearly match the explanation component.
+7. If a code segment contains multiple lines, split them into separate objects in codeSegments.
+
+IMPORTANT:
+- You MUST cover the ENTIRE $explainedEntity in the explanation.
+- You MUST explain only the provided $explainedEntity, not the entire file.
+- The file context and agent trace are reference context only.
+- Use the agent trace to improve the explanation when it helps, but do NOT turn the answer into a log recap.
+- Do NOT use emojis anywhere in your response.
+- Return ONLY a JSON object with this exact shape:
+{
+  "summary": {
+    "title": "",
+    "low_unstructured": "",
+    "low_structured": "",
+    "medium_unstructured": "",
+    "medium_structured": "",
+    "high_unstructured": "",
+    "high_structured": ""
+  },
+  "mappings": {
+    "low_unstructured": [
+      {
+        "explanationComponent": "exact phrase from summary.low_unstructured",
+        "codeSegments": [
+          { "code": "relevant code fragment", "line": 5 }
+        ]
+      }
+    ],
+    "low_structured": [],
+    "medium_unstructured": [],
+    "medium_structured": [],
+    "high_unstructured": [],
+    "high_structured": []
+  }
+}
+- Do NOT wrap the JSON in markdown fences.
+- Do NOT add commentary before or after the JSON.
+- Instead, write the final JSON payload exactly to this absolute file path and overwrite the file contents:
+${responseFile.toAbsolutePath()}
+- Write plain UTF-8 text containing only the JSON object.
+- Output the JSON between these exact marker lines:
+$SUMMARY_WITH_MAPPINGS_START_MARKER
+[your JSON here]
+$SUMMARY_WITH_MAPPINGS_END_MARKER
+
+File Context (for reference only):
+$fileContext
+
+$additionalContext
+
+Input to explain:
+$contentToExplain
+
+Code for mappings (each line is prefixed with its absolute line number):
+$codeWithLineNumbers
+        """.trimIndent()
+
+        logModelPrompt(
+            source = "JunieCliService.generateCodeSummaryWithMappings",
+            model = JUNIE_EXPLANATION_MODEL,
+            prompt = prompt
+        )
+
+        val executionResult = executeJuniePrompt(
+            prompt = prompt,
+            model = JUNIE_EXPLANATION_MODEL,
+            onOutputLine = onOutputLine
+        ).getOrElse { throwable ->
+            return@withContext Result.failure(throwable)
+        }
+
+        runCatching {
+            val jsonResponse = waitForResponseFile(responseFile, { containsSummaryWithMappingsKeys(it) })
+                ?: extractSummaryWithMappingsJson(executionResult.outputText, executionResult.jsonOutputText)
+            val parsed = json.decodeFromString<CodeSummaryWithMappings>(jsonResponse)
+            CodeSummaryWithMappings(
+                summary = parsed.summary,
+                mappings = normalizeSummaryMappings(parsed.summary, parsed.mappings, realStartLine)
+            )
+        }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { throwable ->
+                val detailedError = extractJunieErrorMessage(executionResult.jsonOutputText)
+                    ?: throwable.message
+                    ?: "Junie summary and mapping generation failed"
+                Result.failure(RuntimeException(detailedError, throwable))
+            }
+        )
+    }
+
     private fun logSummaryGenerationContext(
         contentToExplain: String,
         fileContext: String,
@@ -496,6 +638,32 @@ $summaryText
         throw IllegalStateException("Junie response did not contain a valid mapping JSON array")
     }
 
+    private fun extractSummaryWithMappingsJson(outputText: String, jsonOutputText: String): String {
+        val directCandidates = listOf(outputText, jsonOutputText, "$outputText\n$jsonOutputText")
+
+        directCandidates.forEach { candidate ->
+            extractBetweenMarkers(
+                candidate,
+                SUMMARY_WITH_MAPPINGS_START_MARKER,
+                SUMMARY_WITH_MAPPINGS_END_MARKER
+            )
+                ?.takeIf { containsSummaryWithMappingsKeys(it) }
+                ?.let { return it }
+        }
+
+        directCandidates.forEach { candidate ->
+            extractJsonObjectWithSummaryWithMappingsKeys(candidate)?.let { return it }
+        }
+
+        directCandidates.forEach { candidate ->
+            extractSummaryWithMappingsFromEmbeddedJson(candidate)?.let { return it }
+        }
+
+        val diagnostic = buildJunieParseDiagnostic(outputText, jsonOutputText)
+        println("[JunieCliService] Failed to extract summary-with-mappings JSON.\n$diagnostic")
+        throw IllegalStateException("Junie response did not contain a valid summary-with-mappings JSON object")
+    }
+
     private fun extractJsonObjectWithSummaryKeys(text: String): String? {
         val fencedMatch = Regex("```(?:json)?\\s*([\\s\\S]*?)\\s*```", RegexOption.IGNORE_CASE)
             .find(text.trim())
@@ -517,12 +685,33 @@ $summaryText
         return candidate.takeIf { containsSummaryKeys(it) }
     }
 
+    private fun extractJsonObjectWithSummaryWithMappingsKeys(text: String): String? {
+        val fencedMatch = Regex("```(?:json)?\\s*([\\s\\S]*?)\\s*```", RegexOption.IGNORE_CASE)
+            .find(text.trim())
+        if (fencedMatch != null) {
+            val payload = normalizeJsonPayload(fencedMatch.groupValues[1])
+            if (containsSummaryWithMappingsKeys(payload)) {
+                return payload
+            }
+        }
+
+        return extractJsonObjectMatching(text, ::containsSummaryWithMappingsKeys)
+    }
+
     private fun extractSummaryFromEmbeddedJson(text: String): String? {
         val trimmed = text.trim()
         if (trimmed.isEmpty()) return null
 
         val root = runCatching { json.parseToJsonElement(trimmed) }.getOrNull() ?: return null
         return findSummaryJsonInElement(root)
+    }
+
+    private fun extractSummaryWithMappingsFromEmbeddedJson(text: String): String? {
+        val trimmed = text.trim()
+        if (trimmed.isEmpty()) return null
+
+        val root = runCatching { json.parseToJsonElement(trimmed) }.getOrNull() ?: return null
+        return findSummaryWithMappingsJsonInElement(root)
     }
 
     private fun extractArrayFromEmbeddedJson(text: String): String? {
@@ -549,7 +738,12 @@ $summaryText
         val payload = normalizeJsonPayload(Files.readString(path, StandardCharsets.UTF_8))
         if (payload.isEmpty()) return null
 
-        return extractBetweenMarkers(payload, SUMMARY_START_MARKER, SUMMARY_END_MARKER)
+        return extractBetweenMarkers(
+            payload,
+            SUMMARY_WITH_MAPPINGS_START_MARKER,
+            SUMMARY_WITH_MAPPINGS_END_MARKER
+        )
+            ?: extractBetweenMarkers(payload, SUMMARY_START_MARKER, SUMMARY_END_MARKER)
             ?: extractBetweenMarkers(payload, MAPPING_START_MARKER, MAPPING_END_MARKER)
             ?: payload
     }
@@ -618,6 +812,37 @@ $summaryText
         }
     }
 
+    private fun findSummaryWithMappingsJsonInElement(element: JsonElement): String? {
+        if (element is JsonObject) {
+            val serialized = element.toString()
+            if (containsSummaryWithMappingsKeys(serialized)) {
+                return serialized
+            }
+        }
+
+        return when (element) {
+            is JsonObject -> {
+                element.values.firstNotNullOfOrNull { value ->
+                    when {
+                        value is JsonObject || value is JsonArray -> findSummaryWithMappingsJsonInElement(value)
+                        else -> runCatching {
+                            val content = value.jsonPrimitive.content
+                            extractBetweenMarkers(
+                                content,
+                                SUMMARY_WITH_MAPPINGS_START_MARKER,
+                                SUMMARY_WITH_MAPPINGS_END_MARKER
+                            ) ?: extractJsonObjectWithSummaryWithMappingsKeys(content)
+                        }.getOrNull()
+                    }
+                }
+            }
+            is JsonArray -> {
+                element.firstNotNullOfOrNull { value -> findSummaryWithMappingsJsonInElement(value) }
+            }
+            else -> null
+        }
+    }
+
     private fun findMappingArrayInElement(element: JsonElement): String? {
         return when (element) {
             is JsonArray -> {
@@ -667,6 +892,54 @@ $summaryText
         return candidate.takeIf { containsMappingKeys(it) }
     }
 
+    private fun extractJsonObjectMatching(text: String, predicate: (String) -> Boolean): String? {
+        val source = text.trim()
+        source.forEachIndexed { index, char ->
+            if (char != '{') return@forEachIndexed
+
+            var depth = 0
+            var inString = false
+            var escaped = false
+
+            for (cursor in index until source.length) {
+                val current = source[cursor]
+
+                if (escaped) {
+                    escaped = false
+                    continue
+                }
+
+                if (current == '\\' && inString) {
+                    escaped = true
+                    continue
+                }
+
+                if (current == '"') {
+                    inString = !inString
+                    continue
+                }
+
+                if (!inString) {
+                    when (current) {
+                        '{' -> depth++
+                        '}' -> {
+                            depth--
+                            if (depth == 0) {
+                                val candidate = normalizeJsonPayload(source.substring(index, cursor + 1))
+                                if (predicate(candidate)) {
+                                    return candidate
+                                }
+                                break
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return null
+    }
+
     private fun containsSummaryKeys(text: String): Boolean {
         return text.contains("\"low_unstructured\"") &&
             text.contains("\"low_structured\"") &&
@@ -678,6 +951,65 @@ $summaryText
 
     private fun containsMappingKeys(text: String): Boolean {
         return text.contains("\"explanationComponent\"") && text.contains("\"codeSegments\"")
+    }
+
+    private fun containsSummaryWithMappingsKeys(text: String): Boolean {
+        return text.contains("\"summary\"") &&
+            text.contains("\"mappings\"") &&
+            containsSummaryKeys(text)
+    }
+
+    private fun normalizeSummaryMappings(
+        summary: CodeSummary,
+        mappings: SummaryMappings,
+        realStartLine: Int
+    ): SummaryMappings {
+        return SummaryMappings(
+            low_unstructured = normalizeMappingsForSummary(summary.low_unstructured, mappings.low_unstructured, realStartLine),
+            low_structured = normalizeMappingsForSummary(summary.low_structured, mappings.low_structured, realStartLine),
+            medium_unstructured = normalizeMappingsForSummary(summary.medium_unstructured, mappings.medium_unstructured, realStartLine),
+            medium_structured = normalizeMappingsForSummary(summary.medium_structured, mappings.medium_structured, realStartLine),
+            high_unstructured = normalizeMappingsForSummary(summary.high_unstructured, mappings.high_unstructured, realStartLine),
+            high_structured = normalizeMappingsForSummary(summary.high_structured, mappings.high_structured, realStartLine)
+        )
+    }
+
+    private fun normalizeMappingsForSummary(
+        summaryText: String,
+        mappings: List<SummaryMapping>,
+        realStartLine: Int
+    ): List<SummaryMapping> {
+        val correctedMappings = mappings.map { mapping ->
+            val needsCorrection = mapping.codeSegments.any { it.line < realStartLine }
+            if (needsCorrection) {
+                val correctedSegments = mapping.codeSegments.map { segment ->
+                    CodeSegment(
+                        code = segment.code,
+                        line = segment.line + realStartLine - 1
+                    )
+                }
+                SummaryMapping(
+                    explanationComponent = mapping.explanationComponent,
+                    codeSegments = correctedSegments
+                )
+            } else {
+                mapping
+            }
+        }
+
+        return correctedMappings.mapNotNull { mapping ->
+            if (summaryText.contains(mapping.explanationComponent)) {
+                mapping
+            } else {
+                val fuzzy = findFuzzyMatchInText(summaryText, mapping.explanationComponent)
+                if (fuzzy != null) {
+                    SummaryMapping(explanationComponent = fuzzy, codeSegments = mapping.codeSegments)
+                } else {
+                    println("[normalizeMappingsForSummary] explanationComponent not found in summary (dropped): ${mapping.explanationComponent}")
+                    null
+                }
+            }
+        }
     }
 
     private fun buildJunieParseDiagnostic(outputText: String, jsonOutputText: String): String {
