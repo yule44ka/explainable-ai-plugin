@@ -1,12 +1,11 @@
 package com.example.explainableaiplugin.services
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Computable
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * Service to detect code changes between snapshots
@@ -22,14 +21,14 @@ class CodeChangeDetector(private val project: Project) {
     private val fileSnapshots = mutableMapOf<String, String>()
     
     /**
-     * Capture current state of all open files in the project
+     * Capture current state of text files in the project
      */
     fun captureSnapshot() {
         fileSnapshots.clear()
 
-        val currentFiles = readOpenFiles()
+        val currentFiles = readProjectTextFiles()
 
-        println("[CodeChangeDetector] Capturing snapshots for ${currentFiles.size} open files")
+        println("[CodeChangeDetector] Capturing snapshots for ${currentFiles.size} project text files")
 
         currentFiles.forEach { (filePath, content) ->
             fileSnapshots[filePath] = content
@@ -50,9 +49,9 @@ class CodeChangeDetector(private val project: Project) {
         println("[CodeChangeDetector] Starting change detection...")
         println("[CodeChangeDetector] Snapshots to check: ${fileSnapshots.size}")
 
-        val currentFiles = readOpenFiles()
+        val currentFiles = readProjectTextFiles()
         
-        println("[CodeChangeDetector] Current files with documents: ${currentFiles.size}")
+        println("[CodeChangeDetector] Current project text files: ${currentFiles.size}")
         
         // Compare snapshots with current state
         fileSnapshots.forEach { (filePath, oldContent) ->
@@ -101,24 +100,49 @@ class CodeChangeDetector(private val project: Project) {
         return changes
     }
 
-    private fun readOpenFiles(): Map<String, String> {
-        return ApplicationManager.getApplication().runReadAction(Computable {
-            val fileDocumentManager = FileDocumentManager.getInstance()
-            val fileEditorManager = FileEditorManager.getInstance(project)
-            val openFiles = fileEditorManager.openFiles
+    private fun readProjectTextFiles(): Map<String, String> {
+        val basePath = project.basePath ?: return emptyMap()
+        val root = Path.of(basePath)
+        val files = mutableMapOf<String, String>()
+        val stream = Files.walk(root)
 
-            println("[CodeChangeDetector] Currently open files: ${openFiles.size}")
-
-            openFiles.mapNotNull { virtualFile ->
-                val document = fileDocumentManager.getDocument(virtualFile)
-                if (document != null) {
-                    virtualFile.path to document.text
-                } else {
-                    println("[CodeChangeDetector] WARNING: No document for file: ${virtualFile.path}")
-                    null
+        try {
+            stream
+                .filter { Files.isRegularFile(it) }
+                .filter { isTrackableProjectFile(root, it) }
+                .forEach { path ->
+                    runCatching {
+                        files[path.toString()] = Files.readString(path, StandardCharsets.UTF_8)
+                    }.onFailure { throwable ->
+                        println("[CodeChangeDetector] WARNING: Could not read file $path: ${throwable.message}")
+                    }
                 }
-            }.toMap()
-        })
+        } finally {
+            stream.close()
+        }
+
+        println("[CodeChangeDetector] Project text files tracked: ${files.size}")
+        return files
+    }
+
+    private fun isTrackableProjectFile(root: Path, path: Path): Boolean {
+        val relativePath = root.relativize(path)
+        val pathParts = relativePath.map { it.toString() }.toSet()
+        if (pathParts.any { it in EXCLUDED_DIRECTORIES }) {
+            return false
+        }
+
+        val fileName = path.fileName?.toString() ?: return false
+        if (fileName in EXCLUDED_FILES) {
+            return false
+        }
+
+        val extension = fileName.substringAfterLast('.', missingDelimiterValue = "")
+        if (extension !in TRACKED_EXTENSIONS) {
+            return false
+        }
+
+        return runCatching { Files.size(path) <= MAX_TRACKED_FILE_BYTES }.getOrDefault(false)
     }
     
     /**
@@ -234,3 +258,52 @@ enum class ChangeType {
     REMOVED,
     MODIFIED
 }
+
+private const val MAX_TRACKED_FILE_BYTES = 1_000_000L
+
+private val EXCLUDED_DIRECTORIES = setOf(
+    ".git",
+    ".gradle",
+    ".idea",
+    ".intellijPlatform",
+    "build",
+    "out",
+    "target",
+    "node_modules"
+)
+
+private val EXCLUDED_FILES = setOf(
+    "gradle-wrapper.jar"
+)
+
+private val TRACKED_EXTENSIONS = setOf(
+    "java",
+    "kt",
+    "kts",
+    "xml",
+    "properties",
+    "json",
+    "yaml",
+    "yml",
+    "md",
+    "txt",
+    "html",
+    "css",
+    "js",
+    "ts",
+    "tsx",
+    "jsx",
+    "py",
+    "go",
+    "rs",
+    "c",
+    "cpp",
+    "h",
+    "hpp",
+    "cs",
+    "swift",
+    "rb",
+    "php",
+    "sql",
+    "sh"
+)

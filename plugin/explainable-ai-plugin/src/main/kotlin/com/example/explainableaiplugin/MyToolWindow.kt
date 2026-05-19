@@ -106,9 +106,11 @@ class MyToolWindow(private val project: Project) {
     )
     
     // Combobox for model selection with prices (Code Summary tab)
+    private val modelLabel = JLabel("Model:")
     private val modelCombo = ComboBox(modelPricing.map { (model, price) -> "$model | $price" }.toTypedArray())
     
     // Comboboxes for Code Generation tab
+    private val generationModelLabel = JLabel("Model:")
     private val generationModelCombo = ComboBox(modelPricing.map { (model, price) -> "$model | $price" }.toTypedArray())
     private val generationDetailLevelCombo = ComboBox(arrayOf("Low Detail", "Medium Detail", "High Detail"))
     private val generationFormatTypeCombo = ComboBox(arrayOf("Paragraph", "Bullet Points"))
@@ -197,10 +199,10 @@ class MyToolWindow(private val project: Project) {
             // At least one provider is configured - show main interface with tabs.
             val tabbedPane = JTabbedPane()
             
-            // Create Summary tab
+            // Create Explanation tab
             val codeSummaryTab = createSummaryTab()
             summaryTabPanel = codeSummaryTab
-            tabbedPane.addTab("Code Summary", null, codeSummaryTab, "Generate and view code summaries")
+            tabbedPane.addTab("Explanation Generator", null, codeSummaryTab, "Generate and view code explanations")
             
             // Create Code Generation tab
             generationTabPanel = createCodeGenerationTab()
@@ -232,21 +234,21 @@ class MyToolWindow(private val project: Project) {
     }
     
     /**
-     * Create Summary tab content
+     * Create Explanation tab content
      */
     private fun createSummaryTab(): JPanel {
         val tabPanel = JPanel(BorderLayout())
         
-        // Control panel for summary
+        // Control panel for explanation
         val controlPanel = panel {
             row {
-                label("Code Summary Generator").applyToComponent {
+                label("Explanation Generator").applyToComponent {
                     font = Font(font.name, Font.BOLD, 14)
                 }
             }
             
             row {
-                text("Select code in editor and click Generate to create AI-powered summaries")
+                text("Select code in editor and click Generate to create AI-powered explanations")
             }
             
             separator()
@@ -255,15 +257,20 @@ class MyToolWindow(private val project: Project) {
                 label("Explanation Provider:")
                 cell(explanationProviderCombo).applyToComponent {
                     selectedIndex = settings.explanationProvider.ordinal
-                    toolTipText = "Use Junie or legacy OpenAI API calls for summaries and mappings"
+                    toolTipText = "Use Junie or legacy OpenAI API calls for explanations and mappings"
                     addActionListener {
                         settings.explanationProvider = selectedExplanationProvider(explanationProviderCombo)
+                        updateModelVisibility(
+                            explanationProviderCombo,
+                            modelLabel,
+                            modelCombo
+                        )
                     }
                 }
             }
             
             row {
-                label("Model:")
+                cell(modelLabel)
                 cell(modelCombo).applyToComponent {
                     // Set current model from settings as default
                     val currentModel = openAIService.getModel()
@@ -280,6 +287,11 @@ class MyToolWindow(private val project: Project) {
                     }
                 }
             }
+            updateModelVisibility(
+                explanationProviderCombo,
+                modelLabel,
+                modelCombo
+            )
             
             row {
                 label("Detail Level:")
@@ -306,7 +318,7 @@ class MyToolWindow(private val project: Project) {
             }
             
             row {
-                button("Generate Summary") {
+                button("Generate Explanation") {
                     generateSummaryFromEditor()
                 }.applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
@@ -425,7 +437,7 @@ class MyToolWindow(private val project: Project) {
             separator()
             
             row {
-                label("Summary Settings for Code Changes").applyToComponent {
+                label("Explanation Settings for Code Changes").applyToComponent {
                     font = Font(font.name, Font.BOLD, 12)
                 }
             }
@@ -440,15 +452,20 @@ class MyToolWindow(private val project: Project) {
                 label("Explanation Provider:")
                 cell(generationExplanationProviderCombo).applyToComponent {
                     selectedIndex = settings.explanationProvider.ordinal
-                    toolTipText = "Use Junie or legacy OpenAI API calls for summaries and mappings"
+                    toolTipText = "Use Junie or legacy OpenAI API calls for explanations and mappings"
                     addActionListener {
                         settings.explanationProvider = selectedExplanationProvider(generationExplanationProviderCombo)
+                        updateModelVisibility(
+                            generationExplanationProviderCombo,
+                            generationModelLabel,
+                            generationModelCombo
+                        )
                     }
                 }
             }
             
             row {
-                label("Model:")
+                cell(generationModelLabel)
                 cell(generationModelCombo).applyToComponent {
                     // Set current model from settings as default
                     val currentModel = openAIService.getModel()
@@ -463,15 +480,20 @@ class MyToolWindow(private val project: Project) {
                     if (selectedIndex == -1) {
                         selectedIndex = 0
                     }
-                    toolTipText = "AI model to use for generating summaries"
+                    toolTipText = "AI model to use for generating explanations"
                 }
             }
+            updateModelVisibility(
+                generationExplanationProviderCombo,
+                generationModelLabel,
+                generationModelCombo
+            )
             
             row {
                 label("Detail Level:")
                 cell(generationDetailLevelCombo).applyToComponent {
                     selectedIndex = 1 // Medium by default
-                    toolTipText = "Level of detail for summaries"
+                    toolTipText = "Level of detail for explanations"
                     addActionListener {
                         if (currentChangeSummaries.isNotEmpty()) {
                             displayGenerationSummaries()
@@ -484,7 +506,7 @@ class MyToolWindow(private val project: Project) {
                 label("Format:")
                 cell(generationFormatTypeCombo).applyToComponent {
                     selectedIndex = 0 // Paragraph by default
-                    toolTipText = "Summary format: paragraph or bullet points"
+                    toolTipText = "Explanation format: paragraph or bullet points"
                     addActionListener {
                         if (currentChangeSummaries.isNotEmpty()) {
                             displayGenerationSummaries()
@@ -592,6 +614,18 @@ class MyToolWindow(private val project: Project) {
     private fun selectedExplanationProvider(comboBox: ComboBox<String>): ExplanationProvider {
         val selected = comboBox.selectedItem as? String
         return ExplanationProvider.fromValue(selected)
+    }
+
+    private fun updateModelVisibility(
+        providerComboBox: ComboBox<String>,
+        label: JLabel,
+        modelComboBox: ComboBox<String>
+    ) {
+        val isOpenAIProviderSelected = selectedExplanationProvider(providerComboBox) == ExplanationProvider.OPENAI_API
+        label.isVisible = isOpenAIProviderSelected
+        modelComboBox.isVisible = isOpenAIProviderSelected
+        providerComboBox.parent?.revalidate()
+        providerComboBox.parent?.repaint()
     }
 
     private fun selectedModel(comboBox: ComboBox<String>): String {
@@ -788,7 +822,7 @@ class MyToolWindow(private val project: Project) {
         
         // Run generation in background
         ProgressManager.getInstance().run(
-            object : Task.Backgroundable(project, "Generating Code Summary...", true) {
+            object : Task.Backgroundable(project, "Generating Code Explanation...", true) {
                 var summary: CodeSummary? = null
                 var mappings: SummaryMappings? = null
                 var error: Throwable? = null
@@ -796,7 +830,7 @@ class MyToolWindow(private val project: Project) {
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = false
                     indicator.fraction = 0.0
-                    indicator.text = "Generating summary with ${provider.displayName}..."
+                    indicator.text = "Generating explanation with ${provider.displayName}..."
                     runBlocking {
                         val summaryWithMappingsResult = generateCodeSummaryAndMappingsWithProvider(
                             provider = provider,
@@ -830,17 +864,17 @@ class MyToolWindow(private val project: Project) {
                         }
                         sourceFilePath?.let { project.putUserData(GenerateSummaryAction.SUMMARY_FILE_PATH_KEY, it) }
                         displayCurrentSummary()
-                        openAIService.showSuccessNotification("Summary and mappings generated successfully!")
+                        openAIService.showSuccessNotification("Explanation and mappings generated successfully!")
                     }
                 }
                 
                 override fun onThrowable(error: Throwable) {
-                    openAIService.showErrorNotification("Failed to generate summary: ${error.message}")
+                    openAIService.showErrorNotification("Failed to generate explanation: ${error.message}")
                 }
                 
                 override fun onFinished() {
                     error?.let {
-                        openAIService.showErrorNotification("Failed to generate summary: ${it.message}")
+                        openAIService.showErrorNotification("Failed to generate explanation: ${it.message}")
                     }
                 }
             }
@@ -926,7 +960,7 @@ class MyToolWindow(private val project: Project) {
         if (filePath == null) {
             JOptionPane.showMessageDialog(
                 mainPanel,
-                "Generate a summary from an editor file first",
+                "Generate an explanation from an editor file first",
                 "Error",
                 JOptionPane.WARNING_MESSAGE
             )
@@ -937,7 +971,7 @@ class MyToolWindow(private val project: Project) {
         if (mappings.isEmpty()) {
             JOptionPane.showMessageDialog(
                 mainPanel,
-                "Generate a summary with mappings first",
+                "Generate an explanation with mappings first",
                 "No High-Detail Bullet Mapping",
                 JOptionPane.WARNING_MESSAGE
             )
@@ -962,7 +996,7 @@ class MyToolWindow(private val project: Project) {
         if (currentChangeSummaries.isEmpty()) {
             JOptionPane.showMessageDialog(
                 mainPanel,
-                "Generate code and summaries first",
+                "Generate code and explanations first",
                 "No Generated Explanations",
                 JOptionPane.WARNING_MESSAGE
             )
@@ -1339,10 +1373,10 @@ class MyToolWindow(private val project: Project) {
             "Using model:",
             "Detail level:",
             "Processing ",
-            "Summary generated",
+            "Explanation generated",
             "Building mappings",
             "Mappings built",
-            "Summary with trace failed",
+            "Explanation with trace failed",
             "Failed:",
             "Generated ",
             "You can now change Detail Level",
@@ -1547,13 +1581,13 @@ class MyToolWindow(private val project: Project) {
                     val model = selectedModel(generationModelCombo)
                     if (!isProviderConfigured(provider)) {
                         SwingUtilities.invokeLater {
-                            junieLogTextArea.append("${provider.displayName} is not configured for summaries\n")
+                            junieLogTextArea.append("${provider.displayName} is not configured for explanations\n")
                         }
                         showProviderConfigurationWarning(provider)
                         return
                     }
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("Using ${provider.displayName} for summaries and mappings\n")
+                        junieLogTextArea.append("Using ${provider.displayName} for explanations and mappings\n")
                         junieLogTextArea.append("Detail level: ${detailLevel.replaceFirstChar { it.uppercase() }}, Format: ${if (isStructured) "Bullet Points" else "Paragraph"}\n")
                     }
                     
@@ -1569,7 +1603,7 @@ class MyToolWindow(private val project: Project) {
                         
                         fileChange.changedSegments.forEach { segment ->
                             indicator.fraction = processedSegments.toDouble() / totalSegments
-                            indicator.text = "Generating summary ${processedSegments + 1}/$totalSegments with ${provider.displayName}..."
+                            indicator.text = "Generating explanation ${processedSegments + 1}/$totalSegments with ${provider.displayName}..."
                             runBlocking {
                                 // Process any segment that has actual content in old/new state
                                 val hasContentToSummarize =
@@ -1577,7 +1611,7 @@ class MyToolWindow(private val project: Project) {
                                 if (hasContentToSummarize) {
                                     
                                     SwingUtilities.invokeLater {
-                                        junieLogTextArea.append(" • Lines ${segment.startLine}-${segment.endLine}: Generating summary...\n")
+                                        junieLogTextArea.append(" • Lines ${segment.startLine}-${segment.endLine}: Generating explanation...\n")
                                     }
                                     
                                     // Generate summary for this segment
@@ -1611,7 +1645,7 @@ class MyToolWindow(private val project: Project) {
                                     summaryWithMappingsResult.onSuccess { summaryWithMappings ->
                                         val summary = summaryWithMappings.summary
                                         SwingUtilities.invokeLater {
-                                            junieLogTextArea.append("Summary generated via ${provider.displayName}\n")
+                                            junieLogTextArea.append("Explanation generated via ${provider.displayName}\n")
                                             junieLogTextArea.append("Mappings generated for all formats\n")
                                         }
                                         
@@ -1646,8 +1680,8 @@ class MyToolWindow(private val project: Project) {
                 
                 override fun onSuccess() {
                     SwingUtilities.invokeLater {
-                        junieLogTextArea.append("\n Generated ${changeSummaries.size} summaries\n")
-                        junieLogTextArea.append("You can now change Detail Level or Format above to view different summaries\n")
+                        junieLogTextArea.append("\n Generated ${changeSummaries.size} explanations\n")
+                        junieLogTextArea.append("You can now change Detail Level or Format above to view different explanations\n")
                     }
                     
                     if (changeSummaries.isNotEmpty()) {
@@ -1709,7 +1743,7 @@ class MyToolWindow(private val project: Project) {
         
         // Title with current settings
         val formatInfo = "${currentDetailLevel.replaceFirstChar { it.uppercase() }} Detail - ${if (currentIsStructured) "Bullet Points" else "Paragraph"}"
-        val titleLabel = JLabel("Code Changes Summary").apply {
+        val titleLabel = JLabel("Code Changes Explanation").apply {
             font = Font(font.name, Font.BOLD, 14)
             border = BorderFactory.createEmptyBorder(10, 0, 5, 0)
             alignmentX = JComponent.LEFT_ALIGNMENT

@@ -170,7 +170,7 @@ $contentToExplain
             onFailure = { throwable ->
                 val detailedError = extractJunieErrorMessage(executionResult.jsonOutputText)
                     ?: throwable.message
-                    ?: "Junie summary generation failed"
+                    ?: "Junie explanation generation failed"
                 Result.failure(RuntimeException(detailedError, throwable))
             }
         )
@@ -292,7 +292,7 @@ $summaryText
             onFailure = { throwable ->
                 val detailedError = extractJunieErrorMessage(executionResult.jsonOutputText)
                     ?: throwable.message
-                    ?: "Junie summary mapping failed"
+                    ?: "Junie explanation mapping failed"
                 Result.failure(RuntimeException(detailedError, throwable))
             }
         )
@@ -431,8 +431,8 @@ $codeWithLineNumbers
             onSuccess = { Result.success(it) },
             onFailure = { throwable ->
                 println(
-                    "[JunieCliService] Combined summary-with-mappings response failed; " +
-                        "falling back to separate summary and mapping calls: ${throwable.message}"
+                    "[JunieCliService] Combined explanation-with-mappings response failed; " +
+                        "falling back to separate explanation and mapping calls: ${throwable.message}"
                 )
                 generateCodeSummaryWithSeparateMappings(
                     contentToExplain = contentToExplain,
@@ -448,7 +448,7 @@ $codeWithLineNumbers
                         val detailedError = extractJunieErrorMessage(executionResult.jsonOutputText)
                             ?: fallbackThrowable.message
                             ?: throwable.message
-                            ?: "Junie summary and mapping generation failed"
+                            ?: "Junie explanation and mapping generation failed"
                         Result.failure(RuntimeException(detailedError, fallbackThrowable))
                     }
                 )
@@ -465,7 +465,7 @@ $codeWithLineNumbers
         agentTrace: String?,
         onOutputLine: (String) -> Unit
     ): Result<CodeSummaryWithMappings> {
-        onOutputLine("Combined summary-with-mappings JSON was not parseable; retrying with separate summary and mapping calls...")
+        onOutputLine("Combined explanation-with-mappings JSON was not parseable; retrying with separate explanation and mapping calls...")
 
         val summary = generateCodeSummary(
             contentToExplain = contentToExplain,
@@ -527,7 +527,7 @@ $codeWithLineNumbers
     ) {
         println(
             buildString {
-                appendLine("[JunieCliService] Summary generation context")
+                appendLine("[JunieCliService] Explanation generation context")
                 appendLine("Provider: Junie")
                 appendLine("Model: $JUNIE_EXPLANATION_MODEL")
                 appendLine("Input type: ${if (isDiffInput) "code diff" else "code snippet"}")
@@ -539,7 +539,7 @@ $codeWithLineNumbers
                     appendLine("--- Agent trace ---")
                     appendLine(agentTrace)
                 }
-                appendLine("--- End summary context ---")
+                appendLine("--- End explanation context ---")
             }
         )
     }
@@ -691,8 +691,8 @@ $codeWithLineNumbers
         }
 
         val diagnostic = buildJunieParseDiagnostic(outputText, jsonOutputText)
-        println("[JunieCliService] Failed to extract summary JSON.\n$diagnostic")
-        throw IllegalStateException("Junie response did not contain a valid code summary JSON object")
+        println("[JunieCliService] Failed to extract explanation JSON.\n$diagnostic")
+        throw IllegalStateException("Junie response did not contain a valid code explanation JSON object")
     }
 
     private fun extractJsonArray(outputText: String, jsonOutputText: String): String {
@@ -739,8 +739,8 @@ $codeWithLineNumbers
         }
 
         val diagnostic = buildJunieParseDiagnostic(outputText, jsonOutputText)
-        println("[JunieCliService] Failed to extract summary-with-mappings JSON.\n$diagnostic")
-        throw IllegalStateException("Junie response did not contain a valid summary-with-mappings JSON object")
+        println("[JunieCliService] Failed to extract explanation-with-mappings JSON.\n$diagnostic")
+        throw IllegalStateException("Junie response did not contain a valid explanation-with-mappings JSON object")
     }
 
     private fun extractJsonObjectWithSummaryKeys(text: String): String? {

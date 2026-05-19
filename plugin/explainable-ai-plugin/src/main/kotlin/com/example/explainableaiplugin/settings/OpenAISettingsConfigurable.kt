@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.swing.JComponent
+import javax.swing.JLabel
 
 /**
  * UI for OpenAI settings in Settings -> Tools -> Explainable AI
@@ -27,6 +28,7 @@ class OpenAISettingsConfigurable : Configurable {
     private val junieTokenField = JBPasswordField()
     private val apiEndpointField = JBTextField()
     private val modelField = JBTextField()
+    private val modelLabel = JLabel("Model:")
     private val temperatureField = JBTextField()
     private val maxTokensField = JBTextField()
     private val explanationProviderCombo = javax.swing.JComboBox(
@@ -78,6 +80,11 @@ class OpenAISettingsConfigurable : Configurable {
                 row("Explanation Provider:") {
                     cell(explanationProviderCombo)
                         .comment("Choose Junie or the legacy OpenAI API calls for explanations and mappings")
+                        .applyToComponent {
+                            addActionListener {
+                                updateModelVisibility()
+                            }
+                        }
                 }
                 
                 row("API Endpoint:") {
@@ -86,7 +93,8 @@ class OpenAISettingsConfigurable : Configurable {
                         .comment("OpenAI API endpoint URL")
                 }
                 
-                row("Model:") {
+                row {
+                    cell(modelLabel)
                     cell(modelField)
                         .align(AlignX.FILL)
                         .comment("Model to use (e.g., gpt-4, gpt-3.5-turbo)")
@@ -115,6 +123,15 @@ class OpenAISettingsConfigurable : Configurable {
         
         reset()
         return settingsPanel!!
+    }
+
+    private fun updateModelVisibility() {
+        val isOpenAIProviderSelected = ExplanationProvider.entries[explanationProviderCombo.selectedIndex] ==
+                ExplanationProvider.OPENAI_API
+        modelLabel.isVisible = isOpenAIProviderSelected
+        modelField.isVisible = isOpenAIProviderSelected
+        settingsPanel?.revalidate()
+        settingsPanel?.repaint()
     }
     
     private fun testConnection() {
@@ -212,6 +229,7 @@ class OpenAISettingsConfigurable : Configurable {
         temperatureField.text = settings.temperature.toString()
         maxTokensField.text = settings.maxTokens.toString()
         explanationProviderCombo.selectedIndex = settings.explanationProvider.ordinal
+        updateModelVisibility()
     }
     
     override fun disposeUIResources() {

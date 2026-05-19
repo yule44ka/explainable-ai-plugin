@@ -38,7 +38,7 @@ class GenerateSummaryAction : AnAction() {
         if (selectedText.isNullOrEmpty()) {
             Messages.showWarningDialog(
                 project,
-                "Please select some code to generate summary",
+                "Please select some code to generate an explanation",
                 "No Code Selected"
             )
             return
@@ -72,13 +72,13 @@ class GenerateSummaryAction : AnAction() {
         
         // Run in background with progress indicator
         ProgressManager.getInstance().run(
-            object : Task.Backgroundable(project, "Generating Code Summary with AI...", true) {
+            object : Task.Backgroundable(project, "Generating Code Explanation with AI...", true) {
                 var summaryWithMappings: CodeSummaryWithMappings? = null
                 var error: Throwable? = null
                 
                 override fun run(indicator: ProgressIndicator) {
                     indicator.isIndeterminate = true
-                    indicator.text = "Generating summary and mappings with ${provider.displayName}..."
+                    indicator.text = "Generating explanation and mappings with ${provider.displayName}..."
                     
                     runBlocking {
                         val result = when (provider) {
@@ -116,12 +116,12 @@ class GenerateSummaryAction : AnAction() {
                 }
                 
                 override fun onThrowable(error: Throwable) {
-                    openAIService.showErrorNotification("Failed to generate summary: ${error.message}")
+                    openAIService.showErrorNotification("Failed to generate explanation: ${error.message}")
                 }
                 
                 override fun onFinished() {
                     error?.let {
-                        openAIService.showErrorNotification("Failed to generate summary: ${it.message}")
+                        openAIService.showErrorNotification("Failed to generate explanation: ${it.message}")
                     }
                 }
             }

@@ -63,8 +63,8 @@
             
             <action id="ExplainableAI.GenerateSummary"
                     class="com.example.explainableaiplugin.actions.GenerateSummaryAction"
-                    text="Generate Summary"
-                    description="Generate multi-level summary of selected code"
+                    text="Generate Explanation"
+                    description="Generate multi-level explanation of selected code"
                     icon="AllIcons.Actions.Preview"/>
 
             <action id="ExplainableAI.AddExplanationComments"
