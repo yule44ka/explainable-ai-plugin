@@ -1,1 +1,19 @@
 .idea
+figures
+
+# Evaluation local source repositories and generated worktrees are large and
+# should be recreated locally rather than committed.
+evaluation/llm-as-a-judge/source-repos/
+evaluation/llm-as-a-judge/scripts/generate_dataset_kotlin/.gradle/
+evaluation/llm-as-a-judge/scripts/generate_dataset_kotlin/build/
+evaluation/swe-bench-verified-mini/repos/
+evaluation/swe-bench-verified-mini/repos-explained/
+evaluation/swe-bench-verified-mini/.venvs/
+evaluation/swe-bench-verified-mini/.matplotlib-cache/
+evaluation/swe-bench-verified-mini/logs/
+evaluation/swe-bench-verified-mini/**/worktrees/
+evaluation/**/__pycache__/
+evaluation/**/.pytest_cache/
+evaluation/**/.mypy_cache/
+evaluation/**/.DS_Store
+evaluation/**/.env
