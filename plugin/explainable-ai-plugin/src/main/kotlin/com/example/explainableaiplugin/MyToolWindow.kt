@@ -1136,19 +1136,23 @@ class MyToolWindow(private val project: Project) {
                 println("[createInteractiveSummaryPanel] WARNING: Component not found: '${mapping.explanationComponent}'")
                 return@forEachIndexed
             }
+            val highlightRange = textOnlyHighlightRange(
+                start = componentStart,
+                text = mapping.explanationComponent
+            )
 
             val labelColor = mappingColors[index % mappingColors.size].let { Color(it.red, it.green, it.blue) }
             val painter = DefaultHighlighter.DefaultHighlightPainter(labelColor)
             textArea.highlighter.addHighlight(
-                componentStart,
-                componentStart + mapping.explanationComponent.length,
+                highlightRange.first,
+                highlightRange.second,
                 painter
             )
 
             mappingRanges.add(
                 MappingRange(
-                    start = componentStart,
-                    endExclusive = componentStart + mapping.explanationComponent.length,
+                    start = highlightRange.first,
+                    endExclusive = highlightRange.second,
                     mapping = mapping,
                     color = labelColor
                 )
@@ -1191,6 +1195,24 @@ class MyToolWindow(private val project: Project) {
 
         println("[createInteractiveSummaryPanel] Panel created successfully")
         return panel
+    }
+
+    private fun textOnlyHighlightRange(start: Int, text: String): Pair<Int, Int> {
+        var offset = 0
+        while (offset < text.length && text[offset].isWhitespace() && text[offset] != '\n') {
+            offset++
+        }
+
+        if (offset < text.length && (text[offset] == '•' || text[offset] == '◦')) {
+            offset++
+            if (offset < text.length && text[offset] == ' ') {
+                offset++
+            }
+        }
+
+        val end = start + text.length
+        val textStart = (start + offset).coerceAtMost(end)
+        return textStart to end
     }
     
     private fun highlightCodeInEditor(
@@ -1397,7 +1419,7 @@ class MyToolWindow(private val project: Project) {
             .joinToString("\n")
             .trim()
     }
-    
+
     /**
      * Generate code using Junie CLI
      */
@@ -1759,8 +1781,9 @@ class MyToolWindow(private val project: Project) {
         }
         targetPanel.add(formatLabel)
         
-        // Display each change summary
-        summaries.forEachIndexed { index, changeSummary ->
+        // Display changes grouped by file.
+        val summariesByFile = summaries.groupBy { it.filePath }
+        summariesByFile.entries.forEachIndexed { fileIndex, (filePath, fileSummaries) ->
             val changePanel = JPanel().apply {
                 layout = BoxLayout(this, BoxLayout.Y_AXIS)
                 border = BorderFactory.createCompoundBorder(
@@ -1773,50 +1796,59 @@ class MyToolWindow(private val project: Project) {
             }
             
             // File info
-            val fileName = changeSummary.filePath.substringAfterLast("/")
+            val fileName = filePath.substringAfterLast("/")
             changePanel.add(JLabel(" $fileName").apply {
                 font = Font(font.name, Font.BOLD, 12)
                 foreground = JBColor(Color(100, 60, 180), Color(187, 134, 252))
                 border = BorderFactory.createEmptyBorder(0, 0, 5, 0)
             })
-            
-            // Line range
-            changePanel.add(JLabel("Lines ${changeSummary.startLine}-${changeSummary.endLine}").apply {
-                font = Font(font.name, Font.ITALIC, 10)
-                foreground = Color(128, 128, 128)
-                border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
-            })
-            
-            // Summary title
-            if (changeSummary.summary.title.isNotEmpty()) {
-                changePanel.add(JLabel(changeSummary.summary.title).apply {
-                    font = Font(font.name, Font.BOLD, 12)
-                    foreground = JBColor(Color(30, 30, 30), Color.WHITE)
-                    border = BorderFactory.createEmptyBorder(0, 0, 8, 0)
-                })
-            }
-            
-            // Summary text with interactive mappings using current settings
-            val summaryText = getSummaryText(changeSummary.summary, currentDetailLevel, currentIsStructured)
-            val mappingKey = "${currentDetailLevel}_${if (currentIsStructured) "structured" else "unstructured"}"
-            val mappings = getMappingsForChangeSummary(changeSummary.mappings, mappingKey)
-            
-            if (mappings.isNotEmpty()) {
-                val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings, changeSummary.filePath)
-                interactivePanel.background = JBColor(Color(245, 247, 249), Color(60, 63, 65))
-                changePanel.add(interactivePanel)
-            } else {
-                changePanel.add(JLabel(summaryText).apply {
-                    font = Font(font.name, Font.PLAIN, 11)
-                    foreground = JBColor(Color(80, 80, 80), Color(200, 200, 200))
+
+            fileSummaries.forEachIndexed { changeIndex, changeSummary ->
+                if (changeIndex > 0) {
+                    changePanel.add(JSeparator(SwingConstants.HORIZONTAL).apply {
+                        maximumSize = java.awt.Dimension(Integer.MAX_VALUE, 2)
+                        border = BorderFactory.createEmptyBorder(10, 0, 10, 0)
+                    })
+                }
+
+                // Line range
+                changePanel.add(JLabel("Lines ${changeSummary.startLine}-${changeSummary.endLine}").apply {
+                    font = Font(font.name, Font.ITALIC, 10)
+                    foreground = Color(128, 128, 128)
                     border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
                 })
+
+                // Summary title
+                if (changeSummary.summary.title.isNotEmpty()) {
+                    changePanel.add(JLabel(changeSummary.summary.title).apply {
+                        font = Font(font.name, Font.BOLD, 12)
+                        foreground = JBColor(Color(30, 30, 30), Color.WHITE)
+                        border = BorderFactory.createEmptyBorder(0, 0, 8, 0)
+                    })
+                }
+
+                // Summary text with interactive mappings using current settings
+                val summaryText = getSummaryText(changeSummary.summary, currentDetailLevel, currentIsStructured)
+                val mappingKey = "${currentDetailLevel}_${if (currentIsStructured) "structured" else "unstructured"}"
+                val mappings = getMappingsForChangeSummary(changeSummary.mappings, mappingKey)
+
+                if (mappings.isNotEmpty()) {
+                    val interactivePanel = createInteractiveSummaryPanel(summaryText, mappings, changeSummary.filePath)
+                    interactivePanel.background = JBColor(Color(245, 247, 249), Color(60, 63, 65))
+                    changePanel.add(interactivePanel)
+                } else {
+                    changePanel.add(JLabel(summaryText).apply {
+                        font = Font(font.name, Font.PLAIN, 11)
+                        foreground = JBColor(Color(80, 80, 80), Color(200, 200, 200))
+                        border = BorderFactory.createEmptyBorder(0, 0, 10, 0)
+                    })
+                }
             }
             
             targetPanel.add(changePanel)
             
-            // Add spacing between changes
-            if (index < summaries.size - 1) {
+            // Add spacing between files
+            if (fileIndex < summariesByFile.size - 1) {
                 targetPanel.add(Box.createVerticalStrut(15))
             }
         }

@@ -32,7 +32,7 @@ class JunieCliService(private val project: Project) {
     
     companion object {
         private const val JUNIE_CODE_MODEL = "gemini-3-flash-preview"
-        private const val JUNIE_EXPLANATION_MODEL = "gemini-3.1-flash-lite-preview"
+        private const val JUNIE_EXPLANATION_MODEL = "gemini-3.1-flash-lite"
         private const val SUMMARY_START_MARKER = "BEGIN_EXPLAINABLE_AI_SUMMARY_JSON"
         private const val SUMMARY_END_MARKER = "END_EXPLAINABLE_AI_SUMMARY_JSON"
         private const val MAPPING_START_MARKER = "BEGIN_EXPLAINABLE_AI_MAPPING_JSON"
@@ -55,7 +55,7 @@ class JunieCliService(private val project: Project) {
                 prompt = prompt,
                 model = JUNIE_CODE_MODEL,
                 onOutputLine = onOutputLine
-            ).getOrThrow()
+            ).recoverFromInvalidModel(prompt, onOutputLine).getOrThrow()
             val outputText = executionResult.outputText
             val jsonOutputText = executionResult.jsonOutputText
             val searchableOutput = outputText + "\n" + jsonOutputText
@@ -157,7 +157,7 @@ $contentToExplain
             prompt = prompt,
             model = JUNIE_EXPLANATION_MODEL,
             onOutputLine = onOutputLine
-        ).getOrElse { throwable ->
+        ).recoverFromInvalidModel(prompt, onOutputLine).getOrElse { throwable ->
             return@withContext Result.failure(throwable)
         }
 
@@ -243,7 +243,7 @@ $summaryText
             prompt = prompt,
             model = JUNIE_EXPLANATION_MODEL,
             onOutputLine = onOutputLine
-        ).getOrElse { throwable ->
+        ).recoverFromInvalidModel(prompt, onOutputLine).getOrElse { throwable ->
             return@withContext Result.failure(throwable)
         }
 
@@ -335,9 +335,9 @@ Generate 6 explanations of the whole input, one for each combination of detail l
 - low_unstructured: One-sentence, low-detail, paragraph style.
 - low_structured: 2-3 short bullet points, low-detail, as a single string. Each bullet must start with "•" and be separated by \n. Never return an array.
 - medium_unstructured: 2-3 sentences, medium-detail, paragraph style.
-- medium_structured: 3-5 bullet points, medium-detail, as a single string. Use "•" for first-level bullets and "◦" for second-level bullets when useful. Bullets must be separated by \n. Never return an array.
+- medium_structured: 3-5 bullet points, medium-detail, as a single string. Use "•" for first-level bullets and "◦" for second-level bullets when useful. Every second-level bullet line MUST start with exactly two spaces before "◦", for example "  ◦ Nested point". Bullets must be separated by \n. Never return an array.
 - high_unstructured: 3-4 sentences, high-detail, paragraph style.
-- high_structured: 4-8 bullet points, high-detail, as a single string. Use "•" for first-level bullets and "◦" for second-level bullets when useful. Bullets must be separated by \n. Never return an array.
+- high_structured: 4-8 bullet points, high-detail, as a single string. Use "•" for first-level bullets and "◦" for second-level bullets when useful. Every second-level bullet line MUST start with exactly two spaces before "◦", for example "  ◦ Nested point". Bullets must be separated by \n. Never return an array.
 
 For EACH of the 6 explanation strings, also build mappings from explanation components to code segments.
 
@@ -353,6 +353,7 @@ Mapping rules:
 IMPORTANT:
 - You MUST cover the ENTIRE $explainedEntity in the explanation.
 - You MUST explain only the provided $explainedEntity, not the entire file.
+- For medium_structured and high_structured, if there are second-level bullets, they MUST be indented with exactly two spaces before "◦". Do not place "◦" at the same indentation level as "•".
 - The file context and agent trace are reference context only.
 - Use the agent trace to improve the explanation when it helps, but do NOT turn the answer into a log recap.
 - Do NOT use emojis anywhere in your response.
@@ -415,7 +416,7 @@ $codeWithLineNumbers
             prompt = prompt,
             model = JUNIE_EXPLANATION_MODEL,
             onOutputLine = onOutputLine
-        ).getOrElse { throwable ->
+        ).recoverFromInvalidModel(prompt, onOutputLine).getOrElse { throwable ->
             return@withContext Result.failure(throwable)
         }
 
@@ -423,9 +424,10 @@ $codeWithLineNumbers
             val jsonResponse = waitForResponseFile(responseFile, { containsSummaryWithMappingsKeys(it) })
                 ?: extractSummaryWithMappingsJson(executionResult.outputText, executionResult.jsonOutputText)
             val parsed = json.decodeFromString<CodeSummaryWithMappings>(jsonResponse)
+            val normalizedSummary = parsed.summary.withNormalizedStructuredBulletIndent()
             CodeSummaryWithMappings(
-                summary = parsed.summary,
-                mappings = normalizeSummaryMappings(parsed.summary, parsed.mappings, realStartLine)
+                summary = normalizedSummary,
+                mappings = normalizeSummaryMappings(normalizedSummary, parsed.mappings, realStartLine)
             )
         }.fold(
             onSuccess = { Result.success(it) },
@@ -558,7 +560,7 @@ $codeWithLineNumbers
 
     private fun executeJuniePrompt(
         prompt: String,
-        model: String,
+        model: String?,
         onOutputLine: (String) -> Unit
     ): Result<JunieExecutionResult> {
         val token = settings.getJunieToken()
@@ -576,7 +578,9 @@ $codeWithLineNumbers
 
             commandLine.addParameter("--output-format=json")
             commandLine.addParameter("--json-output-file=${jsonOutputFile.toAbsolutePath()}")
-            commandLine.addParameter("--model=$model")
+            if (!model.isNullOrBlank()) {
+                commandLine.addParameter("--model=$model")
+            }
             commandLine.addParameter(prompt)
 
             println("[JunieCliService] Executing command: ${commandLine.commandLineString}")
@@ -628,6 +632,24 @@ $codeWithLineNumbers
             throwable.printStackTrace()
         }
     }
+
+    private fun Result<JunieExecutionResult>.recoverFromInvalidModel(
+        prompt: String,
+        onOutputLine: (String) -> Unit
+    ): Result<JunieExecutionResult> {
+        val executionResult = getOrElse { return this }
+        val output = executionResult.outputText + "\n" + executionResult.jsonOutputText
+        if (executionResult.exitCode == 0 || !output.contains("Invalid model:", ignoreCase = true)) {
+            return this
+        }
+
+        onOutputLine("Configured Junie model is not available in this CLI version; retrying with Junie default model...")
+        return executeJuniePrompt(
+            prompt = prompt,
+            model = null,
+            onOutputLine = onOutputLine
+        )
+    }
     
     private fun outputTypeLabel(outputType: Key<*>): String {
         return when (outputType) {
@@ -671,6 +693,29 @@ $codeWithLineNumbers
 
     private fun parseCodeSummary(jsonString: String): CodeSummary {
         return json.decodeFromString(CodeSummary.serializer(), jsonString)
+            .withNormalizedStructuredBulletIndent()
+    }
+
+    private fun CodeSummary.withNormalizedStructuredBulletIndent(): CodeSummary {
+        return copy(
+            low_structured = normalizeStructuredBulletIndent(low_structured),
+            medium_structured = normalizeStructuredBulletIndent(medium_structured),
+            high_structured = normalizeStructuredBulletIndent(high_structured)
+        )
+    }
+
+    private fun normalizeStructuredBulletIndent(text: String): String {
+        return text
+            .lineSequence()
+            .map { line ->
+                val trimmedStart = line.trimStart()
+                if (trimmedStart.startsWith("◦")) {
+                    "  $trimmedStart"
+                } else {
+                    line
+                }
+            }
+            .joinToString("\n")
     }
 
     private fun extractCodeSummaryJson(outputText: String, jsonOutputText: String): String {
@@ -1080,14 +1125,15 @@ $codeWithLineNumbers
         }
 
         return correctedMappings.mapNotNull { mapping ->
-            if (summaryText.contains(mapping.explanationComponent)) {
-                mapping
+            val normalizedComponent = normalizeStructuredBulletIndent(mapping.explanationComponent)
+            if (summaryText.contains(normalizedComponent)) {
+                SummaryMapping(explanationComponent = normalizedComponent, codeSegments = mapping.codeSegments)
             } else {
-                val fuzzy = findFuzzyMatchInText(summaryText, mapping.explanationComponent)
+                val fuzzy = findFuzzyMatchInText(summaryText, normalizedComponent)
                 if (fuzzy != null) {
                     SummaryMapping(explanationComponent = fuzzy, codeSegments = mapping.codeSegments)
                 } else {
-                    println("[normalizeMappingsForSummary] explanationComponent not found in summary (dropped): ${mapping.explanationComponent}")
+                    println("[normalizeMappingsForSummary] explanationComponent not found in summary (dropped): $normalizedComponent")
                     null
                 }
             }
