@@ -1,0 +1,90 @@
+Authenticated successfully
+[38;5;78m●[0m [1mFound "def formfield_for_manytomany|def formfield_for_foreignkey" in django/contrib/admin[0m
+[38;5;247mdjango/contrib/admin/options.py [216—220][0m
+[38;5;247mdjango/contrib/admin/options.py [240—244][0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/contrib/admin/options.py [218 - 318][0m
+[38;5;247mThe file in the admin options module was opened at a specific line, revealing a method related to ordering and fieldsets configuration.[0m
+[38;5;78m●[0m [1mEdited files[0m
+[38;5;247mCreated reproduce_issue.py[0m
+[38;5;247mA Python script was created to test if a custom widget is preserved in a Django admin formfield_for_manytomany method when using filter_horizontal, with success or failure printed based on the widget type.[0m
+[38;5;78m●[0m [1mpython reproduce_issue.py[0m
+[38;5;241m│ Widget without filter_horizontal: <class '__main__.CustomWidget'>[0m
+[38;5;241m│ Widget with filter_horizontal: <class 'django.contrib.admin.widgets.FilteredSelectMultiple'>[0m
+[38;5;241m│ FAILURE: Custom widget overwritten.[0m
+[38;5;247mThe script ran successfully but reported a failure indicating that the custom widget was overwritten.[0m
+[38;5;78m●[0m [1mThinking[0m
+[38;5;247mThe issue is confirmed. `formfield_for_manytomany` in `django/contrib/admin/options.py` overwrites the `widget` parameter in `kwargs` without checking if it's already present, unlike `formfield_for_foreignkey`.[0m
+[38;5;247mI've created a reproduction script that demonstrates this behavior when `filter_horizontal` is used.[0m
+[38;5;247mNext, I will modify `django/contrib/admin/options.py` to add the missing check.[0m
+[38;5;78m●[0m [1mEdited files[0m
+[38;5;247mUpdated django/contrib/admin/options.py[0m
+[38;5;247mThe code was modified to add a conditional check for the 'widget' key in kwargs before setting it based on the field type in the admin form.[0m
+[38;5;78m●[0m [1mpython reproduce_issue.py[0m
+[38;5;241m│ Widget without filter_horizontal: <class '__main__.CustomWidget'>[0m
+[38;5;241m│ Widget with filter_horizontal: <class '__main__.CustomWidget'>[0m
+[38;5;241m│ SUCCESS: Custom widget preserved.[0m
+[38;5;247mThe script ran successfully, confirming that the custom widget was preserved with and without the filter_horizontal.[0m
+[38;5;78m●[0m [1mSearched "*admin*field*" in tests[0m
+[38;5;247mNo matches found[0m
+[38;5;78m●[0m [1mFound "formfield_for_manytomany" in tests[0m
+[38;5;247mtests/admin_ordering/tests.py [142—146][0m
+[38;5;247mtests/admin_ordering/tests.py [175—179][0m
+[38;5;78m●[0m [1mls tests/admin_*[0m
+[38;5;241m│ tests/admin_autodiscover:[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ urls.py[0m
+[38;5;241m│ widgetadmin.py[0m
+[38;5;247mThe directory contains multiple test subdirectories with various Python files related to admin functionality.[0m
+[38;5;203m●[0m [1mpython ./tests/runtests.py admin_widgets admin_ordering[0m
+[38;5;241m│ Traceback (most recent call last):[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ ) from e[0m
+[38;5;241m│ RuntimeError: Django module not found, reference tests/README.rst for instructions.[0m
+[38;5;78m●[0m [1mPYTHONPATH=. python ./tests/runtests.py admin_widgets admin_ordering[0m
+[38;5;241m│ Creating test database for alias 'default'...[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ Testing against Django installed in '/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/django__django-12713/django__django/django'[0m
+[38;5;241m│ System check identified no issues (0 silenced).[0m
+[38;5;247mAll 91 tests ran successfully with 14 skipped, and no system issues were detected.[0m
+[38;5;78m●[0m [1mPYTHONPATH=. python ./tests/runtests.py admin_views[0m
+[38;5;241m│ Creating test database for alias 'default'...[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ Testing against Django installed in '/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/django__django-12713/django__django/django'[0m
+[38;5;241m│ System check identified no issues (0 silenced).[0m
+[38;5;247mAll 362 tests ran successfully with 15 skipped, and no system issues were identified.[0m
+[38;5;78m●[0m [1mFound "def formfield_for_dbfield" in django/contrib/admin/options.py[0m
+[38;5;247mdjango/contrib/admin/options.py [128—132][0m
+[38;5;78m●[0m [1mThinking[0m
+[38;5;247mI've applied the fix to `formfield_for_manytomany` and verified it with the reproduction script. I've also run relevant existing tests (`admin_widgets`, `admin_ordering`, `admin_views`) and they passed.[0m
+[38;5;247mNow I'm just double-checking `formfield_for_dbfield` to see if it has similar issues, though the report was specifically about `formfield_for_manytomany`.[0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/contrib/admin/options.py [130 - 230][0m
+[38;5;247mThe file was opened successfully, displaying its content and structure for further review.[0m
+[38;5;78m●[0m [1mrm reproduce_issue.py[0m
+[38;5;247mThe file named reproduce_issue.py was successfully deleted without any errors.[0m
+[38;5;78m●[0m [1mls tests/modeladmin*[0m
+[38;5;241m│ __init__.py[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ test_checks.py[0m
+[38;5;241m│ tests.py[0m
+[38;5;247mThe tests/modeladmin directory contains several Python files, including initialization, models, and multiple test files.[0m
+[38;5;78m●[0m [1mPYTHONPATH=. python ./tests/runtests.py modeladmin[0m
+[38;5;241m│ Creating test database for alias 'default'...[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ Testing against Django installed in '/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/django__django-12713/django__django/django'[0m
+[38;5;241m│ System check identified no issues (0 silenced).[0m
+[38;5;247mAll 156 modeladmin tests ran successfully with no issues detected.[0m
+[38;5;78m●[0m [1mTASK RESULT:[0m
+[38;5;247m### Summary[0m
+[38;5;247m- Fixed a bug where `formfield_for_manytomany()` in `ModelAdmin` would overwrite a custom `widget` passed via `kwargs`.[0m
+[38;5;247m- Aligned `formfield_for_manytomany()` behavior with `formfield_for_foreignkey()`.[0m
+[38;5;247m### Changes[0m
+[38;5;247m- Modified `django/contrib/admin/options.py` to wrap the logic that sets default widgets for ManyToMany fields (autocomplete, raw ID, and filtered select multiple) in an `if 'widget' not in kwargs:` block.[0m
+[38;5;247m- This ensures that if a user provides a custom widget when calling `super().formfield_for_manytomany(db_field, request, widget=MyWidget)`, it is preserved instead of being overwritten by the default admin widgets.[0m
+[38;5;247m### Verification[0m
+[38;5;247m- Created a reproduction script that demonstrated the issue when `filter_horizontal` was enabled.[0m
+[38;5;247m- Verified that with the fix, the custom widget is correctly preserved.[0m
+[38;5;247m- Ran existing tests in `admin_widgets`, `admin_ordering`, `admin_views`, and `modeladmin`, all of which passed.[0m
+[38;5;247m# FILES[0m
+[38;5;247mUpdated django/contrib/admin/options.py[0m

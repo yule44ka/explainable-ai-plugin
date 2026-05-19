@@ -1,0 +1,990 @@
+FFFFFFFFFFFFFFFFFF                                                       [100%]
+=================================== FAILURES ===================================
+________________________ test_TooManyRedirects_on_HEAD _________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver', freshenv=True)
+    def test_TooManyRedirects_on_HEAD(app):
+        class InfiniteRedirectOnHeadHandler(http.server.BaseHTTPRequestHandler):
+            def do_HEAD(self):
+                self.send_response(302, "Found")
+                self.send_header("Location", "http://localhost:7777/")
+                self.end_headers()
+    
+            def do_GET(self):
+                self.send_response(200, "OK")
+                self.end_headers()
+                self.wfile.write(b"ok\n")
+    
+>       with http_server(InfiniteRedirectOnHeadHandler):
+
+tests/test_build_linkcheck.py:400: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109953130>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+________________________________ test_defaults _________________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck', freshenv=True)
+    def test_defaults(app):
+        app.builder.build_all()
+    
+        assert (app.outdir / 'output.txt').exists()
+        content = (app.outdir / 'output.txt').read_text()
+    
+        print(content)
+        # looking for '#top' and '#does-not-exist' not found should fail
+>       assert "Anchor 'top' not found" in content
+E       assert "Anchor 'top' not found" in 'links.txt:9: [broken] https://www.google.com/#!bar: HTTPSConnectionPool(host=\'www.google.com\', port=443): Max retri...onnection(host=\'localhost\', port=7777): Failed to establish a new connection: [Errno 1] Operation not permitted"))\n'
+
+tests/test_build_linkcheck.py:30: AssertionError
+----------------------------- Captured stdout call -----------------------------
+links.txt:9: [broken] https://www.google.com/#!bar: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:10: [broken] https://www.google.com#!bar: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:12: [broken] http://www.sphinx-doc.org/en/1.7/intro.html#does-not-exist: HTTPConnectionPool(host='www.sphinx-doc.org', port=80): Max retries exceeded with url: /en/1.7/intro.html (Caused by NameResolutionError("HTTPConnection(host='www.sphinx-doc.org', port=80): Failed to resolve 'www.sphinx-doc.org' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:3: [broken] https://www.w3.org/TR/2006/REC-xml-names-20060816/#defaulting: HTTPSConnectionPool(host='www.w3.org', port=443): Max retries exceeded with url: /TR/2006/REC-xml-names-20060816/ (Caused by NameResolutionError("HTTPSConnection(host='www.w3.org', port=443): Failed to resolve 'www.w3.org' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:11: [broken] https://www.google.com/#top: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:15: [broken] path/to/notfound: 
+links.txt:18: [broken] https://www.google.com/image2.png: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image2.png (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:17: [broken] https://www.google.com/image.png: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image.png (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))
+links.txt:13: [broken] https://localhost:7777/doesnotexist: HTTPSConnectionPool(host='localhost', port=7777): Max retries exceeded with url: /doesnotexist (Caused by NewConnectionError("HTTPSConnection(host='localhost', port=7777): Failed to establish a new connection: [Errno 1] Operation not permitted"))
+
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+[01mbuilding [linkcheck]: [39;49;00mall source files
+[01mupdating environment: [39;49;00m[new config] 1 added, 0 changed, 0 removed
+[01mreading sources... [39;49;00m[100%] [35mlinks[39;49;00m                                                
+[01mlooking for now-outdated files... [39;49;00mnone found
+[01mpickling environment... [39;49;00mdone
+[01mchecking consistency... [39;49;00mdone
+[01mpreparing documents... [39;49;00mdone
+[01mwriting output... [39;49;00m[100%] [32mlinks[39;49;00m                                                 
+(line    9) [91mbroken    [39;49;00mhttps://www.google.com/#!bar[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   10) [91mbroken    [39;49;00mhttps://www.google.com#!bar[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   12) [91mbroken    [39;49;00mhttp://www.sphinx-doc.org/en/1.7/intro.html#does-not-exist[91m - HTTPConnectionPool(host='www.sphinx-doc.org', port=80): Max retries exceeded with url: /en/1.7/intro.html (Caused by NameResolutionError("HTTPConnection(host='www.sphinx-doc.org', port=80): Failed to resolve 'www.sphinx-doc.org' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line    3) [91mbroken    [39;49;00mhttps://www.w3.org/TR/2006/REC-xml-names-20060816/#defaulting[91m - HTTPSConnectionPool(host='www.w3.org', port=443): Max retries exceeded with url: /TR/2006/REC-xml-names-20060816/ (Caused by NameResolutionError("HTTPSConnection(host='www.w3.org', port=443): Failed to resolve 'www.w3.org' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   11) [91mbroken    [39;49;00mhttps://www.google.com/#top[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   15) [91mbroken    [39;49;00mpath/to/notfound[91m - [39;49;00m
+(line   14) [32mok        [39;49;00mconf.py
+(line   18) [91mbroken    [39;49;00mhttps://www.google.com/image2.png[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image2.png (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   17) [91mbroken    [39;49;00mhttps://www.google.com/image.png[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image.png (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   13) [91mbroken    [39;49;00mhttps://localhost:7777/doesnotexist[91m - HTTPSConnectionPool(host='localhost', port=7777): Max retries exceeded with url: /doesnotexist (Caused by NewConnectionError("HTTPSConnection(host='localhost', port=7777): Failed to establish a new connection: [Errno 1] Operation not permitted"))[39;49;00m
+
+
+# warning: 
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:9: WARNING: Duplicate explicit target name: "example bar invalid".[39;49;00m
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:9: WARNING: Duplicate explicit target name: "example bar invalid".[39;49;00m
+[31m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:5: WARNING: Unknown target name: "http://www.sphinx-doc.org/en/1.4.8/tutorial.html#install-sphinx".[39;49;00m
+
+______________________________ test_defaults_json ______________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck', freshenv=True)
+    def test_defaults_json(app):
+        app.builder.build_all()
+    
+        assert (app.outdir / 'output.json').exists()
+        content = (app.outdir / 'output.json').read_text()
+        print(content)
+    
+        rows = [json.loads(x) for x in content.splitlines()]
+        row = rows[0]
+        for attr in ["filename", "lineno", "status", "code", "uri",
+                     "info"]:
+            assert attr in row
+    
+        assert len(content.splitlines()) == 10
+        assert len(rows) == 10
+        # the output order of the rows is not stable
+        # due to possible variance in network latency
+        rowsby = {row["uri"]: row for row in rows}
+>       assert rowsby["https://www.google.com#!bar"] == {
+            'filename': 'links.txt',
+            'lineno': 10,
+            'status': 'working',
+            'code': 0,
+            'uri': 'https://www.google.com#!bar',
+            'info': ''
+        }
+E       assert {'code': 0, '...eno': 10, ...} == {'code': 0, '...eno': 10, ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'info': 'HTTPSConnectionPool(host=\'www.google.com\', port=443): Max retries exceeded with url: / (Caused by NameReso...le.com\', port=443): Failed to resolve \'www.google.com\' ([Errno 8] nodename nor servname provided, or not known)"))'} != {'info': ''}
+E         {'status': 'broken'} != {'status': 'working'}
+E         Use -v to get more diff
+
+tests/test_build_linkcheck.py:61: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"filename": "links.txt", "lineno": 3, "status": "broken", "code": 0, "uri": "https://www.w3.org/TR/2006/REC-xml-names-20060816/#defaulting", "info": "HTTPSConnectionPool(host='www.w3.org', port=443): Max retries exceeded with url: /TR/2006/REC-xml-names-20060816/ (Caused by NameResolutionError(\"HTTPSConnection(host='www.w3.org', port=443): Failed to resolve 'www.w3.org' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+{"filename": "links.txt", "lineno": 12, "status": "broken", "code": 0, "uri": "http://www.sphinx-doc.org/en/1.7/intro.html#does-not-exist", "info": "HTTPConnectionPool(host='www.sphinx-doc.org', port=80): Max retries exceeded with url: /en/1.7/intro.html (Caused by NameResolutionError(\"HTTPConnection(host='www.sphinx-doc.org', port=80): Failed to resolve 'www.sphinx-doc.org' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+{"filename": "links.txt", "lineno": 9, "status": "broken", "code": 0, "uri": "https://www.google.com/#!bar", "info": "HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+{"filename": "links.txt", "lineno": 10, "status": "broken", "code": 0, "uri": "https://www.google.com#!bar", "info": "HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+{"filename": "links.txt", "lineno": 11, "status": "broken", "code": 0, "uri": "https://www.google.com/#top", "info": "HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+{"filename": "links.txt", "lineno": 15, "status": "broken", "code": 0, "uri": "path/to/notfound", "info": ""}
+{"filename": "links.txt", "lineno": 14, "status": "working", "code": 0, "uri": "conf.py", "info": ""}
+{"filename": "links.txt", "lineno": 18, "status": "broken", "code": 0, "uri": "https://www.google.com/image2.png", "info": "HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image2.png (Caused by NameResolutionError(\"HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+{"filename": "links.txt", "lineno": 13, "status": "broken", "code": 0, "uri": "https://localhost:7777/doesnotexist", "info": "HTTPSConnectionPool(host='localhost', port=7777): Max retries exceeded with url: /doesnotexist (Caused by NewConnectionError(\"HTTPSConnection(host='localhost', port=7777): Failed to establish a new connection: [Errno 1] Operation not permitted\"))"}
+{"filename": "links.txt", "lineno": 17, "status": "broken", "code": 0, "uri": "https://www.google.com/image.png", "info": "HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image.png (Caused by NameResolutionError(\"HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)\"))"}
+
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+[01mbuilding [linkcheck]: [39;49;00mall source files
+[01mupdating environment: [39;49;00m[new config] 1 added, 0 changed, 0 removed
+[01mreading sources... [39;49;00m[100%] [35mlinks[39;49;00m                                                
+[01mlooking for now-outdated files... [39;49;00mnone found
+[01mpickling environment... [39;49;00mdone
+[01mchecking consistency... [39;49;00mdone
+[01mpreparing documents... [39;49;00mdone
+[01mwriting output... [39;49;00m[100%] [32mlinks[39;49;00m                                                 
+(line    3) [91mbroken    [39;49;00mhttps://www.w3.org/TR/2006/REC-xml-names-20060816/#defaulting[91m - HTTPSConnectionPool(host='www.w3.org', port=443): Max retries exceeded with url: /TR/2006/REC-xml-names-20060816/ (Caused by NameResolutionError("HTTPSConnection(host='www.w3.org', port=443): Failed to resolve 'www.w3.org' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   12) [91mbroken    [39;49;00mhttp://www.sphinx-doc.org/en/1.7/intro.html#does-not-exist[91m - HTTPConnectionPool(host='www.sphinx-doc.org', port=80): Max retries exceeded with url: /en/1.7/intro.html (Caused by NameResolutionError("HTTPConnection(host='www.sphinx-doc.org', port=80): Failed to resolve 'www.sphinx-doc.org' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line    9) [91mbroken    [39;49;00mhttps://www.google.com/#!bar[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   10) [91mbroken    [39;49;00mhttps://www.google.com#!bar[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   11) [91mbroken    [39;49;00mhttps://www.google.com/#top[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   15) [91mbroken    [39;49;00mpath/to/notfound[91m - [39;49;00m
+(line   14) [32mok        [39;49;00mconf.py
+(line   18) [91mbroken    [39;49;00mhttps://www.google.com/image2.png[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image2.png (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   13) [91mbroken    [39;49;00mhttps://localhost:7777/doesnotexist[91m - HTTPSConnectionPool(host='localhost', port=7777): Max retries exceeded with url: /doesnotexist (Caused by NewConnectionError("HTTPSConnection(host='localhost', port=7777): Failed to establish a new connection: [Errno 1] Operation not permitted"))[39;49;00m
+(line   17) [91mbroken    [39;49;00mhttps://www.google.com/image.png[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: /image.png (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+
+
+# warning: 
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:9: WARNING: Duplicate explicit target name: "example bar invalid".[39;49;00m
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:9: WARNING: Duplicate explicit target name: "example bar invalid".[39;49;00m
+[31m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:5: WARNING: Unknown target name: "http://www.sphinx-doc.org/en/1.4.8/tutorial.html#install-sphinx".[39;49;00m
+
+_____________________________ test_anchors_ignored _____________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx(
+        'linkcheck', testroot='linkcheck', freshenv=True,
+        confoverrides={'linkcheck_anchors_ignore': ["^!", "^top$"],
+                       'linkcheck_ignore': [
+                           'https://localhost:7777/doesnotexist',
+                           'http://www.sphinx-doc.org/en/1.7/intro.html#',
+                           'https://www.google.com/image.png',
+                           'https://www.google.com/image2.png',
+                           'path/to/notfound']
+                       })
+    def test_anchors_ignored(app):
+        app.builder.build_all()
+    
+        assert (app.outdir / 'output.txt').exists()
+        content = (app.outdir / 'output.txt').read_text()
+    
+        # expect all ok when excluding #top
+>       assert not content
+E       assert not 'links.txt:3: [broken] https://www.w3.org/TR/2006/REC-xml-names-20060816/#defaulting: HTTPSConnectionPool(host=\'www.w...e.com\', port=443): Failed to resolve \'www.google.com\' ([Errno 8] nodename nor servname provided, or not known)"))\n'
+
+tests/test_build_linkcheck.py:111: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+[01mbuilding [linkcheck]: [39;49;00mall source files
+[01mupdating environment: [39;49;00m[new config] 1 added, 0 changed, 0 removed
+[01mreading sources... [39;49;00m[100%] [35mlinks[39;49;00m                                                
+[01mlooking for now-outdated files... [39;49;00mnone found
+[01mpickling environment... [39;49;00mdone
+[01mchecking consistency... [39;49;00mdone
+[01mpreparing documents... [39;49;00mdone
+[01mwriting output... [39;49;00m[100%] [32mlinks[39;49;00m                                                 
+(line   12) [90m-ignored- [39;49;00mhttp://www.sphinx-doc.org/en/1.7/intro.html#does-not-exist
+(line   13) [90m-ignored- [39;49;00mhttps://localhost:7777/doesnotexist
+(line   14) [32mok        [39;49;00mconf.py
+(line   15) [90m-ignored- [39;49;00mpath/to/notfound
+(line   17) [90m-ignored- [39;49;00mhttps://www.google.com/image.png
+(line   18) [90m-ignored- [39;49;00mhttps://www.google.com/image2.png
+(line    3) [91mbroken    [39;49;00mhttps://www.w3.org/TR/2006/REC-xml-names-20060816/#defaulting[91m - HTTPSConnectionPool(host='www.w3.org', port=443): Max retries exceeded with url: /TR/2006/REC-xml-names-20060816/ (Caused by NameResolutionError("HTTPSConnection(host='www.w3.org', port=443): Failed to resolve 'www.w3.org' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line    9) [91mbroken    [39;49;00mhttps://www.google.com/#!bar[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   10) [91mbroken    [39;49;00mhttps://www.google.com#!bar[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+(line   11) [91mbroken    [39;49;00mhttps://www.google.com/#top[91m - HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='www.google.com', port=443): Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))[39;49;00m
+
+
+# warning: 
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:9: WARNING: Duplicate explicit target name: "example bar invalid".[39;49;00m
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:9: WARNING: Duplicate explicit target name: "example bar invalid".[39;49;00m
+[31m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck/links.txt:5: WARNING: Unknown target name: "http://www.sphinx-doc.org/en/1.4.8/tutorial.html#install-sphinx".[39;49;00m
+
+________________________ test_raises_for_invalid_status ________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-anchor', freshenv=True)
+    def test_raises_for_invalid_status(app):
+        class InternalServerErrorHandler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                self.send_error(500, "Internal Server Error")
+    
+>       with http_server(InternalServerErrorHandler):
+
+tests/test_build_linkcheck.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109d81eb0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-anchor
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-anchor/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+______________________ test_auth_header_uses_first_match _______________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x109dbbd90>
+
+    @pytest.mark.sphinx(
+        'linkcheck', testroot='linkcheck-localserver', freshenv=True,
+        confoverrides={'linkcheck_auth': [
+            (r'^$', ('no', 'match')),
+            (r'^http://localhost:7777/$', ('user1', 'password')),
+            (r'.*local.*', ('user2', 'hunter2')),
+        ]})
+    def test_auth_header_uses_first_match(app, capsys):
+>       with http_server(HeadersDumperHandler):
+
+tests/test_build_linkcheck.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109dbb6d0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+__________________________ test_auth_header_no_match ___________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x109ae7610>
+
+    @pytest.mark.sphinx(
+        'linkcheck', testroot='linkcheck-localserver', freshenv=True,
+        confoverrides={'linkcheck_auth': [(r'^$', ('user1', 'password'))]})
+    def test_auth_header_no_match(app, capsys):
+>       with http_server(HeadersDumperHandler):
+
+tests/test_build_linkcheck.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109dff5b0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+________________________ test_linkcheck_request_headers ________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x109e3a160>
+
+    @pytest.mark.sphinx(
+        'linkcheck', testroot='linkcheck-localserver', freshenv=True,
+        confoverrides={'linkcheck_request_headers': {
+            "http://localhost:7777/": {
+                "Accept": "text/html",
+            },
+            "*": {
+                "X-Secret": "open sesami",
+            }
+        }})
+    def test_linkcheck_request_headers(app, capsys):
+>       with http_server(HeadersDumperHandler):
+
+tests/test_build_linkcheck.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109f64670>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+___________________ test_linkcheck_request_headers_no_slash ____________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x108de3040>
+
+    @pytest.mark.sphinx(
+        'linkcheck', testroot='linkcheck-localserver', freshenv=True,
+        confoverrides={'linkcheck_request_headers': {
+            "http://localhost:7777": {"Accept": "application/json"},
+            "*": {"X-Secret": "open sesami"}
+        }})
+    def test_linkcheck_request_headers_no_slash(app, capsys):
+>       with http_server(HeadersDumperHandler):
+
+tests/test_build_linkcheck.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x108e5a430>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+____________________ test_linkcheck_request_headers_default ____________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x109953460>
+
+    @pytest.mark.sphinx(
+        'linkcheck', testroot='linkcheck-localserver', freshenv=True,
+        confoverrides={'linkcheck_request_headers': {
+            "http://do.not.match.org": {"Accept": "application/json"},
+            "*": {"X-Secret": "open sesami"}
+        }})
+    def test_linkcheck_request_headers_default(app, capsys):
+>       with http_server(HeadersDumperHandler):
+
+tests/test_build_linkcheck.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109a28a00>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+________________________ test_follows_redirects_on_HEAD ________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x109a17280>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver', freshenv=True)
+    def test_follows_redirects_on_HEAD(app, capsys):
+>       with http_server(make_redirect_handler(support_head=True)):
+
+tests/test_build_linkcheck.py:242: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109ba01f0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+________________________ test_follows_redirects_on_GET _________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+capsys = <_pytest.capture.CaptureFixture object at 0x109f6d610>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver', freshenv=True)
+    def test_follows_redirects_on_GET(app, capsys):
+>       with http_server(make_redirect_handler(support_head=False)):
+
+tests/test_build_linkcheck.py:260: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109f6d1f0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+_______________________________ test_invalid_ssl _______________________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-https', freshenv=True)
+    def test_invalid_ssl(app):
+        # Link indicates SSL should be used (https) but the server does not handle it.
+>       with http_server(OKHandler):
+
+tests/test_build_linkcheck.py:290: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109021fd0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+_______________________ test_connect_to_selfsigned_fails _______________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-https', freshenv=True)
+    def test_connect_to_selfsigned_fails(app):
+>       with https_server(OKHandler):
+
+tests/test_build_linkcheck.py:304: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:30: in __init__
+    super().__init__(handler, *args, **kwargs)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109a19430>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+_______________ test_connect_to_selfsigned_with_tls_verify_false _______________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-https', freshenv=True)
+    def test_connect_to_selfsigned_with_tls_verify_false(app):
+        app.config.tls_verify = False
+>       with https_server(OKHandler):
+
+tests/test_build_linkcheck.py:319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:30: in __init__
+    super().__init__(handler, *args, **kwargs)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109e3f3a0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+_________________ test_connect_to_selfsigned_with_tls_cacerts __________________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-https', freshenv=True)
+    def test_connect_to_selfsigned_with_tls_cacerts(app):
+        app.config.tls_cacerts = CERT_FILE
+>       with https_server(OKHandler):
+
+tests/test_build_linkcheck.py:337: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:30: in __init__
+    super().__init__(handler, *args, **kwargs)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109f54a30>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+_______________ test_connect_to_selfsigned_with_requests_env_var _______________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-https', freshenv=True)
+    def test_connect_to_selfsigned_with_requests_env_var(app):
+>       with modify_env(REQUESTS_CA_BUNDLE=CERT_FILE), https_server(OKHandler):
+
+tests/test_build_linkcheck.py:354: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:30: in __init__
+    super().__init__(handler, *args, **kwargs)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x109d80940>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+_______________ test_connect_to_selfsigned_nonexistent_cert_file _______________
+
+app = <SphinxTestApp buildername='linkcheck'>
+
+    @pytest.mark.sphinx('linkcheck', testroot='linkcheck-localserver-https', freshenv=True)
+    def test_connect_to_selfsigned_nonexistent_cert_file(app):
+        app.config.tls_cacerts = "does/not/exist"
+>       with https_server(OKHandler):
+
+tests/test_build_linkcheck.py:372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py:117: in __enter__
+    return next(self.gen)
+tests/utils.py:40: in server
+    server_thread = thread_class(handler, daemon=True)
+tests/utils.py:30: in __init__
+    super().__init__(handler, *args, **kwargs)
+tests/utils.py:17: in __init__
+    self.server = http.server.HTTPServer(("localhost", 7777), handler)
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:452: in __init__
+    self.server_bind()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py:138: in server_bind
+    socketserver.TCPServer.server_bind(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <http.server.HTTPServer object at 0x10a117910>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address:
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+>       self.socket.bind(self.server_address)
+E       PermissionError: [Errno 1] Operation not permitted
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py:466: PermissionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: linkcheck
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-345/linkcheck-localserver-https/_build/linkcheck
+# status: 
+[01mRunning Sphinx v3.4.0+/3670050c0[39;49;00m
+
+# warning: 
+
+=============================== warnings summary ===============================
+sphinx/util/rst.py:56
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained-reeval-testsfix/20260516-112512/worktrees/sphinx-doc__sphinx-8475/sphinx-doc__sphinx/sphinx/util/rst.py:56: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+tests/test_build_linkcheck.py::test_TooManyRedirects_on_HEAD
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained-reeval-testsfix/20260516-112512/worktrees/sphinx-doc__sphinx-8475/sphinx-doc__sphinx/sphinx/jinja2glue.py:106: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    def warning(context: Dict, message: str, *args: Any, **kwargs: Any) -> str:
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_build_linkcheck.py::test_TooManyRedirects_on_HEAD - Permiss...
+FAILED tests/test_build_linkcheck.py::test_defaults - assert "Anchor 'top' no...
+FAILED tests/test_build_linkcheck.py::test_defaults_json - assert {'code': 0,...
+FAILED tests/test_build_linkcheck.py::test_anchors_ignored - assert not 'link...
+FAILED tests/test_build_linkcheck.py::test_raises_for_invalid_status - Permis...
+FAILED tests/test_build_linkcheck.py::test_auth_header_uses_first_match - Per...
+FAILED tests/test_build_linkcheck.py::test_auth_header_no_match - PermissionE...
+FAILED tests/test_build_linkcheck.py::test_linkcheck_request_headers - Permis...
+FAILED tests/test_build_linkcheck.py::test_linkcheck_request_headers_no_slash
+FAILED tests/test_build_linkcheck.py::test_linkcheck_request_headers_default
+FAILED tests/test_build_linkcheck.py::test_follows_redirects_on_HEAD - Permis...
+FAILED tests/test_build_linkcheck.py::test_follows_redirects_on_GET - Permiss...
+FAILED tests/test_build_linkcheck.py::test_invalid_ssl - PermissionError: [Er...
+FAILED tests/test_build_linkcheck.py::test_connect_to_selfsigned_fails - Perm...
+FAILED tests/test_build_linkcheck.py::test_connect_to_selfsigned_with_tls_verify_false
+FAILED tests/test_build_linkcheck.py::test_connect_to_selfsigned_with_tls_cacerts
+FAILED tests/test_build_linkcheck.py::test_connect_to_selfsigned_with_requests_env_var
+FAILED tests/test_build_linkcheck.py::test_connect_to_selfsigned_nonexistent_cert_file
+18 failed, 3 warnings in 0.68s

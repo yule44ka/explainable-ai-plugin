@@ -1,0 +1,10 @@
+ M django/conf/locale/nb/formats.py
+ M django/contrib/admin/templatetags/base.py
+ M django/contrib/gis/db/backends/postgis/models.py
+ M django/contrib/gis/db/backends/spatialite/features.py
+ M django/contrib/postgres/fields/__init__.py
+ M django/core/checks/security/sessions.py
+ M django/db/models/fields/related_lookups.py
+ M django/db/models/functions/datetime.py
+ M django/templatetags/l10n.py
+ M django/utils/http.py

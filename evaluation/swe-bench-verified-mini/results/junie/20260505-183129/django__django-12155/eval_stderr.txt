@@ -1,0 +1,14 @@
+test_parse_rst_with_docstring_no_leading_line_feed (admin_docs.test_utils.TestUtils) ... skipped 'no docutils installed.'
+test_description_output (admin_docs.test_utils.TestUtils) ... skipped 'no docutils installed.'
+test_initial_header_level (admin_docs.test_utils.TestUtils) ... skipped 'no docutils installed.'
+test_parse_docstring (admin_docs.test_utils.TestUtils) ... skipped 'no docutils installed.'
+test_parse_rst (admin_docs.test_utils.TestUtils)
+parse_rst() should use `cmsreference` as the default role. ... skipped 'no docutils installed.'
+test_publish_parts (admin_docs.test_utils.TestUtils)
+Django shouldn't break the default role for interpreted text ... skipped 'no docutils installed.'
+test_title_output (admin_docs.test_utils.TestUtils) ... skipped 'no docutils installed.'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+OK (skipped=7)

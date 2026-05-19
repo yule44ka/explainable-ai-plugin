@@ -1,0 +1,1 @@
+results/junie-sphinx-explained/20260515-222808/sphinx-doc__sphinx-10435/model.patch

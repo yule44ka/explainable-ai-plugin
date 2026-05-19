@@ -1,0 +1,3 @@
+instance_id,repo,base_commit,status,success,agent_seconds,eval_seconds,total_seconds,junie_returncode,eval_returncode,output_dir,error
+sphinx-doc__sphinx-8475,sphinx-doc/sphinx,3ea1ec84cc610f7a9f4f6b354e264565254923ff,failed,False,0.012,1.547,1.764,,1,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained-reeval-testsfix/20260516-112512/sphinx-doc__sphinx-8475,
+sphinx-doc__sphinx-10435,sphinx-doc/sphinx,f1061c012e214f16fd8790dec3c283d787e3daa8,failed,False,0.012,4.421,4.642,,1,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained-reeval-testsfix/20260516-112512/sphinx-doc__sphinx-10435,

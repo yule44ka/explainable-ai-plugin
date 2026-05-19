@@ -1,0 +1,96 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index ac17b16dc..8fcc8ef64 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -588,6 +588,28 @@ class Documenter:
+         else:
+             return 'docstring of %s' % fullname
+ 
++    def get_attr_doc(self, cls: Any, name: str) -> Optional[Tuple[str, List[str]]]:
++        """Find docstring for an attribute in the MRO."""
++        if not inspect.isclass(cls):
++            return None
++
++        for base in inspect.getmro(cls):
++            try:
++                module = safe_getattr(base, '__module__')
++                qualname = safe_getattr(base, '__qualname__')
++                analyzer = ModuleAnalyzer.for_module(module)
++                analyzer.analyze()
++                key = (qualname, name)
++                if key in analyzer.find_attr_docs():
++                    docstrings = list(analyzer.find_attr_docs()[key])
++                    sourcename = '%s:docstring of %s.%s' % (analyzer.srcname,
++                                                            module, qualname)
++                    return sourcename, docstrings
++            except (AttributeError, PycodeError):
++                pass
++
++        return None
++
+     def add_content(self, more_content: Optional[StringList], no_docstring: bool = False
+                     ) -> None:
+         """Add content from docstrings, attribute documentation and user."""
+@@ -598,9 +620,18 @@ class Documenter:
+ 
+         # set sourcename and add content from attribute documentation
+         sourcename = self.get_sourcename()
+-        if self.analyzer:
+-            attr_docs = self.analyzer.find_attr_docs()
+-            if self.objpath:
++        if self.objpath:
++            attr_doc = None
++            if self.parent and inspect.isclass(self.parent):
++                attr_doc = self.get_attr_doc(self.parent, self.objpath[-1])
++
++            if attr_doc:
++                no_docstring = True
++                attr_sourcename, docstrings = attr_doc
++                for i, line in enumerate(self.process_doc([docstrings])):
++                    self.add_line(line, attr_sourcename, i)
++            elif self.analyzer:
++                attr_docs = self.analyzer.find_attr_docs()
+                 key = ('.'.join(self.objpath[:-1]), self.objpath[-1])
+                 if key in attr_docs:
+                     no_docstring = True
+@@ -751,7 +782,9 @@ class Documenter:
+                         keep = has_doc or self.options.undoc_members
+                 else:
+                     keep = False
+-            elif (namespace, membername) in attr_docs:
++            elif (namespace, membername) in attr_docs or \
++                 (inspect.isclass(self.object) and
++                  self.get_attr_doc(self.object, membername)):
+                 if want_all and isprivate:
+                     if self.options.private_members is None:
+                         keep = False
+@@ -2168,24 +2201,11 @@ class UninitializedInstanceAttributeMixin(DataDocumenterMixinBase):
+     """
+ 
+     def get_attribute_comment(self, parent: Any) -> Optional[List[str]]:
+-        try:
+-            for cls in inspect.getmro(parent):
+-                try:
+-                    module = safe_getattr(cls, '__module__')
+-                    qualname = safe_getattr(cls, '__qualname__')
+-
+-                    analyzer = ModuleAnalyzer.for_module(module)
+-                    analyzer.analyze()
+-                    if qualname and self.objpath:
+-                        key = (qualname, self.objpath[-1])
+-                        if key in analyzer.attr_docs:
+-                            return list(analyzer.attr_docs[key])
+-                except (AttributeError, PycodeError):
+-                    pass
+-        except (AttributeError, PycodeError):
+-            pass
+-
+-        return None
++        attr_doc = self.get_attr_doc(parent, self.objpath[-1])
++        if attr_doc:
++            return attr_doc[1]
++        else:
++            return None
+ 
+     def is_uninitialized_instance_attribute(self, parent: Any) -> bool:
+         """Check the subject is an attribute defined in __init__()."""

@@ -1,0 +1,150 @@
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_code_role
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_writer
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_warnings
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_basic
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_basic_manual
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_basic_howto
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_basic_manual_ja
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_basic_howto_ja
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_theme
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_theme_papersize
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_theme_options
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_additional_settings_for_language_code
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_additional_settings_for_greek
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_title_after_admonitions
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_release
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_numref
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_numref_with_prefix1
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_numref_with_prefix2
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_numref_with_language_ja
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_obey_numfig_is_false
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_obey_numfig_secnum_depth_is_zero
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_obey_numfig_secnum_depth_is_two
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_obey_numfig_but_math_numfig_false
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_add_latex_package
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_babel_with_no_language_settings
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_babel_with_language_de
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_babel_with_language_ru
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_babel_with_language_tr
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_babel_with_language_ja
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_babel_with_unknown_language
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_polyglossia_with_language_de
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_polyglossia_with_language_de_1901
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_footnote
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_reference_in_caption_and_codeblock_in_footnote
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_footnote_referred_multiple_times
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_show_urls_is_inline
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_show_urls_is_footnote
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_show_urls_is_no
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_show_urls_footnote_and_substitutions
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_image_in_section
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_logo_if_not_found
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_toctree_maxdepth_manual
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_toctree_maxdepth_howto
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_toctree_not_found
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_toctree_without_maxdepth
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_toctree_with_deeper_maxdepth
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_toplevel_sectioning_is_None
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_toplevel_sectioning_is_part
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_toplevel_sectioning_is_part_with_howto
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_toplevel_sectioning_is_chapter
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_toplevel_sectioning_is_chapter_with_howto
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_toplevel_sectioning_is_section
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_table_tabulars
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_table_longtable
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_table_complex_tables
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_table_custom_template_caseA
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_table_custom_template_caseB
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_table_custom_template_caseC
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_raw_directive
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_images
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_index
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_equations
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_image_in_parsed_literal
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_nested_enumerated_list
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_thebibliography
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_glossary
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_labels
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_figure_in_admonition
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_default_latex_documents
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_index_on_title
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_texescape_for_non_unicode_supported_engine
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_texescape_for_unicode_supported_engine
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_elements_extrapackages
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_nested_tables
+
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_container
+

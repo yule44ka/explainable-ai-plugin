@@ -1,0 +1,70 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..07204946a7 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -414,6 +414,7 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state._adding_pk_provided = False
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -433,6 +434,8 @@ class Model(metaclass=ModelBase):
+                 if val is _DEFERRED:
+                     continue
+                 _setattr(self, field.attname, val)
++                if field.primary_key:
++                    self._state._adding_pk_provided = True
+         else:
+             # Slower, kwargs-ready version.
+             fields_iter = iter(opts.fields)
+@@ -440,6 +443,8 @@ class Model(metaclass=ModelBase):
+                 if val is _DEFERRED:
+                     continue
+                 _setattr(self, field.attname, val)
++                if field.primary_key:
++                    self._state._adding_pk_provided = True
+                 kwargs.pop(field.name, None)
+ 
+         # Now we're left with the unprocessed fields that *must* come from
+@@ -455,16 +460,22 @@ class Model(metaclass=ModelBase):
+                     try:
+                         # Assume object instance was passed in.
+                         rel_obj = kwargs.pop(field.name)
++                        if field.primary_key:
++                            self._state._adding_pk_provided = True
+                         is_related_object = True
+                     except KeyError:
+                         try:
+                             # Object instance wasn't passed in -- must be an ID.
+                             val = kwargs.pop(field.attname)
++                            if field.primary_key:
++                                self._state._adding_pk_provided = True
+                         except KeyError:
+                             val = field.get_default()
+                 else:
+                     try:
+                         val = kwargs.pop(field.attname)
++                        if field.primary_key:
++                            self._state._adding_pk_provided = True
+                     except KeyError:
+                         # This is done with an exception rather than the
+                         # default argument on pop because we don't want
+@@ -569,6 +580,8 @@ class Model(metaclass=ModelBase):
+         return getattr(self, meta.pk.attname)
+ 
+     def _set_pk_val(self, value):
++        if hasattr(self, '_state'):
++            self._state._adding_pk_provided = True
+         return setattr(self, self._meta.pk.attname, value)
+ 
+     pk = property(_get_pk_val, _set_pk_val)
+@@ -851,6 +864,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            not getattr(self._state, '_adding_pk_provided', False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):

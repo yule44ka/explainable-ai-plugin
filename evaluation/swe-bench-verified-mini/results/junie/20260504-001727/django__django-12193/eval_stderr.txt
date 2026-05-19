@@ -1,0 +1,14 @@
+test_get_context_does_not_mutate_attrs (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... FAIL
+
+======================================================================
+FAIL: test_get_context_does_not_mutate_attrs (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12193/django__django/tests/forms_tests/widget_tests/test_checkboxinput.py", line 96, in test_get_context_does_not_mutate_attrs
+    self.assertIs(attrs['checked'], False)
+AssertionError: True is not False
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

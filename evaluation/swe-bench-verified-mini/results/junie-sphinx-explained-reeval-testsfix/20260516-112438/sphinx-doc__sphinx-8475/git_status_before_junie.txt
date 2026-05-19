@@ -1,0 +1,11 @@
+ M sphinx/builders/dummy.py
+ M sphinx/builders/htmlhelp.py
+ M sphinx/builders/linkcheck.py
+ M sphinx/environment/adapters/__init__.py
+ M sphinx/roles.py
+ M sphinx/search/de.py
+ M tests/roots/test-apidoc-toc/mypackage/resource/__init__.py
+ M tests/roots/test-ext-autodoc/target/annotated.py
+ M tests/roots/test-ext-autosummary-template/conf.py
+ M tests/roots/test-setup/doc/conf.py
+ M tests/roots/test-toctree-duplicated/conf.py

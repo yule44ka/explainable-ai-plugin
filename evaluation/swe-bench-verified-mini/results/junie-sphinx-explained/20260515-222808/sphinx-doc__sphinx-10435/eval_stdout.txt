@@ -1,0 +1,1499 @@
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE.EEE [ 96%]
+EEE                                                                      [100%]
+==================================== ERRORS ====================================
+____________________ ERROR at setup of test_latex_code_role ____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1605
+  @pytest.mark.sphinx('latex', testroot='reST-code-role')
+  def test_latex_code_role(app):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1605
+________________________ ERROR at setup of test_writer _________________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 104
+  @pytest.mark.sphinx('latex')
+  def test_writer(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:104
+____________________ ERROR at setup of test_latex_warnings _____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 134
+  @pytest.mark.sphinx('latex', testroot='warnings', freshenv=True)
+  def test_latex_warnings(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:134
+______________________ ERROR at setup of test_latex_basic ______________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 147
+  @pytest.mark.sphinx('latex', testroot='basic')
+  def test_latex_basic(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:147
+__________________ ERROR at setup of test_latex_basic_manual ___________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 159
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={
+                          'latex_documents': [('index', 'test.tex', 'title', 'author', 'manual')]
+                      })
+  def test_latex_basic_manual(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:159
+___________________ ERROR at setup of test_latex_basic_howto ___________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 171
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={
+                          'latex_documents': [('index', 'test.tex', 'title', 'author', 'howto')]
+                      })
+  def test_latex_basic_howto(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:171
+_________________ ERROR at setup of test_latex_basic_manual_ja _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 183
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={
+                          'language': 'ja',
+                          'latex_documents': [('index', 'test.tex', 'title', 'author', 'manual')]
+                      })
+  def test_latex_basic_manual_ja(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:183
+_________________ ERROR at setup of test_latex_basic_howto_ja __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 196
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={
+                          'language': 'ja',
+                          'latex_documents': [('index', 'test.tex', 'title', 'author', 'howto')]
+                      })
+  def test_latex_basic_howto_ja(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:196
+______________________ ERROR at setup of test_latex_theme ______________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 209
+  @pytest.mark.sphinx('latex', testroot='latex-theme')
+  def test_latex_theme(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:209
+_________________ ERROR at setup of test_latex_theme_papersize _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 218
+  @pytest.mark.sphinx('latex', testroot='latex-theme',
+                      confoverrides={'latex_elements': {'papersize': 'b5paper',
+                                                        'pointsize': '9pt'}})
+  def test_latex_theme_papersize(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:218
+__________________ ERROR at setup of test_latex_theme_options __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 229
+  @pytest.mark.sphinx('latex', testroot='latex-theme',
+                      confoverrides={'latex_theme_options': {'papersize': 'b5paper',
+                                                             'pointsize': '9pt'}})
+  def test_latex_theme_options(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:229
+______ ERROR at setup of test_latex_additional_settings_for_language_code ______
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 240
+  @pytest.mark.sphinx('latex', testroot='basic', confoverrides={'language': 'zh'})
+  def test_latex_additional_settings_for_language_code(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:240
+__________ ERROR at setup of test_latex_additional_settings_for_greek __________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 250
+  @pytest.mark.sphinx('latex', testroot='basic', confoverrides={'language': 'el'})
+  def test_latex_additional_settings_for_greek(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:250
+_____________ ERROR at setup of test_latex_title_after_admonitions _____________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 261
+  @pytest.mark.sphinx('latex', testroot='latex-title')
+  def test_latex_title_after_admonitions(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:261
+_____________________ ERROR at setup of test_latex_release _____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 271
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={'release': '1.0_0'})
+  def test_latex_release(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:271
+________________________ ERROR at setup of test_numref _________________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 283
+  @pytest.mark.sphinx('latex', testroot='numfig',
+                      confoverrides={'numfig': True})
+  def test_numref(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:283
+__________________ ERROR at setup of test_numref_with_prefix1 __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 320
+  @pytest.mark.sphinx(
+      'latex', testroot='numfig',
+      confoverrides={'numfig': True,
+                     'numfig_format': {'figure': 'Figure:%s',
+                                       'table': 'Tab_%s',
+                                       'code-block': 'Code-%s',
+                                       'section': 'SECTION-%s'}})
+  def test_numref_with_prefix1(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:320
+__________________ ERROR at setup of test_numref_with_prefix2 __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 368
+  @pytest.mark.sphinx(
+      'latex', testroot='numfig',
+      confoverrides={'numfig': True,
+                     'numfig_format': {'figure': 'Figure:%s.',
+                                       'table': 'Tab_%s:',
+                                       'code-block': 'Code-%s | ',
+                                       'section': 'SECTION_%s_'}})
+  def test_numref_with_prefix2(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:368
+________________ ERROR at setup of test_numref_with_language_ja ________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 412
+  @pytest.mark.sphinx(
+      'latex', testroot='numfig',
+      confoverrides={'numfig': True, 'language': 'ja'})
+  def test_numref_with_language_ja(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:412
+______________ ERROR at setup of test_latex_obey_numfig_is_false _______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 450
+  @pytest.mark.sphinx('latex', testroot='latex-numfig')
+  def test_latex_obey_numfig_is_false(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:450
+________ ERROR at setup of test_latex_obey_numfig_secnum_depth_is_zero _________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 461
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-numfig',
+      confoverrides={'numfig': True, 'numfig_secnum_depth': 0})
+  def test_latex_obey_numfig_secnum_depth_is_zero(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:461
+_________ ERROR at setup of test_latex_obey_numfig_secnum_depth_is_two _________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 474
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-numfig',
+      confoverrides={'numfig': True, 'numfig_secnum_depth': 2})
+  def test_latex_obey_numfig_secnum_depth_is_two(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:474
+________ ERROR at setup of test_latex_obey_numfig_but_math_numfig_false ________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 487
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-numfig',
+      confoverrides={'numfig': True, 'math_numfig': False})
+  def test_latex_obey_numfig_but_math_numfig_false(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:487
+________________ ERROR at setup of test_latex_add_latex_package ________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 500
+  @pytest.mark.sphinx('latex', testroot='basic')
+  def test_latex_add_latex_package(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:500
+____________ ERROR at setup of test_babel_with_no_language_settings ____________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 510
+  @pytest.mark.sphinx('latex', testroot='latex-babel')
+  def test_babel_with_no_language_settings(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:510
+________________ ERROR at setup of test_babel_with_language_de _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 533
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'de'})
+  def test_babel_with_language_de(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:533
+________________ ERROR at setup of test_babel_with_language_ru _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 558
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'ru'})
+  def test_babel_with_language_ru(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:558
+________________ ERROR at setup of test_babel_with_language_tr _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 583
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'tr'})
+  def test_babel_with_language_tr(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:583
+________________ ERROR at setup of test_babel_with_language_ja _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 608
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'ja'})
+  def test_babel_with_language_ja(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:608
+______________ ERROR at setup of test_babel_with_unknown_language ______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 632
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'unknown'})
+  def test_babel_with_unknown_language(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:632
+_____________ ERROR at setup of test_polyglossia_with_language_de ______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 659
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'de', 'latex_engine': 'lualatex'})
+  def test_polyglossia_with_language_de(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:659
+___________ ERROR at setup of test_polyglossia_with_language_de_1901 ___________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 685
+  @pytest.mark.sphinx(
+      'latex', testroot='latex-babel',
+      confoverrides={'language': 'de-1901', 'latex_engine': 'lualatex'})
+  def test_polyglossia_with_language_de_1901(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:685
+_______________________ ERROR at setup of test_footnote ________________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 711
+  @pytest.mark.sphinx('latex')
+  def test_footnote(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:711
+____ ERROR at setup of test_reference_in_caption_and_codeblock_in_footnote _____
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 739
+  @pytest.mark.sphinx('latex', testroot='footnotes')
+  def test_reference_in_caption_and_codeblock_in_footnote(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:739
+___________ ERROR at setup of test_footnote_referred_multiple_times ____________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 778
+  @pytest.mark.sphinx('latex', testroot='footnotes')
+  def test_footnote_referred_multiple_times(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:778
+_______________ ERROR at setup of test_latex_show_urls_is_inline _______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 798
+  @pytest.mark.sphinx(
+      'latex', testroot='footnotes',
+      confoverrides={'latex_show_urls': 'inline'})
+  def test_latex_show_urls_is_inline(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:798
+______________ ERROR at setup of test_latex_show_urls_is_footnote ______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 855
+  @pytest.mark.sphinx(
+      'latex', testroot='footnotes',
+      confoverrides={'latex_show_urls': 'footnote'})
+  def test_latex_show_urls_is_footnote(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:855
+_________________ ERROR at setup of test_latex_show_urls_is_no _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 917
+  @pytest.mark.sphinx(
+      'latex', testroot='footnotes',
+      confoverrides={'latex_show_urls': 'no'})
+  def test_latex_show_urls_is_no(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:917
+______ ERROR at setup of test_latex_show_urls_footnote_and_substitutions _______
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 965
+  @pytest.mark.sphinx(
+      'latex', testroot='footnotes',
+      confoverrides={'latex_show_urls': 'footnote',
+                     'rst_prolog': '.. |URL| replace:: `text <http://www.example.com/>`__'})
+  def test_latex_show_urls_footnote_and_substitutions(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:965
+___________________ ERROR at setup of test_image_in_section ____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 974
+  @pytest.mark.sphinx('latex', testroot='image-in-section')
+  def test_image_in_section(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:974
+________________ ERROR at setup of test_latex_logo_if_not_found ________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 990
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={'latex_logo': 'notfound.jpg'})
+  def test_latex_logo_if_not_found(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:990
+________________ ERROR at setup of test_toctree_maxdepth_manual ________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1000
+  @pytest.mark.sphinx('latex', testroot='toctree-maxdepth')
+  def test_toctree_maxdepth_manual(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1000
+________________ ERROR at setup of test_toctree_maxdepth_howto _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1012
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_documents': [
+          ('index', 'python.tex', 'Sphinx Tests Documentation',
+           'Georg Brandl', 'howto'),
+      ]})
+  def test_toctree_maxdepth_howto(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1012
+___________________ ERROR at setup of test_toctree_not_found ___________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1029
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'root_doc': 'foo'})
+  def test_toctree_not_found(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1029
+_______________ ERROR at setup of test_toctree_without_maxdepth ________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1043
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'root_doc': 'bar'})
+  def test_toctree_without_maxdepth(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1043
+_____________ ERROR at setup of test_toctree_with_deeper_maxdepth ______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1056
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'root_doc': 'qux'})
+  def test_toctree_with_deeper_maxdepth(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1056
+___________ ERROR at setup of test_latex_toplevel_sectioning_is_None ___________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1069
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_toplevel_sectioning': None})
+  def test_latex_toplevel_sectioning_is_None(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1069
+___________ ERROR at setup of test_latex_toplevel_sectioning_is_part ___________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1081
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_toplevel_sectioning': 'part'})
+  def test_latex_toplevel_sectioning_is_part(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1081
+_____ ERROR at setup of test_latex_toplevel_sectioning_is_part_with_howto ______
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1095
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_toplevel_sectioning': 'part',
+                     'latex_documents': [
+                         ('index', 'python.tex', 'Sphinx Tests Documentation',
+                          'Georg Brandl', 'howto')
+                     ]})
+  def test_latex_toplevel_sectioning_is_part_with_howto(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1095
+_________ ERROR at setup of test_latex_toplevel_sectioning_is_chapter __________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1113
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_toplevel_sectioning': 'chapter'})
+  def test_latex_toplevel_sectioning_is_chapter(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1113
+____ ERROR at setup of test_latex_toplevel_sectioning_is_chapter_with_howto ____
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1125
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_toplevel_sectioning': 'chapter',
+                     'latex_documents': [
+                         ('index', 'python.tex', 'Sphinx Tests Documentation',
+                          'Georg Brandl', 'howto')
+                     ]})
+  def test_latex_toplevel_sectioning_is_chapter_with_howto(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1125
+_________ ERROR at setup of test_latex_toplevel_sectioning_is_section __________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1141
+  @pytest.mark.sphinx(
+      'latex', testroot='toctree-maxdepth',
+      confoverrides={'latex_toplevel_sectioning': 'section'})
+  def test_latex_toplevel_sectioning_is_section(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1141
+_________________ ERROR at setup of test_latex_table_tabulars __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1164
+  @pytest.mark.sphinx('latex', testroot='latex-table')
+  @pytest.mark.test_params(shared_result='latex-table')
+  def test_latex_table_tabulars(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1164
+_________________ ERROR at setup of test_latex_table_longtable _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1234
+  @pytest.mark.sphinx('latex', testroot='latex-table')
+  @pytest.mark.test_params(shared_result='latex-table')
+  def test_latex_table_longtable(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1234
+______________ ERROR at setup of test_latex_table_complex_tables _______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1294
+  @pytest.mark.sphinx('latex', testroot='latex-table')
+  @pytest.mark.test_params(shared_result='latex-table')
+  def test_latex_table_complex_tables(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1294
+___________ ERROR at setup of test_latex_table_custom_template_caseA ___________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1318
+  @pytest.mark.sphinx('latex', testroot='latex-table',
+                      confoverrides={'templates_path': ['_mytemplates/latex']})
+  def test_latex_table_custom_template_caseA(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1318
+___________ ERROR at setup of test_latex_table_custom_template_caseB ___________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1326
+  @pytest.mark.sphinx('latex', testroot='latex-table',
+                      confoverrides={'templates_path': ['_mytemplates']})
+  def test_latex_table_custom_template_caseB(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1326
+___________ ERROR at setup of test_latex_table_custom_template_caseC ___________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1334
+  @pytest.mark.sphinx('latex', testroot='latex-table')
+  @pytest.mark.test_params(shared_result='latex-table')
+  def test_latex_table_custom_template_caseC(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1334
+__________________ ERROR at setup of test_latex_raw_directive __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1342
+  @pytest.mark.sphinx('latex', testroot='directives-raw')
+  def test_latex_raw_directive(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1342
+_____________________ ERROR at setup of test_latex_images ______________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1357
+  @pytest.mark.sphinx('latex', testroot='images')
+  def test_latex_images(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1357
+______________________ ERROR at setup of test_latex_index ______________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1381
+  @pytest.mark.sphinx('latex', testroot='latex-index')
+  def test_latex_index(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1381
+____________________ ERROR at setup of test_latex_equations ____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1395
+  @pytest.mark.sphinx('latex', testroot='latex-equations')
+  def test_latex_equations(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1395
+_____________ ERROR at setup of test_latex_image_in_parsed_literal _____________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1405
+  @pytest.mark.sphinx('latex', testroot='image-in-parsed-literal')
+  def test_latex_image_in_parsed_literal(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1405
+_____________ ERROR at setup of test_latex_nested_enumerated_list ______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1415
+  @pytest.mark.sphinx('latex', testroot='nested-enumerated-list')
+  def test_latex_nested_enumerated_list(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1415
+_________________ ERROR at setup of test_latex_thebibliography _________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1432
+  @pytest.mark.sphinx('latex', testroot='footnotes')
+  def test_latex_thebibliography(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1432
+____________________ ERROR at setup of test_latex_glossary _____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1445
+  @pytest.mark.sphinx('latex', testroot='glossary')
+  def test_latex_glossary(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1445
+_____________________ ERROR at setup of test_latex_labels ______________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1469
+  @pytest.mark.sphinx('latex', testroot='latex-labels')
+  def test_latex_labels(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1469
+______________ ERROR at setup of test_latex_figure_in_admonition _______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1518
+  @pytest.mark.sphinx('latex', testroot='latex-figure-in-admonition')
+  def test_latex_figure_in_admonition(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1518
+____________________ ERROR at setup of test_index_on_title _____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1549
+  @pytest.mark.sphinx('latex', testroot='index_on_title')
+  def test_index_on_title(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1549
+______ ERROR at setup of test_texescape_for_non_unicode_supported_engine _______
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1559
+  @pytest.mark.sphinx('latex', testroot='latex-unicode',
+                      confoverrides={'latex_engine': 'pdflatex'})
+  def test_texescape_for_non_unicode_supported_engine(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1559
+________ ERROR at setup of test_texescape_for_unicode_supported_engine _________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1571
+  @pytest.mark.sphinx('latex', testroot='latex-unicode',
+                      confoverrides={'latex_engine': 'xelatex'})
+  def test_texescape_for_unicode_supported_engine(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1571
+_____________ ERROR at setup of test_latex_elements_extrapackages ______________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1583
+  @pytest.mark.sphinx('latex', testroot='basic',
+                      confoverrides={'latex_elements': {'extrapackages': r'\usepackage{foo}'}})
+  def test_latex_elements_extrapackages(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1583
+__________________ ERROR at setup of test_latex_nested_tables __________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1591
+  @pytest.mark.sphinx('latex', testroot='nested-tables')
+  def test_latex_nested_tables(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1591
+____________________ ERROR at setup of test_latex_container ____________________
+file /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py, line 1597
+  @pytest.mark.sphinx('latex', testroot='latex-container')
+  def test_latex_container(app, status, warning):
+E       fixture 'app' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1597
+=============================== warnings summary ===============================
+tests/test_build_html.py:122
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:122: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='warnings')
+
+tests/test_build_html.py:134
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:134: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', confoverrides={'html4_writer': True})
+
+tests/test_build_html.py:399
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:399: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', tags=['testtag'],
+
+tests/test_build_html.py:401
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:401: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_output')
+
+tests/test_build_html.py:432
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:432: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html')
+
+tests/test_build_html.py:433
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:433: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_output_docutils17')
+
+tests/test_build_html.py:464
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:464: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html')
+
+tests/test_build_html.py:465
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:465: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_output_docutils18')
+
+tests/test_build_html.py:472
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:472: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', parallel=2)
+
+tests/test_build_html.py:477
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:477: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html')
+
+tests/test_build_html.py:478
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:478: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_output')
+
+tests/test_build_html.py:507
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:507: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='roles-download')
+
+tests/test_build_html.py:535
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:535: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='build-html-translator')
+
+tests/test_build_html.py:585
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:585: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='tocdepth')
+
+tests/test_build_html.py:586
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:586: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_tocdepth')
+
+tests/test_build_html.py:630
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:630: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('singlehtml', testroot='tocdepth')
+
+tests/test_build_html.py:631
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:631: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_tocdepth')
+
+tests/test_build_html.py:637
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:637: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig')
+
+tests/test_build_html.py:638
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:638: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig')
+
+tests/test_build_html.py:683
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:683: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig')
+
+tests/test_build_html.py:684
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:684: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig')
+
+tests/test_build_html.py:690
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:690: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_html.py:779
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:779: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_html.py:794
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:794: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig', confoverrides={'numfig': True})
+
+tests/test_build_html.py:795
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:795: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_on')
+
+tests/test_build_html.py:875
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:875: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig', confoverrides={'numfig': True})
+
+tests/test_build_html.py:876
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:876: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_on')
+
+tests/test_build_html.py:882
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:882: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig', confoverrides={
+
+tests/test_build_html.py:888
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:888: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_format_warn')
+
+tests/test_build_html.py:968
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:968: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig',
+
+tests/test_build_html.py:974
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:974: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_format_warn')
+
+tests/test_build_html.py:980
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:980: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig',
+
+tests/test_build_html.py:982
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:982: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_depth_2')
+
+tests/test_build_html.py:1062
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1062: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='numfig',
+
+tests/test_build_html.py:1065
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1065: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_depth_2')
+
+tests/test_build_html.py:1135
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1135: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('singlehtml', testroot='numfig', confoverrides={'numfig': True})
+
+tests/test_build_html.py:1136
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1136: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_numfig_on')
+
+tests/test_build_html.py:1156
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1156: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='add_enumerable_node',
+
+tests/test_build_html.py:1163
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1163: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='html_assets')
+
+tests/test_build_html.py:1207
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1207: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='html_assets')
+
+tests/test_build_html.py:1236
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1236: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='html_assets')
+
+tests/test_build_html.py:1250
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1250: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic', confoverrides={'html_copy_source': False})
+
+tests/test_build_html.py:1256
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1256: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic', confoverrides={'html_sourcelink_suffix': '.txt'})
+
+tests/test_build_html.py:1262
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1262: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic', confoverrides={'html_sourcelink_suffix': '.rst'})
+
+tests/test_build_html.py:1268
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1268: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic', confoverrides={'html_sourcelink_suffix': ''})
+
+tests/test_build_html.py:1274
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1274: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='html_entity')
+
+tests/test_build_html.py:1283
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1283: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic')
+
+tests/test_build_html.py:1317
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1317: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='images', confoverrides={'html_sourcelink_suffix': ''})
+
+tests/test_build_html.py:1331
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1331: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='directives-raw')
+
+tests/test_build_html.py:1369
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1369: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='stylesheets')
+
+tests/test_build_html.py:1375
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1375: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='html_style')
+
+tests/test_build_html.py:1384
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1384: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='images')
+
+tests/test_build_html.py:1394
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1394: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='remote-logo')
+
+tests/test_build_html.py:1404
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1404: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='local-logo')
+
+tests/test_build_html.py:1413
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1413: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic')
+
+tests/test_build_html.py:1466
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1466: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='manpage_url', confoverrides={
+
+tests/test_build_html.py:1468
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1468: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='test_build_html_manpage_url')
+
+tests/test_build_html.py:1474
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1474: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='toctree-glob',
+
+tests/test_build_html.py:1486
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1486: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='toctree-glob',
+
+tests/test_build_html.py:1499
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1499: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic')
+
+tests/test_build_html.py:1504
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1504: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1510
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1510: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1516
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1516: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1529
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1529: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1537
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1537: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1545
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1545: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1558
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1558: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic')
+
+tests/test_build_html.py:1564
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1564: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1571
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1571: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1578
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1578: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic')
+
+tests/test_build_html.py:1583
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1583: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(testroot='basic', srcdir='validate_html_extra_path')
+
+tests/test_build_html.py:1596
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1596: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(testroot='basic', srcdir='validate_html_static_path')
+
+tests/test_build_html.py:1609
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1609: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(testroot='html_scaled_image_link')
+
+tests/test_build_html.py:1628
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1628: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='reST-code-block',
+
+tests/test_build_html.py:1643
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1643: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='reST-code-block',
+
+tests/test_build_html.py:1655
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1655: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='highlight_options')
+
+tests/test_build_html.py:1671
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1671: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='highlight_options',
+
+tests/test_build_html.py:1688
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1688: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1697
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1697: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='basic',
+
+tests/test_build_html.py:1708
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1708: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='html_signaturereturn_icon')
+
+tests/test_build_html.py:1716
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_html.py:1716: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('html', testroot='reST-code-role')
+
+tests/test_build_latex.py:89
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:89: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex')
+
+tests/test_build_latex.py:104
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:104: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex')
+
+tests/test_build_latex.py:134
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:134: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='warnings', freshenv=True)
+
+tests/test_build_latex.py:147
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:147: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic')
+
+tests/test_build_latex.py:159
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:159: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:171
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:171: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:183
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:183: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:196
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:196: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:209
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:209: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-theme')
+
+tests/test_build_latex.py:218
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:218: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-theme',
+
+tests/test_build_latex.py:229
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:229: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-theme',
+
+tests/test_build_latex.py:240
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:240: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic', confoverrides={'language': 'zh'})
+
+tests/test_build_latex.py:250
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:250: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic', confoverrides={'language': 'el'})
+
+tests/test_build_latex.py:261
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:261: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-title')
+
+tests/test_build_latex.py:271
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:271: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:283
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:283: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='numfig',
+
+tests/test_build_latex.py:320
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:320: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:368
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:368: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:412
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:412: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:450
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:450: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-numfig')
+
+tests/test_build_latex.py:461
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:461: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:474
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:474: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:487
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:487: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:500
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:500: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic')
+
+tests/test_build_latex.py:510
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:510: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-babel')
+
+tests/test_build_latex.py:533
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:533: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:558
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:558: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:583
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:583: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:608
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:608: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:632
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:632: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:659
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:659: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:685
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:685: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:711
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:711: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex')
+
+tests/test_build_latex.py:739
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:739: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='footnotes')
+
+tests/test_build_latex.py:778
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:778: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='footnotes')
+
+tests/test_build_latex.py:798
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:798: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:855
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:855: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:917
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:917: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:965
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:965: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:974
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:974: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='image-in-section')
+
+tests/test_build_latex.py:990
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:990: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:1000
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1000: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='toctree-maxdepth')
+
+tests/test_build_latex.py:1012
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1012: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1029
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1029: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1043
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1043: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1056
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1056: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1069
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1069: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1081
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1081: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1095
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1095: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1113
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1113: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1125
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1125: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1141
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1141: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx(
+
+tests/test_build_latex.py:1154
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1154: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='maxlistdepth')
+
+tests/test_build_latex.py:1164
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1164: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-table')
+
+tests/test_build_latex.py:1165
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1165: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='latex-table')
+
+tests/test_build_latex.py:1234
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1234: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-table')
+
+tests/test_build_latex.py:1235
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1235: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='latex-table')
+
+tests/test_build_latex.py:1294
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1294: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-table')
+
+tests/test_build_latex.py:1295
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1295: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='latex-table')
+
+tests/test_build_latex.py:1318
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1318: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-table',
+
+tests/test_build_latex.py:1326
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1326: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-table',
+
+tests/test_build_latex.py:1334
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1334: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-table')
+
+tests/test_build_latex.py:1335
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1335: PytestUnknownMarkWarning: Unknown pytest.mark.test_params - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.test_params(shared_result='latex-table')
+
+tests/test_build_latex.py:1342
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1342: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='directives-raw')
+
+tests/test_build_latex.py:1357
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1357: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='images')
+
+tests/test_build_latex.py:1381
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1381: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-index')
+
+tests/test_build_latex.py:1395
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1395: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-equations')
+
+tests/test_build_latex.py:1405
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1405: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='image-in-parsed-literal')
+
+tests/test_build_latex.py:1415
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1415: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='nested-enumerated-list')
+
+tests/test_build_latex.py:1432
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1432: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='footnotes')
+
+tests/test_build_latex.py:1445
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1445: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='glossary')
+
+tests/test_build_latex.py:1469
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1469: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-labels')
+
+tests/test_build_latex.py:1518
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1518: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-figure-in-admonition')
+
+tests/test_build_latex.py:1541
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1541: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-includegraphics')
+
+tests/test_build_latex.py:1549
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1549: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='index_on_title')
+
+tests/test_build_latex.py:1559
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1559: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-unicode',
+
+tests/test_build_latex.py:1571
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1571: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-unicode',
+
+tests/test_build_latex.py:1583
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1583: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='basic',
+
+tests/test_build_latex.py:1591
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1591: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='nested-tables')
+
+tests/test_build_latex.py:1597
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1597: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='latex-container')
+
+tests/test_build_latex.py:1605
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py:1605: PytestUnknownMarkWarning: Unknown pytest.mark.sphinx - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.sphinx('latex', testroot='reST-code-role')
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_build_latex.py::test_latex_code_role
+ERROR tests/test_build_latex.py::test_writer
+ERROR tests/test_build_latex.py::test_latex_warnings
+ERROR tests/test_build_latex.py::test_latex_basic
+ERROR tests/test_build_latex.py::test_latex_basic_manual
+ERROR tests/test_build_latex.py::test_latex_basic_howto
+ERROR tests/test_build_latex.py::test_latex_basic_manual_ja
+ERROR tests/test_build_latex.py::test_latex_basic_howto_ja
+ERROR tests/test_build_latex.py::test_latex_theme
+ERROR tests/test_build_latex.py::test_latex_theme_papersize
+ERROR tests/test_build_latex.py::test_latex_theme_options
+ERROR tests/test_build_latex.py::test_latex_additional_settings_for_language_code
+ERROR tests/test_build_latex.py::test_latex_additional_settings_for_greek
+ERROR tests/test_build_latex.py::test_latex_title_after_admonitions
+ERROR tests/test_build_latex.py::test_latex_release
+ERROR tests/test_build_latex.py::test_numref
+ERROR tests/test_build_latex.py::test_numref_with_prefix1
+ERROR tests/test_build_latex.py::test_numref_with_prefix2
+ERROR tests/test_build_latex.py::test_numref_with_language_ja
+ERROR tests/test_build_latex.py::test_latex_obey_numfig_is_false
+ERROR tests/test_build_latex.py::test_latex_obey_numfig_secnum_depth_is_zero
+ERROR tests/test_build_latex.py::test_latex_obey_numfig_secnum_depth_is_two
+ERROR tests/test_build_latex.py::test_latex_obey_numfig_but_math_numfig_false
+ERROR tests/test_build_latex.py::test_latex_add_latex_package
+ERROR tests/test_build_latex.py::test_babel_with_no_language_settings
+ERROR tests/test_build_latex.py::test_babel_with_language_de
+ERROR tests/test_build_latex.py::test_babel_with_language_ru
+ERROR tests/test_build_latex.py::test_babel_with_language_tr
+ERROR tests/test_build_latex.py::test_babel_with_language_ja
+ERROR tests/test_build_latex.py::test_babel_with_unknown_language
+ERROR tests/test_build_latex.py::test_polyglossia_with_language_de
+ERROR tests/test_build_latex.py::test_polyglossia_with_language_de_1901
+ERROR tests/test_build_latex.py::test_footnote
+ERROR tests/test_build_latex.py::test_reference_in_caption_and_codeblock_in_footnote
+ERROR tests/test_build_latex.py::test_footnote_referred_multiple_times
+ERROR tests/test_build_latex.py::test_latex_show_urls_is_inline
+ERROR tests/test_build_latex.py::test_latex_show_urls_is_footnote
+ERROR tests/test_build_latex.py::test_latex_show_urls_is_no
+ERROR tests/test_build_latex.py::test_latex_show_urls_footnote_and_substitutions
+ERROR tests/test_build_latex.py::test_image_in_section
+ERROR tests/test_build_latex.py::test_latex_logo_if_not_found
+ERROR tests/test_build_latex.py::test_toctree_maxdepth_manual
+ERROR tests/test_build_latex.py::test_toctree_maxdepth_howto
+ERROR tests/test_build_latex.py::test_toctree_not_found
+ERROR tests/test_build_latex.py::test_toctree_without_maxdepth
+ERROR tests/test_build_latex.py::test_toctree_with_deeper_maxdepth
+ERROR tests/test_build_latex.py::test_latex_toplevel_sectioning_is_None
+ERROR tests/test_build_latex.py::test_latex_toplevel_sectioning_is_part
+ERROR tests/test_build_latex.py::test_latex_toplevel_sectioning_is_part_with_howto
+ERROR tests/test_build_latex.py::test_latex_toplevel_sectioning_is_chapter
+ERROR tests/test_build_latex.py::test_latex_toplevel_sectioning_is_chapter_with_howto
+ERROR tests/test_build_latex.py::test_latex_toplevel_sectioning_is_section
+ERROR tests/test_build_latex.py::test_latex_table_tabulars
+ERROR tests/test_build_latex.py::test_latex_table_longtable
+ERROR tests/test_build_latex.py::test_latex_table_complex_tables
+ERROR tests/test_build_latex.py::test_latex_table_custom_template_caseA
+ERROR tests/test_build_latex.py::test_latex_table_custom_template_caseB
+ERROR tests/test_build_latex.py::test_latex_table_custom_template_caseC
+ERROR tests/test_build_latex.py::test_latex_raw_directive
+ERROR tests/test_build_latex.py::test_latex_images
+ERROR tests/test_build_latex.py::test_latex_index
+ERROR tests/test_build_latex.py::test_latex_equations
+ERROR tests/test_build_latex.py::test_latex_image_in_parsed_literal
+ERROR tests/test_build_latex.py::test_latex_nested_enumerated_list
+ERROR tests/test_build_latex.py::test_latex_thebibliography
+ERROR tests/test_build_latex.py::test_latex_glossary
+ERROR tests/test_build_latex.py::test_latex_labels
+ERROR tests/test_build_latex.py::test_latex_figure_in_admonition
+ERROR tests/test_build_latex.py::test_index_on_title
+ERROR tests/test_build_latex.py::test_texescape_for_non_unicode_supported_engine
+ERROR tests/test_build_latex.py::test_texescape_for_unicode_supported_engine
+ERROR tests/test_build_latex.py::test_latex_elements_extrapackages
+ERROR tests/test_build_latex.py::test_latex_nested_tables
+ERROR tests/test_build_latex.py::test_latex_container
+1 passed, 162 warnings, 74 errors in 0.22s

@@ -1,0 +1,35 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_Catalog_duplicated_message ________________________
+
+    def test_Catalog_duplicated_message():
+        catalog = Catalog()
+        catalog.add('hello', MsgOrigin('/path/to/filename', 1))
+        catalog.add('hello', MsgOrigin('/path/to/filename', 1))
+        catalog.add('hello', MsgOrigin('/path/to/filename', 2))
+        catalog.add('hello', MsgOrigin('/path/to/yetanother', 1))
+        catalog.add('world', MsgOrigin('/path/to/filename', 1))
+    
+        assert len(list(catalog)) == 2
+    
+        msg1, msg2 = list(catalog)
+        assert msg1.text == 'hello'
+>       assert msg1.locations == [('/path/to/filename', 1),
+                                  ('/path/to/filename', 2),
+                                  ('/path/to/yetanother', 1)]
+E       AssertionError: assert [('/path/to/f...tanother', 1)] == [('/path/to/f...tanother', 1)]
+E         
+E         At index 1 diff: ('/path/to/filename', 1) != ('/path/to/filename', 2)
+E         Left contains one more item: ('/path/to/yetanother', 1)
+E         Use -v to get more diff
+
+tests/test_build_gettext.py:27: AssertionError
+=============================== warnings summary ===============================
+sphinx/builders/gettext.py:164
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-10466/sphinx-doc__sphinx/sphinx/builders/gettext.py:164: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+    datetime.utcfromtimestamp(timestamp)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_build_gettext.py::test_Catalog_duplicated_message - Asserti...
+1 failed, 1 warning in 0.34s

@@ -1,0 +1,82 @@
+diff --git a/sphinx/domains/cpp.py b/sphinx/domains/cpp.py
+index fe52d881d..4fc9ef540 100644
+--- a/sphinx/domains/cpp.py
++++ b/sphinx/domains/cpp.py
+@@ -314,6 +314,7 @@ _fold_operator_re = re.compile(r'''(?x)
+     |   !=
+     |   [<>=/*%+|&^~-]=?
+ ''')
++_udl_suffix_re = re.compile(r'([a-zA-Z_][a-zA-Z0-9_]*)')
+ # see https://en.cppreference.com/w/cpp/keyword
+ _keywords = [
+     'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor',
+@@ -856,9 +857,10 @@ class ASTStringLiteral(ASTLiteral):
+ 
+ 
+ class ASTCharLiteral(ASTLiteral):
+-    def __init__(self, prefix: str, data: str) -> None:
++    def __init__(self, prefix: str, data: str, suffix: str = None) -> None:
+         self.prefix = prefix  # may be None when no prefix
+         self.data = data
++        self.suffix = suffix
+         assert prefix in _id_char_from_prefix
+         self.type = _id_char_from_prefix[prefix]
+         decoded = data.encode().decode('unicode-escape')
+@@ -868,10 +870,13 @@ class ASTCharLiteral(ASTLiteral):
+             raise UnsupportedMultiCharacterCharLiteral(decoded)
+ 
+     def _stringify(self, transform: StringifyTransform) -> str:
+-        if self.prefix is None:
+-            return "'" + self.data + "'"
+-        else:
+-            return self.prefix + "'" + self.data + "'"
++        res = []
++        if self.prefix is not None:
++            res.append(self.prefix)
++        res.append("'" + self.data + "'")
++        if self.suffix is not None:
++            res.append(self.suffix)
++        return "".join(res)
+ 
+     def get_id(self, version: int) -> str:
+         return self.type + str(self.value)
+@@ -4664,18 +4669,22 @@ class DefinitionParser(BaseParser):
+             if self.match(regex):
+                 while self.current_char in 'uUlLfF':
+                     self.pos += 1
++                self.match(_udl_suffix_re)
+                 return ASTNumberLiteral(self.definition[pos:self.pos])
+ 
++        pos = self.pos
+         string = self._parse_string()
+         if string is not None:
+-            return ASTStringLiteral(string)
++            self.match(_udl_suffix_re)
++            return ASTStringLiteral(self.definition[pos:self.pos])
+ 
+         # character-literal
+         if self.match(char_literal_re):
+             prefix = self.last_match.group(1)  # may be None when no prefix
+             data = self.last_match.group(2)
++            suffix = self.matched_text if self.match(_udl_suffix_re) else None
+             try:
+-                return ASTCharLiteral(prefix, data)
++                return ASTCharLiteral(prefix, data, suffix)
+             except UnicodeDecodeError as e:
+                 self.fail("Can not handle character literal. Internal error was: %s" % e)
+             except UnsupportedMultiCharacterCharLiteral:
+@@ -5590,12 +5599,12 @@ class DefinitionParser(BaseParser):
+                 if threadLocal:
+                     continue
+ 
+-            if outer == 'function':
+-                # function-specifiers
++            if outer in ('member', 'function'):
+                 if not inline:
+                     inline = self.skip_word('inline')
+                     if inline:
+                         continue
++            if outer == 'function':
+                 if not friend:
+                     friend = self.skip_word('friend')
+                     if friend:

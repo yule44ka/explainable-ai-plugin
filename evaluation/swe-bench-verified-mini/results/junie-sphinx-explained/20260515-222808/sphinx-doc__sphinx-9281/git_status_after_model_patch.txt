@@ -1,0 +1,5 @@
+M  sphinx/util/images.py
+M  sphinx/util/inspect.py
+M  sphinx/util/typing.py
+A  tests/test_issue_enum.py
+M  tests/test_util_inspect.py

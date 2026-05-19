@@ -1,0 +1,84 @@
+diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py
+index c1b72e0293..8194ca0210 100644
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -400,7 +400,7 @@ class BaseDatabaseSchemaEditor:
+         news = {tuple(fields) for fields in new_index_together}
+         # Deleted indexes
+         for fields in olds.difference(news):
+-            self._delete_composed_index(model, fields, {'index': True}, self.sql_delete_index)
++            self._delete_composed_index(model, fields, {'index': True, 'unique': False}, self.sql_delete_index)
+         # Created indexes
+         for field_names in news.difference(olds):
+             fields = [model._meta.get_field(field) for field in field_names]
+diff --git a/tests/schema/tests.py b/tests/schema/tests.py
+index 9aa1e239ac..6c9dec2b58 100644
+--- a/tests/schema/tests.py
++++ b/tests/schema/tests.py
+@@ -2245,6 +2245,66 @@ class SchemaTests(TransactionTestCase):
+             AuthorWithIndexedNameAndBirthday._meta.indexes = []
+             editor.remove_index(AuthorWithIndexedNameAndBirthday, index)
+ 
++    @isolate_apps('schema')
++    def test_remove_index_together_with_unique_together(self):
++        class MyModelIndexTogether(Model):
++            f1 = CharField(max_length=100)
++            f2 = CharField(max_length=100)
++
++            class Meta:
++                app_label = 'schema'
++                unique_together = (('f1', 'f2'),)
++                index_together = (('f1', 'f2'),)
++
++        with connection.schema_editor() as editor:
++            editor.create_model(MyModelIndexTogether)
++        # Ensure both exist.
++        constraints = self.get_constraints(MyModelIndexTogether._meta.db_table)
++        num_indexes = sum(
++            1 for c in constraints.values()
++            if c['columns'] == ['f1', 'f2'] and c['index']
++        )
++        self.assertEqual(num_indexes, 2)
++        # Remove index_together.
++        with connection.schema_editor() as editor:
++            editor.alter_index_together(MyModelIndexTogether, [('f1', 'f2')], [])
++        # Ensure unique_together still exists.
++        constraints = self.get_constraints(MyModelIndexTogether._meta.db_table)
++        self.assertTrue(any(
++            c['unique'] for c in constraints.values()
++            if c['columns'] == ['f1', 'f2']
++        ))
++
++    @isolate_apps('schema')
++    def test_remove_unique_together_with_index_together(self):
++        class MyModelUniqueTogether(Model):
++            f1 = CharField(max_length=100)
++            f2 = CharField(max_length=100)
++
++            class Meta:
++                app_label = 'schema'
++                unique_together = (('f1', 'f2'),)
++                index_together = (('f1', 'f2'),)
++
++        with connection.schema_editor() as editor:
++            editor.create_model(MyModelUniqueTogether)
++        # Ensure both exist.
++        constraints = self.get_constraints(MyModelUniqueTogether._meta.db_table)
++        num_indexes = sum(
++            1 for c in constraints.values()
++            if c['columns'] == ['f1', 'f2'] and c['index']
++        )
++        self.assertEqual(num_indexes, 2)
++        # Remove unique_together.
++        with connection.schema_editor() as editor:
++            editor.alter_unique_together(MyModelUniqueTogether, [('f1', 'f2')], [])
++        # Ensure index_together still exists.
++        constraints = self.get_constraints(MyModelUniqueTogether._meta.db_table)
++        self.assertTrue(any(
++            not c['unique'] and c['index'] for c in constraints.values()
++            if c['columns'] == ['f1', 'f2']
++        ))
++
+     @isolate_apps('schema')
+     def test_db_table(self):
+         """

@@ -1,0 +1,17 @@
+{
+  "copied_files": [
+    "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/run_report.json",
+    "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_command.txt",
+    "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_stdout.txt",
+    "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_stderr.txt",
+    "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_result.json",
+    "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/logs/run_instance.log"
+  ],
+  "instance_id": "django__django-11790",
+  "logs_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/logs",
+  "model_name_or_path": "junie-gemini-3-flash-preview",
+  "report_path": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/junie-gemini-3-flash-preview.20260504-145357.json",
+  "resolved": false,
+  "run_id": "20260504-145357",
+  "status": "error"
+}

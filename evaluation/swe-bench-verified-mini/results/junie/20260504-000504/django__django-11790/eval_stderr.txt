@@ -1,0 +1,29 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_username_field_max_length_defaults_to_254 (auth_tests.test_forms.AuthenticationFormTest) ... FAIL
+test_username_field_max_length_matches_user_model (auth_tests.test_forms.AuthenticationFormTest) ... FAIL
+
+======================================================================
+FAIL: test_username_field_max_length_defaults_to_254 (auth_tests.test_forms.AuthenticationFormTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/repos/django__django/django/test/utils.py", line 370, in inner
+    return func(*args, **kwargs)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/repos/django__django/tests/auth_tests/test_forms.py", line 439, in test_username_field_max_length_defaults_to_254
+    self.assertEqual(form.fields['username'].widget.attrs.get('maxlength'), 254)
+AssertionError: '254' != 254
+
+======================================================================
+FAIL: test_username_field_max_length_matches_user_model (auth_tests.test_forms.AuthenticationFormTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/repos/django__django/django/test/utils.py", line 370, in inner
+    return func(*args, **kwargs)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/repos/django__django/tests/auth_tests/test_forms.py", line 426, in test_username_field_max_length_matches_user_model
+    self.assertEqual(form.fields['username'].widget.attrs.get('maxlength'), 255)
+AssertionError: '255' != 255
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.007s
+
+FAILED (failures=2)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

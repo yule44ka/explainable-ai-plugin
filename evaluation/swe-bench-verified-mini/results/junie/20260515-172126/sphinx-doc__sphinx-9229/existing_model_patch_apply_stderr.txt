@@ -1,0 +1,12 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/sphinx-doc__sphinx-9229/model.patch:1013: space before tab in indent.
+    	display: none;
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/sphinx-doc__sphinx-9229/model.patch:1022: space before tab in indent.
+    	margin-left: 0;
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/sphinx-doc__sphinx-9229/model.patch:1023: space before tab in indent.
+    	margin-top: 0;
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/sphinx-doc__sphinx-9229/model.patch:1024: space before tab in indent.
+    	margin-right: 0;
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/sphinx-doc__sphinx-9229/model.patch:1025: space before tab in indent.
+    	margin-bottom: 0;
+warning: squelched 109 whitespace errors
+warning: 114 lines add whitespace errors.

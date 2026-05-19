@@ -1,0 +1,8 @@
+tests/test_build_gettext.py::test_Catalog_duplicated_message
+tests/test_build_gettext.py::test_build_gettext
+tests/test_build_gettext.py::test_msgfmt
+tests/test_build_gettext.py::test_gettext_index_entries
+tests/test_build_gettext.py::test_gettext_disable_index_entries
+tests/test_build_gettext.py::test_gettext_template
+tests/test_build_gettext.py::test_gettext_template_msgid_order_in_sphinxpot
+tests/test_build_gettext.py::test_build_single_pot

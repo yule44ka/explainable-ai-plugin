@@ -1,0 +1,12 @@
+diff --git a/django/forms/fields.py b/django/forms/fields.py
+index 10e35c5a72..8db9f9a6ed 100644
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -204,6 +204,7 @@ class Field:
+         memo[id(self)] = result
+         result.widget = copy.deepcopy(self.widget, memo)
+         result.validators = self.validators[:]
++        result.error_messages = copy.deepcopy(self.error_messages, memo)
+         return result
+ 
+ 

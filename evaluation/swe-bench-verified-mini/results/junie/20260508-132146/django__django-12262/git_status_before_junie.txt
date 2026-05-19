@@ -1,0 +1,9 @@
+ M django/conf/locale/bn/formats.py
+ M django/conf/locale/es_PR/formats.py
+ M django/contrib/gis/geos/prototypes/threadsafe.py
+ M django/core/management/commands/makemessages.py
+ M django/db/backends/base/operations.py
+ M django/http/cookie.py
+ M django/template/library.py
+ M django/utils/archive.py
+ M django/views/defaults.py

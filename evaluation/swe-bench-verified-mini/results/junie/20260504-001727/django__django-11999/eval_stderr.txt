@@ -1,0 +1,17 @@
+test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests) ... FAIL
+
+======================================================================
+FAIL: test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-11999/django__django/tests/model_fields/tests.py", line 179, in test_overriding_FIELD_display
+    self.assertEqual(f.get_foo_bar_display(), 'something')
+AssertionError: 'foo' != 'something'
+- foo
++ something
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

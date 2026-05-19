@@ -1,0 +1,1 @@
+error: pathspec 'tests/roots/test-ext-autodoc/target/instance_variable.py' did not match any file(s) known to git

@@ -1,0 +1,6 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/run_report.json
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_command.txt
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_stdout.txt
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_stderr.txt
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/harness_result.json
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/django__django-11790/evaluation/logs/run_instance.log

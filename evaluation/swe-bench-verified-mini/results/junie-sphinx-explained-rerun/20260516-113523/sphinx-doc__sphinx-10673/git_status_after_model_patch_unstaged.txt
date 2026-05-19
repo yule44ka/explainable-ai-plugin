@@ -1,0 +1,3 @@
+ M sphinx/deprecation.py
+ M sphinx/directives/other.py
+ M sphinx/environment/adapters/toctree.py

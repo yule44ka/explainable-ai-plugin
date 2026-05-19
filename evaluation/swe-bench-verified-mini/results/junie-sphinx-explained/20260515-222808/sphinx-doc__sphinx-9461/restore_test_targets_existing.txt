@@ -1,0 +1,4 @@
+tests/roots/test-ext-autodoc/target/properties.py
+tests/test_domain_py.py
+tests/test_ext_autodoc_autoclass.py
+tests/test_ext_autodoc_autoproperty.py

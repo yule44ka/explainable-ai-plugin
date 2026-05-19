@@ -1,0 +1,4 @@
+Unstaged changes after reset:
+M	sphinx/writers/latex.py
+D	tests/conftest.py
+M	tests/test_build_latex.py

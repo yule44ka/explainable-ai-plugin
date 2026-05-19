@@ -1,0 +1,4 @@
+Testing against Django installed in '/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12276/django__django/django'
+Importing application forms_tests
+Skipping setup of unused database(s): default, other.
+System check identified no issues (0 silenced).

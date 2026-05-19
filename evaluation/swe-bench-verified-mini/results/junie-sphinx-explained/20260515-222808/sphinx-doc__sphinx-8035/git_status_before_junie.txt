@@ -1,0 +1,11 @@
+ M doc/conf.py
+ M sphinx/builders/__init__.py
+ M sphinx/directives/other.py
+ M sphinx/domains/std.py
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/util/__init__.py
+ M sphinx/writers/texinfo.py
+ M tests/roots/test-domain-cpp/conf.py
+ M tests/roots/test-ext-viewcode/spam/__init__.py
+ M tests/roots/test-html_style/conf.py
+ M tests/roots/test-nested-tables/conf.py

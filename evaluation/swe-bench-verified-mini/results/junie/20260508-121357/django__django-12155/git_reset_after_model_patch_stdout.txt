@@ -1,0 +1,2 @@
+Unstaged changes after reset:
+M	django/contrib/admindocs/utils.py

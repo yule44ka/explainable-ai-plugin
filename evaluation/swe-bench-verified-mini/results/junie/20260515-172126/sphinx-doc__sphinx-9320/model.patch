@@ -1,0 +1,29 @@
+diff --git a/sphinx/cmd/quickstart.py b/sphinx/cmd/quickstart.py
+index a40a21073..dee81ec2a 100644
+--- a/sphinx/cmd/quickstart.py
++++ b/sphinx/cmd/quickstart.py
+@@ -89,6 +89,8 @@ class ValidationError(Exception):
+ 
+ 
+ def is_path(x: str) -> str:
++    if x == '':
++        return x
+     x = path.expanduser(x)
+     if not path.isdir(x):
+         raise ValidationError(__("Please enter a valid path name."))
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index 279268aee..b4238c903 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -34,7 +34,10 @@ else:
+             return ref._eval_type(globalns, localns)
+ 
+ if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++    try:
++        from types import Union as types_Union
++    except ImportError:
++        from types import UnionType as types_Union
+ else:
+     types_Union = None
+ 

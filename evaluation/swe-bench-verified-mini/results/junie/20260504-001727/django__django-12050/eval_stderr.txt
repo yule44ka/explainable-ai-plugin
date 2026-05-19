@@ -1,0 +1,19 @@
+test_iterable_lookup_value (queries.test_query.TestQuery) ... FAIL
+
+======================================================================
+FAIL: test_iterable_lookup_value (queries.test_query.TestQuery)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12050/django__django/tests/queries/test_query.py", line 122, in test_iterable_lookup_value
+    self.assertEqual(name_exact.rhs, "['a', 'b']")
+AssertionError: "('a', 'b')" != "['a', 'b']"
+- ('a', 'b')
+? ^        ^
++ ['a', 'b']
+? ^        ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

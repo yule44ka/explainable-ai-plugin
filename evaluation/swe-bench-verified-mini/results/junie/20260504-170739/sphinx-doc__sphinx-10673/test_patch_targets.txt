@@ -1,0 +1,3 @@
+tests/roots/test-toctree-index/foo.rst
+tests/roots/test-toctree-index/index.rst
+tests/test_environment_toctree.py

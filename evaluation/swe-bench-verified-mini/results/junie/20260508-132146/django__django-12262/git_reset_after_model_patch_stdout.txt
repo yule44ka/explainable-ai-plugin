@@ -1,0 +1,2 @@
+Unstaged changes after reset:
+M	django/template/library.py

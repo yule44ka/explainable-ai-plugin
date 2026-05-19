@@ -1,0 +1,11 @@
+ M sphinx/ext/autosectionlabel.py
+ M sphinx/ext/duration.py
+ M sphinx/ext/viewcode.py
+ M sphinx/transforms/__init__.py
+ M tests/roots/test-directive-code/conf.py
+ M tests/roots/test-html_entity/conf.py
+ M tests/roots/test-root/autodoc_target.py
+ M tests/roots/test-warnings/autodoc_fodder.py
+ M tests/test_application.py
+ M tests/test_ext_autodoc_mock.py
+ M tests/test_toctree.py

@@ -1,0 +1,1 @@
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m pytest -q tests/test_domain_py.py::test_pyproperty tests/test_ext_autodoc_autoclass.py::test_properties tests/test_ext_autodoc_autoproperty.py::test_class_properties

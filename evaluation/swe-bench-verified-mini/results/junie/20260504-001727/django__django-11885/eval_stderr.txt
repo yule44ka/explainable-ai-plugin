@@ -1,0 +1,22 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_fast_delete_combined_relationships (delete.tests.FastDeleteTests) ... FAIL
+
+======================================================================
+FAIL: test_fast_delete_combined_relationships (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-11885/django__django/tests/delete/tests.py", line 592, in test_fast_delete_combined_relationships
+    referer.delete()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-11885/django__django/django/test/testcases.py", line 78, in __exit__
+    self.test_case.assertEqual(
+AssertionError: 3 != 2 : 3 queries executed, 2 expected
+Captured queries were:
+1. DELETE FROM "delete_secondreferrer" WHERE "delete_secondreferrer"."referrer_id" IN (1)
+2. DELETE FROM "delete_secondreferrer" WHERE "delete_secondreferrer"."other_referrer_id" IN (42)
+3. DELETE FROM "delete_referrer" WHERE "delete_referrer"."id" IN (1)
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

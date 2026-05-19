@@ -1,0 +1,2 @@
+ M django/db/models/base.py
+ M tests/model_inheritance/tests.py

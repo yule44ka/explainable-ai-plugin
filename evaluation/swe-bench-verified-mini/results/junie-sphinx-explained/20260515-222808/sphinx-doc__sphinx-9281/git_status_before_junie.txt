@@ -1,0 +1,11 @@
+ M sphinx/builders/text.py
+ M sphinx/domains/javascript.py
+ M sphinx/environment/collectors/title.py
+ M sphinx/search/tr.py
+ M sphinx/util/compat.py
+ M sphinx/util/inspect.py
+ M tests/roots/test-ext-autodoc/target/canonical/original.py
+ M tests/roots/test-ext-autodoc/target/enums.py
+ M tests/roots/test-ext-autodoc/target/overload2.py
+ M tests/test_build.py
+ M tests/test_docutilsconf.py

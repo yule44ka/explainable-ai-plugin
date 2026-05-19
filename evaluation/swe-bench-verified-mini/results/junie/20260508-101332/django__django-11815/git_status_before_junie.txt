@@ -1,0 +1,8 @@
+ M django/conf/locale/hi/formats.py
+ M django/contrib/gis/db/models/sql/__init__.py
+ M django/contrib/gis/gdal/prototypes/raster.py
+ M django/contrib/gis/gdal/raster/base.py
+ M django/db/backends/mysql/base.py
+ M django/db/migrations/serializer.py
+ M django/middleware/clickjacking.py
+ M django/test/runner.py

@@ -1,0 +1,590 @@
+EEEEEEEEEE                                                               [100%]
+==================================== ERRORS ====================================
+_____________________ ERROR at setup of test_toctree_index _____________________
+
+test_params = {'shared_result': None}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/toctree-index')})
+make_app = <function make_app.<locals>.make at 0x10af90b80>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10abf0ca0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+______________________ ERROR at setup of test_process_doc ______________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10bc07550>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10ac41490>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+_________________________ ERROR at setup of test_glob __________________________
+
+test_params = {'shared_result': None}
+app_params = app_params(args=['dummy'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x10b8a2280>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10bbd2cd0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+______________________ ERROR at setup of test_get_toc_for ______________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10b79d670>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10bb8c370>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+___________________ ERROR at setup of test_get_toc_for_only ____________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10bbc9670>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10bb8fa00>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+_________________ ERROR at setup of test_get_toc_for_tocdepth __________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10bb98670>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10b842760>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+____________________ ERROR at setup of test_get_toctree_for ____________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10bbc0670>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10b901130>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+_______________ ERROR at setup of test_get_toctree_for_collapse ________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10b7e20d0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10b837d00>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+_______________ ERROR at setup of test_get_toctree_for_maxdepth ________________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10bc07af0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10b7a5160>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+_____________ ERROR at setup of test_get_toctree_for_includehidden _____________
+
+test_params = {'shared_result': 'test_environment_toctree_basic'}
+app_params = app_params(args=['xml'], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-283/test_environment_toctree_basic')})
+make_app = <function make_app.<locals>.make at 0x10af90d30>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10ac2dbb0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:177: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:401: in setup_extension
+    self.registry.load_extension(self, extname)
+sphinx/registry.py:459: in load_extension
+    mod = import_module(extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'sphinx.directives.other', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E         File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/worktrees/sphinx-doc__sphinx-10673/sphinx-doc__sphinx/sphinx/directives/other.py", line 148
+E           else:
+E           ^
+E       SyntaxError: invalid syntax
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: SyntaxError
+=============================== warnings summary ===============================
+tests/test_environment_toctree.py::test_toctree_index
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_environment_toctree.py::test_toctree_index -   File "/Users/...
+ERROR tests/test_environment_toctree.py::test_process_doc -   File "/Users/iu...
+ERROR tests/test_environment_toctree.py::test_glob -   File "/Users/iuliia.li...
+ERROR tests/test_environment_toctree.py::test_get_toc_for -   File "/Users/iu...
+ERROR tests/test_environment_toctree.py::test_get_toc_for_only -   File "/Use...
+ERROR tests/test_environment_toctree.py::test_get_toc_for_tocdepth -   File "...
+ERROR tests/test_environment_toctree.py::test_get_toctree_for -   File "/User...
+ERROR tests/test_environment_toctree.py::test_get_toctree_for_collapse -   Fi...
+ERROR tests/test_environment_toctree.py::test_get_toctree_for_maxdepth -   Fi...
+ERROR tests/test_environment_toctree.py::test_get_toctree_for_includehidden
+1 warning, 10 errors in 0.48s

@@ -1,0 +1,11 @@
+ M sphinx/builders/gettext.py
+ M sphinx/builders/linkcheck.py
+ M sphinx/domains/python.py
+ M sphinx/ext/inheritance_diagram.py
+ M sphinx/util/cfamily.py
+ M sphinx/util/compat.py
+ M sphinx/util/fileutil.py
+ M tests/roots/test-ext-autodoc/target/docstring_signature.py
+ M tests/roots/test-keep_warnings/conf.py
+ M tests/test_domain_py.py
+ M tests/test_templating.py

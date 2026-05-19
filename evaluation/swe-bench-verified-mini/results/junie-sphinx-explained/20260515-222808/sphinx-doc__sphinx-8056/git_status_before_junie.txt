@@ -1,0 +1,11 @@
+ M sphinx/builders/gettext.py
+ M sphinx/builders/latex/nodes.py
+ M sphinx/ext/napoleon/docstring.py
+ M sphinx/project.py
+ M sphinx/pycode/parser.py
+ M sphinx/util/nodes.py
+ M sphinx/util/typing.py
+ M sphinx/versioning.py
+ M tests/roots/test-apidoc-subpackage-in-toc/parent/__init__.py
+ M tests/roots/test-pycode-egg/src/setup.py
+ M tests/test_setup_command.py

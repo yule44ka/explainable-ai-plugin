@@ -1,0 +1,2 @@
+tests/conftest.py
+tests/test_build_latex.py

@@ -1,0 +1,8 @@
+
+=============================== warnings summary ===============================
+sphinx/util/rst.py:58
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/sphinx/util/rst.py:58: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 warning in 0.03s

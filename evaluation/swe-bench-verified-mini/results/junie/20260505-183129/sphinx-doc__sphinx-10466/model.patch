@@ -1,0 +1,25 @@
+diff --git a/sphinx/builders/gettext.py b/sphinx/builders/gettext.py
+index e8bc547b7..72cbbfbe4 100644
+--- a/sphinx/builders/gettext.py
++++ b/sphinx/builders/gettext.py
+@@ -32,8 +32,18 @@ class Message:
+     """An entry of translatable message."""
+     def __init__(self, text: str, locations: List[Tuple[str, int]], uuids: List[str]):
+         self.text = text
+-        self.locations = locations
+-        self.uuids = uuids
++        self.locations: List[Tuple[str, int]] = []
++        seen_loc: Set[Tuple[str, int]] = set()
++        for loc in locations:
++            if loc not in seen_loc:
++                self.locations.append(loc)
++                seen_loc.add(loc)
++        self.uuids: List[str] = []
++        seen_uuid: Set[str] = set()
++        for uuid in uuids:
++            if uuid not in seen_uuid:
++                self.uuids.append(uuid)
++                seen_uuid.add(uuid)
+ 
+ 
+ class Catalog:

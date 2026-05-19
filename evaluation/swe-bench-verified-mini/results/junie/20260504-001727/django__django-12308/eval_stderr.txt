@@ -1,0 +1,40 @@
+test_json_display_for_field (admin_utils.tests.UtilsTests) ... test_label_for_field (admin_utils.tests.UtilsTests)
+Tests for label_for_field ... ok
+
+======================================================================
+FAIL: test_json_display_for_field (admin_utils.tests.UtilsTests) (value={'a': {'b': 'c'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12308/django__django/tests/admin_utils/tests.py", line 191, in test_json_display_for_field
+    self.assertEqual(
+AssertionError: "{'a': {'b': 'c'}}" != '{"a": {"b": "c"}}'
+- {'a': {'b': 'c'}}
++ {"a": {"b": "c"}}
+
+
+======================================================================
+FAIL: test_json_display_for_field (admin_utils.tests.UtilsTests) (value=['a', 'b'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12308/django__django/tests/admin_utils/tests.py", line 191, in test_json_display_for_field
+    self.assertEqual(
+AssertionError: 'a, b' != '["a", "b"]'
+- a, b
++ ["a", "b"]
+
+
+======================================================================
+FAIL: test_json_display_for_field (admin_utils.tests.UtilsTests) (value='a')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12308/django__django/tests/admin_utils/tests.py", line 191, in test_json_display_for_field
+    self.assertEqual(
+AssertionError: 'a' != '"a"'
+- a
++ "a"
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+FAILED (failures=3)

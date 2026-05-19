@@ -1,0 +1,16 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_descending_columns_list_sql (indexes.tests.SchemaIndexesTests) ... FAIL
+
+======================================================================
+FAIL: test_descending_columns_list_sql (indexes.tests.SchemaIndexesTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12039/django__django/tests/indexes/tests.py", line 89, in test_descending_columns_list_sql
+    self.assertIn(
+AssertionError: '("headline" DESC)' not found in 'CREATE INDEX "whitespace_idx" ON "indexes_article" ("headline"DESC)'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

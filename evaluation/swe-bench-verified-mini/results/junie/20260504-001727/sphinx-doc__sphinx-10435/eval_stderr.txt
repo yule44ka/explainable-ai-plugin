@@ -1,0 +1,2 @@
+ERROR: found no collectors for /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py::test_latex_code_role
+

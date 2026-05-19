@@ -1,0 +1,133 @@
+diff --git a/sphinx/util/images.py b/sphinx/util/images.py
+index a2a31f55b..5fa8933eb 100644
+--- a/sphinx/util/images.py
++++ b/sphinx/util/images.py
+@@ -9,7 +9,10 @@
+ """
+ 
+ import base64
+-import imghdr
++try:
++    import imghdr
++except ImportError:
++    imghdr = None
+ from collections import OrderedDict
+ from os import path
+ from typing import IO, BinaryIO, NamedTuple, Optional, Tuple
+@@ -56,11 +59,12 @@ def get_image_size(filename: str) -> Optional[Tuple[int, int]]:
+ 
+ 
+ def guess_mimetype_for_stream(stream: IO, default: Optional[str] = None) -> Optional[str]:
+-    imgtype = imghdr.what(stream)
+-    if imgtype:
+-        return 'image/' + imgtype
+-    else:
+-        return default
++    if imghdr:
++        imgtype = imghdr.what(stream)
++        if imgtype:
++            return 'image/' + imgtype
++
++    return default
+ 
+ 
+ def guess_mimetype(filename: str = '', default: Optional[str] = None) -> Optional[str]:
+@@ -116,4 +120,5 @@ def test_svg(h: bytes, f: Optional[BinaryIO]) -> Optional[str]:
+ 
+ # install test_svg() to imghdr
+ # refs: https://docs.python.org/3.6/library/imghdr.html#imghdr.tests
+-imghdr.tests.append(test_svg)
++if imghdr:
++    imghdr.tests.append(test_svg)
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index dba50e065..0dd746341 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -438,6 +438,12 @@ def safe_getattr(obj: Any, name: str, *defargs: Any) -> Any:
+ # • It includes stringification utilities for signatures (`stringify_signature`) and object descriptions (`object_description`) to produce human-readable representations suitable for reST documentation.
+ def object_description(object: Any) -> str:
+     """A repr() implementation that returns text safe to use in reST context."""
++    if isinstance(object, enum.Enum):
++        if object.name is not None:
++            return "%s.%s" % (object.__class__.__qualname__, object.name)
++        else:
++            # fallback for unnamed enum members (e.g. flag combinations in old python or unnamed IntFlag values)
++            return repr(object)
+     if isinstance(object, dict):
+         try:
+             sorted_keys = sorted(object)
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index af6edcae0..e47b0af36 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -34,7 +34,7 @@ else:
+             return ref._eval_type(globalns, localns)
+ 
+ if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++    from types import UnionType as types_Union
+ else:
+     types_Union = None
+ 
+diff --git a/tests/test_issue_enum.py b/tests/test_issue_enum.py
+new file mode 100644
+index 000000000..ceed493c3
+--- /dev/null
++++ b/tests/test_issue_enum.py
+@@ -0,0 +1,26 @@
++import enum
++import pytest
++from sphinx.util import inspect
++
++class MyEnum(enum.Enum):
++    Val = 1
++
++class MyIntEnum(enum.IntEnum):
++    Val = 1
++
++class MyFlag(enum.Flag):
++    A = 1
++    B = 2
++
++def test_object_description_enumns():
++    assert inspect.object_description(MyEnum.Val) == "MyEnum.Val"
++    assert inspect.object_description(MyIntEnum.Val) == "MyIntEnum.Val"
++    assert inspect.object_description(MyFlag.A) == "MyFlag.A"
++    assert inspect.object_description(MyFlag.A | MyFlag.B) == "MyFlag.A|B"
++
++def test_object_description_enumns_nested():
++    class Outer:
++        class InnerEnum(enum.Enum):
++            Val = 1
++    
++    assert inspect.object_description(Outer.InnerEnum.Val) == "test_object_description_enumns_nested.<locals>.Outer.InnerEnum.Val"
+diff --git a/tests/test_util_inspect.py b/tests/test_util_inspect.py
+index de4ad9236..796303fc2 100644
+--- a/tests/test_util_inspect.py
++++ b/tests/test_util_inspect.py
+@@ -472,6 +472,25 @@ def test_safe_getattr_with___dict___override():
+         pytest.fail('AttributeError not raised')
+ 
+ 
++def test_object_description_enumns():
++    import enum
++
++    class MyEnum(enum.Enum):
++        Val = 1
++
++    class MyIntEnum(enum.IntEnum):
++        Val = 1
++
++    class MyFlag(enum.Flag):
++        A = 1
++        B = 2
++
++    assert inspect.object_description(MyEnum.Val) == "MyEnum.Val"
++    assert inspect.object_description(MyIntEnum.Val) == "MyIntEnum.Val"
++    assert inspect.object_description(MyFlag.A) == "MyFlag.A"
++    assert inspect.object_description(MyFlag.A | MyFlag.B) == "MyFlag.A|B"
++
++
+ def test_dictionary_sorting():
+     dictionary = {"c": 3, "a": 1, "d": 2, "b": 4}
+     description = inspect.object_description(dictionary)

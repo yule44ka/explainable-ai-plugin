@@ -1,0 +1,5 @@
+Unstaged changes after reset:
+M	sphinx/cmd/quickstart.py
+M	sphinx/deprecation.py
+M	sphinx/util/images.py
+M	sphinx/util/typing.py

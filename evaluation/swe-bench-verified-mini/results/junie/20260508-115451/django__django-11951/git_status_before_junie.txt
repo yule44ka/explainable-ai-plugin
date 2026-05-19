@@ -1,0 +1,9 @@
+ M django/contrib/gis/gdal/layer.py
+ M django/contrib/gis/geoip2/base.py
+ M django/contrib/sessions/apps.py
+ M django/core/mail/backends/console.py
+ M django/db/migrations/migration.py
+ M django/db/models/lookups.py
+ M django/db/models/query.py
+ M django/db/models/sql/datastructures.py
+ M django/template/__init__.py

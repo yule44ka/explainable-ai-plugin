@@ -1,0 +1,25 @@
+
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_build_latex.py __________________
+ImportError while importing test module '/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-10435/sphinx-doc__sphinx/tests/test_build_latex.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+sphinx/writers/latex.py:29: in <module>
+    from docutils.utils.roman import toRoman
+E   ModuleNotFoundError: No module named 'docutils.utils.roman'
+
+During handling of the above exception, another exception occurred:
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_build_latex.py:12: in <module>
+    from sphinx.builders.latex import default_latex_documents
+sphinx/builders/latex/__init__.py:30: in <module>
+    from sphinx.writers.latex import LaTeXTranslator, LaTeXWriter
+sphinx/writers/latex.py:32: in <module>
+    from roman import toRoman  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ModuleNotFoundError: No module named 'roman'
+=========================== short test summary info ============================
+ERROR tests/test_build_latex.py
+1 error in 1.41s

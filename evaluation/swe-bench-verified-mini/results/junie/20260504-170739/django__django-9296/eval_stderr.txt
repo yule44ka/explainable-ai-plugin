@@ -1,0 +1,39 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_first_page (pagination.tests.ModelPaginationTests) ... ok
+test_last_page (pagination.tests.ModelPaginationTests) ... ok
+test_page_getitem (pagination.tests.ModelPaginationTests)
+Tests proper behavior of a paginator page __getitem__ (queryset ... ok
+test_paginating_empty_queryset_does_not_warn (pagination.tests.ModelPaginationTests) ... ok
+test_paginating_unordered_object_list_raises_warning (pagination.tests.ModelPaginationTests)
+Unordered object list warning with an object that has an ordered ... ok
+test_paginating_unordered_queryset_raises_warning (pagination.tests.ModelPaginationTests) ... ok
+test_paginator_iteration (pagination.tests.PaginationTests) ... ok
+test_count_does_not_silence_attribute_error (pagination.tests.PaginationTests) ... ok
+test_count_does_not_silence_type_error (pagination.tests.PaginationTests) ... ok
+test_float_integer_page (pagination.tests.PaginationTests) ... ok
+test_get_page (pagination.tests.PaginationTests)
+Paginator.get_page() returns a valid page even with invalid page ... ok
+test_get_page_empty_object_list (pagination.tests.PaginationTests)
+Paginator.get_page() with an empty object_list. ... ok
+test_get_page_empty_object_list_and_allow_empty_first_page_false (pagination.tests.PaginationTests)
+Paginator.get_page() raises EmptyPage if allow_empty_first_page=False ... ok
+test_get_page_hook (pagination.tests.PaginationTests)
+A Paginator subclass can use the ``_get_page`` hook to ... ok
+test_invalid_page_number (pagination.tests.PaginationTests)
+Invalid page numbers result in the correct exception being raised. ... ok
+test_no_content_allow_empty_first_page (pagination.tests.PaginationTests) ... ok
+test_page_indexes (pagination.tests.PaginationTests)
+Paginator pages have the correct start and end indexes. ... ok
+test_page_range_iterator (pagination.tests.PaginationTests)
+Paginator.page_range should be an iterator. ... ok
+test_page_sequence (pagination.tests.PaginationTests)
+A paginator page acts like a standard sequence. ... ok
+test_paginate_misc_classes (pagination.tests.PaginationTests) ... ok
+test_paginator (pagination.tests.PaginationTests)
+Tests the paginator attributes using varying inputs. ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.005s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

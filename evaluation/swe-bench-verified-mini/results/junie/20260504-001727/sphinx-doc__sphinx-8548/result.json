@@ -1,0 +1,15 @@
+{
+  "agent_seconds": 9.545,
+  "base_commit": "dd1615c59dc6fff633e27dbb3861f2d27e1fb976",
+  "error": "Failed to restore test patch targets:\nerror: pathspec 'tests/roots/test-ext-autodoc/target/instance_variable.py' did not match any file(s) known to git\n",
+  "eval_seconds": 0.0,
+  "finished_at": "2026-05-03T21:20:08.830019+00:00",
+  "instance_id": "sphinx-doc__sphinx-8548",
+  "junie_returncode": 0,
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/sphinx-doc__sphinx-8548",
+  "repo": "sphinx-doc/sphinx",
+  "started_at": "2026-05-03T21:19:53.617674+00:00",
+  "status": "error",
+  "success": false,
+  "total_seconds": 15.212
+}

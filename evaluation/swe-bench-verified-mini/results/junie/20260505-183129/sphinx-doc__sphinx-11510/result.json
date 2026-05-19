@@ -1,0 +1,15 @@
+{
+  "agent_seconds": 261.105,
+  "base_commit": "6cb783c0024a873722952a67ebb9f41771c8eb6d",
+  "error": "Failed to restore test patch targets:\nerror: pathspec 'tests/roots/test-directive-include/baz/baz.rst' did not match any file(s) known to git\nerror: pathspec 'tests/roots/test-directive-include/conf.py' did not match any file(s) known to git\nerror: pathspec 'tests/roots/test-directive-include/foo.rst' did not match any file(s) known to git\nerror: pathspec 'tests/roots/test-directive-include/text.txt' did not match any file(s) known to git\n",
+  "eval_seconds": 0.0,
+  "finished_at": "2026-05-05T15:42:55.670631+00:00",
+  "instance_id": "sphinx-doc__sphinx-11510",
+  "junie_returncode": 0,
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/sphinx-doc__sphinx-11510",
+  "repo": "sphinx-doc/sphinx",
+  "started_at": "2026-05-05T15:38:30.675124+00:00",
+  "status": "error",
+  "success": false,
+  "total_seconds": 264.994
+}

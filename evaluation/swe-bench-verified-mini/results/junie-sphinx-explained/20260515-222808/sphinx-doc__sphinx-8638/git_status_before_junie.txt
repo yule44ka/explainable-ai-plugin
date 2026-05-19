@@ -1,0 +1,11 @@
+ M sphinx/domains/python.py
+ M sphinx/testing/fixtures.py
+ M sphinx/util/images.py
+ M tests/roots/test-api-set-translator/conf.py
+ M tests/roots/test-builder-gettext-dont-rebuild-mo/conf.py
+ M tests/roots/test-ext-autodoc/target/__init__.py
+ M tests/roots/test-ext-autodoc/target/decorator.py
+ M tests/roots/test-extensions/read_parallel.py
+ M tests/roots/test-setup/doc/conf.py
+ M tests/roots/test-theming/conf.py
+ M tests/test_domain_py.py

@@ -1,0 +1,47 @@
+test_use_required_attribute (forms_tests.widget_tests.test_fileinput.FileInputTest) ... FAIL
+test_filefield_with_fileinput_required (forms_tests.tests.test_forms.FormsTestCase) ... FAIL
+
+======================================================================
+FAIL: test_use_required_attribute (forms_tests.widget_tests.test_fileinput.FileInputTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12276/django__django/tests/forms_tests/widget_tests/test_fileinput.py", line 26, in test_use_required_attribute
+    self.assertIs(self.widget.use_required_attribute('resume.txt'), False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_filefield_with_fileinput_required (forms_tests.tests.test_forms.FormsTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12276/django__django/tests/forms_tests/tests/test_forms.py", line 2503, in test_filefield_with_fileinput_required
+    self.assertHTMLEqual(
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12276/django__django/django/test/testcases.py", line 785, in assertHTMLEqual
+    self.fail(self._formatMessage(msg, standardMsg))
+AssertionError: <tr>
+<th>
+File1:
+</th><td>
+<input name="file1" required type="file">
+</td>
+</tr> [truncated]... != <tr>
+<th>
+File1:
+</th><td>
+<input name="file1" type="file">
+</td>
+</tr>
+  <tr>
+  <th>
+  File1:
+  </th><td>
+- <input name="file1" required type="file">
+?                     ---------
+
++ <input name="file1" type="file">
+  </td>
+  </tr>
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.028s
+
+FAILED (failures=2)

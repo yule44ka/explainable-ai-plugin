@@ -1,0 +1,12 @@
+ M sphinx/directives/__init__.py
+ M sphinx/domains/changeset.py
+ M sphinx/domains/cpp.py
+ M sphinx/domains/python.py
+ M sphinx/transforms/i18n.py
+ M sphinx/util/docfields.py
+ M tests/roots/test-apidoc-trailing-underscore/package_/module_.py
+ M tests/roots/test-ext-autodoc/target/singledispatch.py
+ M tests/roots/test-ext-todo/conf.py
+ M tests/roots/test-html_scaled_image_link/conf.py
+ M tests/roots/test-inheritance/dummy/__init__.py
+ M tests/test_markup.py

@@ -1,0 +1,89 @@
+diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py
+index 1a8ea0973..00ca23182 100644
+--- a/sphinx/ext/autodoc/importer.py
++++ b/sphinx/ext/autodoc/importer.py
+@@ -18,7 +18,7 @@ from sphinx.ext.autodoc.mock import ismock, undecorate
+ from sphinx.pycode import ModuleAnalyzer, PycodeError
+ from sphinx.util import logging
+ from sphinx.util.inspect import (getannotations, getmro, getslots, isclass, isenumclass,
+-                                 safe_getattr)
++                                 isproperty, safe_getattr)
+ 
+ if False:
+     # For type annotation
+@@ -213,6 +213,16 @@ def get_object_members(subject: Any, objpath: List[str], attrgetter: Callable,
+     for name in dir(subject):
+         try:
+             value = attrgetter(subject, name)
++            if isclass(subject):
++                if isproperty(value):
++                    pass
++                else:
++                    for cls in getmro(subject):
++                        if name in cls.__dict__:
++                            if isproperty(cls.__dict__[name]):
++                                value = cls.__dict__[name]
++                            break
++
+             directly_defined = name in obj_dict
+             name = unmangle(subject, name)
+             if name and name not in members:
+@@ -280,6 +290,15 @@ def get_class_members(subject: Any, objpath: List[str], attrgetter: Callable
+ 
+             unmangled = unmangle(subject, name)
+             if unmangled and unmangled not in members:
++                if isproperty(value):
++                    pass
++                else:
++                    for cls in getmro(subject):
++                        if name in cls.__dict__:
++                            if isproperty(cls.__dict__[name]):
++                                value = cls.__dict__[name]
++                            break
++
+                 if name in obj_dict:
+                     members[unmangled] = ObjectMember(unmangled, value, class_=subject)
+                 else:
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 004a19611..0ec18bf73 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -389,6 +389,9 @@ def iscoroutinefunction(obj: Any) -> bool:
+ 
+ def isproperty(obj: Any) -> bool:
+     """Check if the object is property."""
++    if isinstance(obj, classmethod):
++        obj = getattr(obj, '__func__', obj)
++
+     if sys.version_info >= (3, 8):
+         from functools import cached_property  # cached_property is available since py3.8
+         if isinstance(obj, cached_property):
+@@ -848,6 +851,9 @@ def getdoc(obj: Any, attrgetter: Callable = safe_getattr,
+     * inherited decorated methods
+     """
+     doc = attrgetter(obj, '__doc__', None)
++    if isinstance(obj, (classmethod, staticmethod)) and (doc is None or doc == obj.__class__.__doc__):
++        doc = getdoc(obj.__func__, attrgetter=attrgetter,
++                     allow_inherited=allow_inherited, cls=cls, name=name)
+     if ispartial(obj) and doc == obj.__class__.__doc__:
+         return getdoc(obj.func)
+     elif doc is None and allow_inherited:
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index 4e1b184e0..e09ab8508 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -34,7 +34,13 @@ else:
+             return ref._eval_type(globalns, localns)
+ 
+ if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++    try:
++        from types import Union as types_Union  # type: ignore
++    except ImportError:
++        try:
++            from types import UnionType as types_Union  # type: ignore
++        except ImportError:
++            types_Union = None
+ else:
+     types_Union = None
+ 

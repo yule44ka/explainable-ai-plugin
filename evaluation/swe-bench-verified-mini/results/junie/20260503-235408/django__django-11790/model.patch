@@ -1,0 +1,51 @@
+diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py
+index a0cfed0995..03d4df3042 100644
+--- a/django/contrib/auth/forms.py
++++ b/django/contrib/auth/forms.py
+@@ -191,9 +191,11 @@ class AuthenticationForm(forms.Form):
+ 
+         # Set the max length and label for the "username" field.
+         self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+-        self.fields['username'].max_length = self.username_field.max_length or 254
+-        if self.fields['username'].label is None:
+-            self.fields['username'].label = capfirst(self.username_field.verbose_name)
++        username_field = self.fields['username']
++        username_field.max_length = self.username_field.max_length or 254
++        if username_field.label is None:
++            username_field.label = capfirst(self.username_field.verbose_name)
++        username_field.widget.attrs.update(username_field.widget_attrs(username_field.widget))
+ 
+     def clean(self):
+         username = self.cleaned_data.get('username')
+diff --git a/tests/auth_tests/test_forms.py b/tests/auth_tests/test_forms.py
+index 7085dcfa11..c8a9ff1abc 100644
+--- a/tests/auth_tests/test_forms.py
++++ b/tests/auth_tests/test_forms.py
+@@ -423,6 +423,7 @@ class AuthenticationFormTest(TestDataMixin, TestCase):
+         CustomEmailField.objects.create_user(**data)
+         form = AuthenticationForm(None, data)
+         self.assertEqual(form.fields['username'].max_length, 255)
++        self.assertEqual(form.fields['username'].widget.attrs['maxlength'], '255')
+         self.assertEqual(form.errors, {})
+ 
+     @override_settings(AUTH_USER_MODEL='auth_tests.IntegerUsernameUser')
+@@ -435,6 +436,7 @@ class AuthenticationFormTest(TestDataMixin, TestCase):
+         IntegerUsernameUser.objects.create_user(**data)
+         form = AuthenticationForm(None, data)
+         self.assertEqual(form.fields['username'].max_length, 254)
++        self.assertEqual(form.fields['username'].widget.attrs['maxlength'], '254')
+         self.assertEqual(form.errors, {})
+ 
+     def test_username_field_label(self):
+@@ -513,6 +515,11 @@ class AuthenticationFormTest(TestDataMixin, TestCase):
+             with self.subTest(field_name=field_name, autocomplete=autocomplete):
+                 self.assertEqual(form.fields[field_name].widget.attrs['autocomplete'], autocomplete)
+ 
++    def test_username_field_maxlength(self):
++        form = AuthenticationForm()
++        username_max_length = User._meta.get_field('username').max_length
++        self.assertEqual(form.fields['username'].widget.attrs['maxlength'], str(username_max_length))
++
+ 
+ class SetPasswordFormTest(TestDataMixin, TestCase):
+ 

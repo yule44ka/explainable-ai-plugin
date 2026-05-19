@@ -1,0 +1,12 @@
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/ext/autodoc/importer.py
+ M sphinx/registry.py
+ M tests/roots/test-apidoc-toc/mypackage/resource/__init__.py
+ M tests/roots/test-ext-autodoc/target/partialfunction.py
+ M tests/roots/test-ext-autodoc/target/singledispatch.py
+ M tests/roots/test-ext-autodoc/target/sort_by_all.py
+ M tests/roots/test-ext-autodoc/target/typehints.py
+ M tests/roots/test-ext-autosummary-mock_imports/foo.py
+ M tests/roots/test-ext-autosummary-recursive/package/__init__.py
+ M tests/test_domain_py.py
+ M utils/bump_version.py

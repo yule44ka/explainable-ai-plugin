@@ -1,0 +1,5 @@
+tests/test_ext_viewcode.py::test_viewcode
+tests/test_ext_viewcode.py::test_viewcode_epub_default
+tests/test_ext_viewcode.py::test_viewcode_epub_enabled
+tests/test_ext_viewcode.py::test_linkcode
+tests/test_ext_viewcode.py::test_local_source_files

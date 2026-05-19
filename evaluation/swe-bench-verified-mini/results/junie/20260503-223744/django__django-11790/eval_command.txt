@@ -1,0 +1,1 @@
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 tests/runtests.py --verbosity=2 auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_defaults_to_254 auth_tests.test_forms.AuthenticationFormTest.test_username_field_max_length_matches_user_model

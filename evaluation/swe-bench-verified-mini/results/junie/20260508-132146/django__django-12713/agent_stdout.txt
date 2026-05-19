@@ -1,0 +1,95 @@
+Authenticated successfully
+[38;5;78m●[0m [1mFound "def formfield_for_manytomany|def formfield_for_foreignkey" in django/contrib/admin[0m
+[38;5;247mdjango/contrib/admin/options.py [220—224][0m
+[38;5;247mdjango/contrib/admin/options.py [244—248][0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/contrib/admin/options.py [222 - 322][0m
+[38;5;247mThe file was opened at a specific line, revealing a method related to ordering and fieldsets in the admin options.[0m
+[38;5;78m●[0m [1mEdited files[0m
+[38;5;247mCreated reproduce_issue.py[0m
+[38;5;247mA Python script was created to test whether a custom widget is preserved in a Django admin formfield for a many-to-many relationship.[0m
+[38;5;78m●[0m [1mEdited files[0m
+[38;5;247mUpdated reproduce_issue.py[0m
+[38;5;247mThe file was updated to add a filter_horizontal attribute to the admin class while retaining the custom widget assignment in the formfield_for_manytomany method.[0m
+[38;5;203m●[0m [1mpython reproduce_issue.py[0m
+[38;5;241m│ Traceback (most recent call last):[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked[0m
+[38;5;241m│ ModuleNotFoundError: No module named 'reproduce_app'[0m
+[38;5;78m●[0m [1mEdited files[0m
+[38;5;247mUpdated reproduce_issue.py[0m
+[38;5;247mThe INSTALLED_APPS list was updated to remove a specific app, leaving only the default Django apps.[0m
+[38;5;78m●[0m [1mpython reproduce_issue.py[0m
+[38;5;241m│ Widget: FilteredSelectMultiple[0m
+[38;5;241m│ FAILURE: Custom widget overwritten[0m
+[38;5;247mThe script ran successfully but reported a failure indicating that a custom widget was overwritten.[0m
+[38;5;78m●[0m [1mThinking[0m
+[38;5;247mReproduced the issue where `formfield_for_manytomany` overwrites a custom widget passed in `kwargs`. The implementation of `formfield_for_manytomany` in `django/contrib/admin/options.py` lacks the `if 'widget' not in kwargs:` check that is present in `formfield_for_foreignkey`.[0m
+[38;5;247mNext step: Modify `django/contrib/admin/options.py` to add the missing check.[0m
+[38;5;78m●[0m [1mEdited files[0m
+[38;5;247mUpdated django/contrib/admin/options.py[0m
+[38;5;247mThe code was updated to add a conditional check for the presence of a 'widget' key in the arguments before assigning widget types based on field attributes.[0m
+[38;5;78m●[0m [1mpython reproduce_issue.py[0m
+[38;5;241m│ Widget: CustomWidget[0m
+[38;5;241m│ SUCCESS: Custom widget preserved[0m
+[38;5;247mThe script ran successfully with exit code 0, confirming that the custom widget was preserved.[0m
+[38;5;78m●[0m [1mFound "**/*test*admin*" in tests[0m
+[38;5;247mtests/admin_scripts/test_django_admin_py.py[0m
+[38;5;247mtests/admin_views/test_adminsite.py[0m
+[38;5;247mtests/auth_tests/test_admin_multidb.py[0m
+[38;5;78m●[0m [1mls tests/modeladmin[0m
+[38;5;241m│ __init__.py[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ test_checks.py[0m
+[38;5;241m│ tests.py[0m
+[38;5;247mThe tests/modeladmin directory contains several Python files, including initialization, models, and multiple test files.[0m
+[38;5;203m●[0m [1mpython ./tests/runtests.py modeladmin[0m
+[38;5;241m│ Traceback (most recent call last):[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ ) from e[0m
+[38;5;241m│ RuntimeError: Django module not found, reference tests/README.rst for instructions.[0m
+[38;5;78m●[0m [1mexport PYTHONPATH=$PYTHONPATH:.[0m
+[1mpython ./tests/runtests.py modeladmin[0m
+[38;5;241m│ Creating test database for alias 'default'...[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ System check identified no issues (0 silenced).[0m
+[38;5;241m│ Destroying test database for alias 'default'...[0m
+[38;5;247mAll 156 tests ran successfully with no issues detected, and the test database was created and destroyed without errors.[0m
+[38;5;78m●[0m [1mexport PYTHONPATH=$PYTHONPATH:.[0m
+[1mpython ./tests/runtests.py admin_views[0m
+[38;5;241m│ Creating test database for alias 'default'...[0m
+[38;5;241m│ ...[0m
+[38;5;241m│ Destroying test database for alias 'default'...[0m
+[38;5;241m│ Destroying test database for alias 'other'...[0m
+[38;5;247mAll 362 tests ran successfully with 15 skipped, and no system issues were detected.[0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/contrib/admin/options.py [210 - 310][0m
+[38;5;247mThe file was opened at a specific line, revealing a section of code related to form field choices and a method for specifying fields.[0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/contrib/admin/options.py [188 - 288][0m
+[38;5;247mThe file was opened successfully, revealing its full length and content structure without any errors.[0m
+[38;5;78m●[0m [1mThinking[0m
+[38;5;247mApplied the fix to `formfield_for_manytomany` in `django/contrib/admin/options.py`. Verified that the reproduction script now passes and that existing `modeladmin` and `admin_views` tests pass.[0m
+[38;5;247mChecked other `formfield_for_*` methods and confirmed they already had similar checks.[0m
+[38;5;247mFound `formfield_for_dbfield` but it's a dispatcher and doesn't seem to have this issue directly.[0m
+[38;5;247mNext step: Final verification and submission.[0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/contrib/admin/options.py [156 - 256][0m
+[38;5;247mThe specified file in the admin module was opened successfully, revealing code related to form field overrides and widget assignments for certain field types.[0m
+[38;5;78m●[0m [1mrm reproduce_issue.py[0m
+[38;5;247mThe file named reproduce_issue.py was successfully deleted without any errors.[0m
+[38;5;78m●[0m [1mTASK RESULT:[0m
+[38;5;247m### Summary[0m
+[38;5;247m- Fixed an issue where `formfield_for_manytomany()` in `ModelAdmin` would overwrite a custom widget passed in the `kwargs` parameter.[0m
+[38;5;247m- This brings `formfield_for_manytomany()` in line with `formfield_for_foreignkey()` and `formfield_for_choice_field()`, which already respected provided widgets.[0m
+[38;5;247m### Changes[0m
+[38;5;247m- Modified `django/contrib/admin/options.py`:[0m
+[38;5;247m    - Wrapped the default widget assignment logic in `formfield_for_manytomany()` with an `if 'widget' not in kwargs:` check.[0m
+[38;5;247m    - This ensures that if a developer explicitly provides a widget when calling `super().formfield_for_manytomany()`, it is not overwritten by the admin's default widgets (like `AutocompleteSelectMultiple`, `ManyToManyRawIdWidget`, or `FilteredSelectMultiple`).[0m
+[38;5;247m### Verification[0m
+[38;5;247m- Created a reproduction script that demonstrated the issue by providing a `CustomWidget` to `formfield_for_manytomany()` while having `filter_horizontal` enabled.[0m
+[38;5;247m- Verified that before the fix, the `CustomWidget` was replaced by `FilteredSelectMultiple`, and after the fix, it was correctly preserved.[0m
+[38;5;247m- Ran existing tests for `modeladmin` and `admin_views` to ensure no regressions were introduced. All tests passed.[0m
+[38;5;247m# FILES[0m
+[38;5;247mUpdated reproduce_issue.py[0m
+[38;5;247mUpdated django/contrib/admin/options.py[0m

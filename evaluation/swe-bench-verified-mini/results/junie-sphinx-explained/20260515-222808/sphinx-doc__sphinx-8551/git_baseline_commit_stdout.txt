@@ -1,0 +1,2 @@
+[detached HEAD afb967607] SWE-bench runner baseline before Junie
+ 12 files changed, 12 insertions(+)

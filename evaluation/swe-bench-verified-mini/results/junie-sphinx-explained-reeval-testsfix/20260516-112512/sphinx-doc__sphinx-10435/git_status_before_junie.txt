@@ -1,0 +1,11 @@
+ M sphinx/__init__.py
+ M sphinx/ext/__init__.py
+ M sphinx/util/fileutil.py
+ M sphinx/util/stemmer/porter.py
+ M sphinx/writers/latex.py
+ M tests/roots/test-add_enumerable_node/conf.py
+ M tests/roots/test-builder-gettext-dont-rebuild-mo/conf.py
+ M tests/roots/test-pycode-egg/conf.py
+ M tests/roots/test-pycode-egg/src/sample.py
+ M tests/test_api_translator.py
+ M tests/test_ext_autodoc_private_members.py

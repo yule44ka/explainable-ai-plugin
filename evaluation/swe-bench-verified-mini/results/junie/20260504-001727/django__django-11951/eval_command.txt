@@ -1,0 +1,1 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/django39/bin/python tests/runtests.py --verbosity=2 bulk_create.tests.BulkCreateTests.test_explicit_batch_size_respects_max_batch_size

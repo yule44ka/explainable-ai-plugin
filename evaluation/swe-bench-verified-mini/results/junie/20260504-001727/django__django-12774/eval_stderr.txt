@@ -1,0 +1,20 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_in_bulk_meta_constraint (lookup.tests.LookupTests) ... ERROR
+
+======================================================================
+ERROR: test_in_bulk_meta_constraint (lookup.tests.LookupTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12774/django__django/tests/lookup/tests.py", line 198, in test_in_bulk_meta_constraint
+    Season.objects.in_bulk(
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12774/django__django/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12774/django__django/django/db/models/query.py", line 693, in in_bulk
+    raise ValueError("in_bulk()'s field_name must be a unique field but %r isn't." % field_name)
+ValueError: in_bulk()'s field_name must be a unique field but 'year' isn't.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+FAILED (errors=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

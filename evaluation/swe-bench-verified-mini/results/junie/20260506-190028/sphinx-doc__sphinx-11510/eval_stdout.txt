@@ -1,0 +1,68 @@
+F........                                                                [100%]
+=================================== FAILURES ===================================
+________________________ test_include_source_read_event ________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='directive-include')
+    def test_include_source_read_event(app):
+        sources_reported = {}
+    
+        def source_read_handler(app, doc, source):
+            sources_reported[doc] = source[0]
+    
+        app.connect("source-read", source_read_handler)
+        text = (".. include:: baz/baz.rst\n"
+                "   :start-line: 4\n\n"
+                ".. include:: text.txt\n"
+                "   :literal:    \n")
+        app.env.find_files(app.config, app.builder)
+        restructuredtext.parse(app, text, 'index')
+        assert "index" in sources_reported
+        assert "text.txt" not in sources_reported  # text was included as literal, no rst parsing
+        assert "baz/baz" in sources_reported
+>       assert sources_reported["baz/baz"] == "\nBaz was here."
+E       AssertionError: assert 'Baz\n===\n\n...Baz was here.' == '\nBaz was here.'
+E         
+E         + Baz
+E         + ===
+E         + 
+E         + .. include:: foo.rst
+E           
+E           Baz was here.
+
+tests/test_directive_other.py:170: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-121/directive-include
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-121/directive-include/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+=============================== warnings summary ===============================
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+tests/test_directive_other.py::test_include_source_read_event
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:24: RemovedInSphinx80Warning: The alias 'sphinx.util.SkipProgressMessage' is deprecated, use 'sphinx.util.display.SkipProgressMessage' instead. Check CHANGES for Sphinx API modifications.
+    from sphinx.util import SkipProgressMessage, progress_message
+
+tests/test_directive_other.py::test_include_source_read_event
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:24: RemovedInSphinx80Warning: The alias 'sphinx.util.progress_message' is deprecated, use 'sphinx.http_date.epoch_to_rfc1123' instead. Check CHANGES for Sphinx API modifications.
+    from sphinx.util import SkipProgressMessage, progress_message
+
+tests/test_directive_other.py::test_include_source_read_event
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/htmlhelp/__init__.py:34: RemovedInSphinx80Warning: The alias 'sphinx.util.progress_message' is deprecated, use 'sphinx.http_date.epoch_to_rfc1123' instead. Check CHANGES for Sphinx API modifications.
+    from sphinx.util import progress_message
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_directive_other.py::test_include_source_read_event - Assert...
+1 failed, 8 passed, 7 warnings in 0.39s

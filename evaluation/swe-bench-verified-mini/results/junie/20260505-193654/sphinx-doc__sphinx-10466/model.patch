@@ -1,0 +1,15 @@
+diff --git a/sphinx/builders/gettext.py b/sphinx/builders/gettext.py
+index e8bc547b7..e3d5db63f 100644
+--- a/sphinx/builders/gettext.py
++++ b/sphinx/builders/gettext.py
+@@ -32,8 +32,8 @@ class Message:
+     """An entry of translatable message."""
+     def __init__(self, text: str, locations: List[Tuple[str, int]], uuids: List[str]):
+         self.text = text
+-        self.locations = locations
+-        self.uuids = uuids
++        self.locations = list(OrderedDict.fromkeys(locations))
++        self.uuids = list(OrderedDict.fromkeys(uuids))
+ 
+ 
+ class Catalog:

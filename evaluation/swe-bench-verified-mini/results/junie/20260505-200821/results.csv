@@ -1,0 +1,2 @@
+instance_id,repo,base_commit,status,success,agent_seconds,eval_seconds,total_seconds,junie_returncode,eval_returncode,output_dir,error
+sphinx-doc__sphinx-11510,sphinx-doc/sphinx,6cb783c0024a873722952a67ebb9f41771c8eb6d,failed,False,331.905,0.363,332.967,0,1,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-200821/sphinx-doc__sphinx-11510,

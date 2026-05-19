@@ -1,0 +1,14 @@
+{
+  "agent_seconds": 0.0,
+  "base_commit": "5573a54d409bb98b5c5acdb308310bed02d392c2",
+  "error": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260508-094149/worktrees/django__django-12143/django__django is not a git repository",
+  "eval_seconds": 0.0,
+  "finished_at": "2026-05-08T06:41:52.054372+00:00",
+  "instance_id": "django__django-12143",
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260508-094149/django__django-12143",
+  "repo": "django/django",
+  "started_at": "2026-05-08T06:41:52.054092+00:00",
+  "status": "error",
+  "success": false,
+  "total_seconds": 0.0
+}

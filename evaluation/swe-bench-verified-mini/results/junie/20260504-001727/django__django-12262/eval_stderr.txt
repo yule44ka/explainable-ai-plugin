@@ -1,0 +1,85 @@
+test_inclusion_tag_errors (template_tests.test_custom.InclusionTagTests) ... FAIL
+test_inclusion_tags (template_tests.test_custom.InclusionTagTests) ... ERROR
+test_simple_tag_errors (template_tests.test_custom.SimpleTagTests) ... FAIL
+test_simple_tags (template_tests.test_custom.SimpleTagTests) ... ERROR
+
+======================================================================
+ERROR: test_inclusion_tags (template_tests.test_custom.InclusionTagTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/tests/template_tests/test_custom.py", line 216, in test_inclusion_tags
+    t = self.engine.from_string(entry[0])
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/engine.py", line 136, in from_string
+    return Template(template_code, engine=self)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 193, in compile_nodelist
+    return parser.parse()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/library.py", line 152, in compile_func
+    args, kwargs = parse_bits(
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/library.py", line 266, in parse_bits
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'inclusion_keyword_only_default' received unexpected keyword argument 'kwarg'
+
+======================================================================
+ERROR: test_simple_tags (template_tests.test_custom.SimpleTagTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/tests/template_tests/test_custom.py", line 87, in test_simple_tags
+    t = self.engine.from_string(entry[0])
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/engine.py", line 136, in from_string
+    return Template(template_code, engine=self)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 193, in compile_nodelist
+    return parser.parse()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/library.py", line 119, in compile_func
+    args, kwargs = parse_bits(
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/template/library.py", line 266, in parse_bits
+    raise TemplateSyntaxError(
+django.template.exceptions.TemplateSyntaxError: 'simple_keyword_only_default' received unexpected keyword argument 'kwarg'
+
+======================================================================
+FAIL: test_inclusion_tag_errors (template_tests.test_custom.InclusionTagTests)
+----------------------------------------------------------------------
+django.template.exceptions.TemplateSyntaxError: 'inclusion_keyword_only_default' received unexpected keyword argument 'kwarg'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/tests/template_tests/test_custom.py", line 248, in test_inclusion_tag_errors
+    self.engine.from_string(entry[1])
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py", line 135, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/test/testcases.py", line 683, in _assert_raises_or_warns_cm
+    self.assertIn(expected_message, str(getattr(cm, cm_attr)))
+AssertionError: "'inclusion_keyword_only_default' received multiple values for keyword argument 'kwarg'" not found in "'inclusion_keyword_only_default' received unexpected keyword argument 'kwarg'"
+
+======================================================================
+FAIL: test_simple_tag_errors (template_tests.test_custom.SimpleTagTests)
+----------------------------------------------------------------------
+django.template.exceptions.TemplateSyntaxError: 'simple_keyword_only_param' received unexpected keyword argument 'kwarg'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/tests/template_tests/test_custom.py", line 124, in test_simple_tag_errors
+    self.engine.from_string(entry[1])
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py", line 135, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12262/django__django/django/test/testcases.py", line 683, in _assert_raises_or_warns_cm
+    self.assertIn(expected_message, str(getattr(cm, cm_attr)))
+AssertionError: "'simple_keyword_only_param' received multiple values for keyword argument 'kwarg'" not found in "'simple_keyword_only_param' received unexpected keyword argument 'kwarg'"
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.005s
+
+FAILED (failures=2, errors=2)

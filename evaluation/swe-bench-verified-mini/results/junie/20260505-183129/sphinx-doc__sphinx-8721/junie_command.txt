@@ -1,0 +1,30 @@
+junie --model gemini-3-flash-preview '--auth=<redacted>' --skip-update-check --project /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8721/sphinx-doc__sphinx --timeout 1800000 --task 'Solve this issue in the current repository.
+DO NOT change tests from /tests.
+Problem statement:
+viewcode creates pages for epub even if `viewcode_enable_epub=False` on `make html epub`
+**Describe the bug**
+viewcode creates pages for epub even if `viewcode_enable_epub=False` on `make html epub`
+
+**To Reproduce**
+```
+$ make html epub
+```
+
+**Expected behavior**
+module pages should not be created for epub by default.
+
+**Your project**
+No
+
+**Screenshots**
+No
+
+**Environment info**
+- OS: Mac
+- Python version: 3.9.1
+- Sphinx version: HEAD of 3.x
+- Sphinx extensions:  sphinx.ext.viewcode
+- Extra tools: No
+
+**Additional context**
+No'

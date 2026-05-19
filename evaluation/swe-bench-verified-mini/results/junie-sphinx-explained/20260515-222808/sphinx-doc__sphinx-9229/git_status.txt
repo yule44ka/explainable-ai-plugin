@@ -1,0 +1,8 @@
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/util/typing.py
+?? imghdr.py
+?? repro.py
+?? repro2.py
+?? repro_issue/
+?? repro_issue2/
+?? test_analyzer_test.py

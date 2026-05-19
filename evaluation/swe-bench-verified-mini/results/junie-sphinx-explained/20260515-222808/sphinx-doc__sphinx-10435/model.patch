@@ -1,0 +1,83 @@
+diff --git a/sphinx/writers/latex.py b/sphinx/writers/latex.py
+index 5a5a3697b..607673d9e 100644
+--- a/sphinx/writers/latex.py
++++ b/sphinx/writers/latex.py
+@@ -1723,6 +1723,11 @@ class LaTeXTranslator(SphinxTranslator):
+                                 r'\sphinxcode{\sphinxupquote{')
+         # get consistent trailer
+         hlcode = hlcode.rstrip()[:-14]  # strip \end{Verbatim}
++        if hlcode.startswith(r'\sphinxcode{\sphinxupquote{' + CR):
++            hlcode = hlcode.replace(r'\sphinxcode{\sphinxupquote{' + CR,
++                                    r'\sphinxcode{\sphinxupquote{%' + CR, 1)
++        if hlcode.endswith(CR):
++            hlcode = hlcode[:-len(CR)] + '%'
+         self.body.append(hlcode)
+         self.body.append('}}')
+         raise nodes.SkipNode
+diff --git a/tests/conftest.py b/tests/conftest.py
+deleted file mode 100644
+index ebbc9e2c7..000000000
+--- a/tests/conftest.py
++++ /dev/null
+@@ -1,47 +0,0 @@
+-import os
+-import shutil
+-
+-import docutils
+-import pytest
+-
+-import sphinx
+-from sphinx.testing import comparer
+-from sphinx.testing.path import path
+-
+-pytest_plugins = 'sphinx.testing.fixtures'
+-
+-# Exclude 'roots' dirs for pytest test collector
+-collect_ignore = ['roots']
+-
+-
+-@pytest.fixture(scope='session')
+-def rootdir():
+-    return path(__file__).parent.abspath() / 'roots'
+-
+-
+-def pytest_report_header(config):
+-    header = ("libraries: Sphinx-%s, docutils-%s" %
+-              (sphinx.__display_version__, docutils.__version__))
+-    if hasattr(config, '_tmp_path_factory'):
+-        header += "\nbase tempdir: %s" % config._tmp_path_factory.getbasetemp()
+-
+-    return header
+-
+-
+-def pytest_assertrepr_compare(op, left, right):
+-    comparer.pytest_assertrepr_compare(op, left, right)
+-
+-
+-def _initialize_test_directory(session):
+-    if 'SPHINX_TEST_TEMPDIR' in os.environ:
+-        tempdir = os.path.abspath(os.getenv('SPHINX_TEST_TEMPDIR'))
+-        print('Temporary files will be placed in %s.' % tempdir)
+-
+-        if os.path.exists(tempdir):
+-            shutil.rmtree(tempdir)
+-
+-        os.makedirs(tempdir)
+-
+-
+-def pytest_sessionstart(session):
+-    _initialize_test_directory(session)
+diff --git a/tests/test_build_latex.py b/tests/test_build_latex.py
+index dd0db8aef..32102b89a 100644
+--- a/tests/test_build_latex.py
++++ b/tests/test_build_latex.py
+@@ -1623,7 +1623,7 @@ def test_latex_code_role(app):
+         r'\PYG{p}{)}'
+         r'\PYG{p}{:} '
+         r'\PYG{k}{pass}')
+-    assert (r'Inline \sphinxcode{\sphinxupquote{' + '\n' +
+-            common_content + '\n}} code block') in content
++    assert (r'Inline \sphinxcode{\sphinxupquote{%' + '\n' +
++            common_content + r'%}} code block') in content
+     assert (r'\begin{sphinxVerbatim}[commandchars=\\\{\}]' +
+             '\n' + common_content + '\n' + r'\end{sphinxVerbatim}') in content

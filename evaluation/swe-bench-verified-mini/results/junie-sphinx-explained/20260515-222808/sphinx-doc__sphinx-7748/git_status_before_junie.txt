@@ -1,0 +1,11 @@
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/ext/autosectionlabel.py
+ M sphinx/highlighting.py
+ M sphinx/util/tags.py
+ M tests/roots/test-autosummary/dummy_module.py
+ M tests/roots/test-ext-autodoc/target/decorator.py
+ M tests/roots/test-ext-autodoc/target/descriptor.py
+ M tests/roots/test-ext-graphviz/conf.py
+ M tests/roots/test-manpage_url/conf.py
+ M tests/roots/test-root/special/code.py
+ M tests/test_ext_autodoc_private_members.py

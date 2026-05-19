@@ -1,0 +1,30 @@
+diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py
+index a0cfed0995..b614a0b179 100644
+--- a/django/contrib/auth/forms.py
++++ b/django/contrib/auth/forms.py
+@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import (
+ from django.contrib.auth.models import User
+ from django.contrib.auth.tokens import default_token_generator
+ from django.contrib.sites.shortcuts import get_current_site
++from django.core import validators
+ from django.core.mail import EmailMultiAlternatives
+ from django.template import loader
+ from django.utils.encoding import force_bytes
+@@ -191,9 +192,14 @@ class AuthenticationForm(forms.Form):
+ 
+         # Set the max length and label for the "username" field.
+         self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+-        self.fields['username'].max_length = self.username_field.max_length or 254
+-        if self.fields['username'].label is None:
+-            self.fields['username'].label = capfirst(self.username_field.verbose_name)
++        username_field = self.fields['username']
++        username_field.max_length = self.username_field.max_length or 254
++        if username_field.label is None:
++            username_field.label = capfirst(self.username_field.verbose_name)
++        if isinstance(username_field, forms.CharField):
++            username_field.widget.attrs['maxlength'] = str(username_field.max_length)
++            if not any(isinstance(v, validators.MaxLengthValidator) for v in username_field.validators):
++                username_field.validators.append(validators.MaxLengthValidator(int(username_field.max_length)))
+ 
+     def clean(self):
+         username = self.cleaned_data.get('username')

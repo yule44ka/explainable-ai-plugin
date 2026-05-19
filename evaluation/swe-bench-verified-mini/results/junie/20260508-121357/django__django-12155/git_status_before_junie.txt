@@ -1,0 +1,9 @@
+ M django/contrib/admin/actions.py
+ M django/contrib/admindocs/utils.py
+ M django/contrib/admindocs/views.py
+ M django/contrib/flatpages/urls.py
+ M django/db/backends/mysql/features.py
+ M django/middleware/cache.py
+ M django/utils/autoreload.py
+ M django/utils/jslex.py
+ M django/utils/translation/trans_real.py

@@ -1,0 +1,4 @@
+Unstaged changes after reset:
+M	sphinx/ext/autodoc/importer.py
+M	sphinx/util/inspect.py
+M	sphinx/util/typing.py

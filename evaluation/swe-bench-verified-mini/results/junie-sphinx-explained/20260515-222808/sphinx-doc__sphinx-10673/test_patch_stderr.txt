@@ -1,0 +1,3 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie-sphinx-explained/20260515-222808/sphinx-doc__sphinx-10673/test.patch:35: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.

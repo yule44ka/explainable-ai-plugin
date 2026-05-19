@@ -1,0 +1,1 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/django39/bin/python tests/runtests.py --verbosity=2 forms_tests.widget_tests.test_fileinput.FileInputTest.test_use_required_attribute forms_tests.tests.test_forms.FormsTestCase.test_filefield_with_fileinput_required

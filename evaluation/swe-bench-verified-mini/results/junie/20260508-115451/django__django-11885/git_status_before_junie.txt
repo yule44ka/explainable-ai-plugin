@@ -1,0 +1,12 @@
+ M django/conf/locale/km/formats.py
+ M django/contrib/admin/models.py
+ M django/contrib/admin/utils.py
+ M django/contrib/contenttypes/__init__.py
+ M django/contrib/gis/utils/ogrinspect.py
+ M django/contrib/sitemaps/views.py
+ M django/core/checks/templates.py
+ M django/db/backends/sqlite3/operations.py
+ M django/db/models/deletion.py
+ M django/db/models/fields/related.py
+ M django/template/loaders/base.py
+ M django/utils/translation/trans_null.py

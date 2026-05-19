@@ -1,0 +1,2 @@
+error: pathspec 'tests/roots/test-toctree-index/foo.rst' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-toctree-index/index.rst' did not match any file(s) known to git

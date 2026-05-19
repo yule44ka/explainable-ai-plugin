@@ -1,0 +1,9 @@
+ M django/contrib/admin/actions.py
+ M django/contrib/gis/gdal/raster/band.py
+ M django/contrib/gis/geos/coordseq.py
+ M django/contrib/postgres/forms/hstore.py
+ M django/contrib/sitemaps/__init__.py
+ M django/contrib/staticfiles/views.py
+ M django/db/migrations/migration.py
+ M django/db/models/enums.py
+ M django/middleware/http.py

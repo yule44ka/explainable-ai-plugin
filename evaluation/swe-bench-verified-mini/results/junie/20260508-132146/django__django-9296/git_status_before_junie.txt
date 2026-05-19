@@ -1,0 +1,9 @@
+ M django/contrib/auth/checks.py
+ M django/contrib/contenttypes/checks.py
+ M django/contrib/redirects/apps.py
+ M django/contrib/staticfiles/management/commands/findstatic.py
+ M django/core/paginator.py
+ M django/db/__init__.py
+ M django/db/backends/mysql/base.py
+ M django/db/migrations/loader.py
+ M django/utils/archive.py

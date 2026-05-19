@@ -1,0 +1,892 @@
+EEEEEEEEE                                                                [100%]
+==================================== ERRORS ====================================
+_______________ ERROR at setup of test_include_source_read_event _______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10793cc10>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x10793c8e0>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/directive-include')})
+make_app = <function make_app.<locals>.make at 0x1079a8670>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10793c940>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10793cc10>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x10793c8e0>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+_______ ERROR at setup of test_include_source_read_event_nested_includes _______
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1083e6ac0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x1083e6ca0>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/directive-include')})
+make_app = <function make_app.<locals>.make at 0x1079a80d0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x1083e6b80>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1083e6ac0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x1083e6ca0>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+________________________ ERROR at setup of test_toctree ________________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1084734c0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108473f10>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x108670c10>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x108473e20>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1084734c0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108473f10>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+___________________ ERROR at setup of test_relative_toctree ____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x108508be0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108508d30>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x1086a6c10>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x108508d90>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x108508be0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108508d30>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+________________ ERROR at setup of test_toctree_urls_and_titles ________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10838ed90>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x10838ea30>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x10866d040>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10838e640>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10838ed90>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x10838ea30>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+_____________________ ERROR at setup of test_toctree_glob ______________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1084ff8e0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x1084ffa90>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x10866d310>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x1084ffa60>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1084ff8e0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x1084ffa90>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+_________________ ERROR at setup of test_toctree_glob_and_url __________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10883a5b0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x10883a910>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x1088708b0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10883aa00>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10883a5b0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x10883a910>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+___________________ ERROR at setup of test_reversed_toctree ____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x108553a30>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108553b80>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x108670e50>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x108553be0>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x108553a30>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108553b80>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+_____________________ ERROR at setup of test_toctree_twice _____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1087524c0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108752610>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+
+sphinx/registry.py:447: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    import os
+    from os import path
+    from typing import TYPE_CHECKING, Any, cast
+    
+    from docutils import nodes
+    from docutils.nodes import Node, make_id
+    from docutils.parsers.rst import directives
+    from docutils.parsers.rst.directives import images, tables
+>   from docutils.parsers.rst.directives.misc import Meta  # type: ignore[attr-defined]
+E   ImportError: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py)
+
+sphinx/directives/patches.py:11: ImportError
+
+The above exception was the direct cause of the following exception:
+
+test_params = {'shared_result': None}
+app_params = _app_params(args=[], kwargs={'srcdir': PosixPath('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-115/toctree-glob')})
+make_app = <function make_app.<locals>.make at 0x1086a6550>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x1087528e0>
+
+    @pytest.fixture()
+    def app(test_params: dict, app_params: tuple[dict, dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        Provides the 'sphinx.application.Sphinx' object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:183: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+sphinx/testing/util.py:120: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:228: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:405: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1087524c0>
+app = <[AttributeError("'SphinxTestApp' object has no attribute 'builder'") raised in repr()] SphinxTestApp object at 0x108752610>
+extname = 'sphinx.directives.patches'
+
+    def load_extension(self, app: Sphinx, extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.directives.patches (exception: cannot import name 'Meta' from 'docutils.parsers.rst.directives.misc' (/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/docutils/parsers/rst/directives/misc.py))
+
+sphinx/registry.py:450: ExtensionError
+=============================== warnings summary ===============================
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_directive_other.py::test_include_source_read_event - sphinx....
+ERROR tests/test_directive_other.py::test_include_source_read_event_nested_includes
+ERROR tests/test_directive_other.py::test_toctree - sphinx.errors.ExtensionEr...
+ERROR tests/test_directive_other.py::test_relative_toctree - sphinx.errors.Ex...
+ERROR tests/test_directive_other.py::test_toctree_urls_and_titles - sphinx.er...
+ERROR tests/test_directive_other.py::test_toctree_glob - sphinx.errors.Extens...
+ERROR tests/test_directive_other.py::test_toctree_glob_and_url - sphinx.error...
+ERROR tests/test_directive_other.py::test_reversed_toctree - sphinx.errors.Ex...
+ERROR tests/test_directive_other.py::test_toctree_twice - sphinx.errors.Exten...
+1 warning, 9 errors in 1.11s

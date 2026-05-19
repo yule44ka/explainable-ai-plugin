@@ -1,0 +1,388 @@
+diff --git a/django/apps/__init__.py b/django/apps/__init__.py
+index 79091dc535..27a8966795 100644
+--- a/django/apps/__init__.py
++++ b/django/apps/__init__.py
+@@ -1,4 +1,8 @@
++# • The file serves as the package initializer for `django.apps`.
++# • It imports `AppConfig` from `.config`.
+ from .config import AppConfig
++# • It imports the `apps` registry instance from `.registry`.
+ from .registry import apps
+ 
++# • It explicitly exposes `AppConfig` and `apps` via `__all__` for cleaner imports.
+ __all__ = ['AppConfig', 'apps']
+diff --git a/django/conf/locale/hi/formats.py b/django/conf/locale/hi/formats.py
+index 923967ac51..d28a2be65c 100644
+--- a/django/conf/locale/hi/formats.py
++++ b/django/conf/locale/hi/formats.py
+@@ -2,11 +2,14 @@
+ #
+ # The *_FORMAT strings use the Django date format syntax,
+ # see https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
++# • Defines date and time format strings for the Hindi locale.
++# • Follows Django date format syntax for `DATE_FORMAT`, `TIME_FORMAT`, and `MONTH_DAY_FORMAT`.
+ DATE_FORMAT = 'j F Y'
+ TIME_FORMAT = 'g:i A'
+ # DATETIME_FORMAT =
+ # YEAR_MONTH_FORMAT =
+ MONTH_DAY_FORMAT = 'j F'
++# • Specifies `SHORT_DATE_FORMAT` as 'd-m-Y'.
+ SHORT_DATE_FORMAT = 'd-m-Y'
+ # SHORT_DATETIME_FORMAT =
+ # FIRST_DAY_OF_WEEK =
+@@ -16,6 +19,7 @@ SHORT_DATE_FORMAT = 'd-m-Y'
+ # DATE_INPUT_FORMATS =
+ # TIME_INPUT_FORMATS =
+ # DATETIME_INPUT_FORMATS =
++# • Defines `DECIMAL_SEPARATOR` as '.' and `THOUSAND_SEPARATOR` as ',' for numeric formatting.
+ DECIMAL_SEPARATOR = '.'
+ THOUSAND_SEPARATOR = ','
+ # NUMBER_GROUPING =
+diff --git a/django/conf/locale/ru/formats.py b/django/conf/locale/ru/formats.py
+index 3e7651d755..d2f72e6442 100644
+--- a/django/conf/locale/ru/formats.py
++++ b/django/conf/locale/ru/formats.py
+@@ -2,13 +2,18 @@
+ #
+ # The *_FORMAT strings use the Django date format syntax,
+ # see https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
++# • Defines date and time format strings for the Russian locale.
++# • Follows Django date format syntax for `DATE_FORMAT`, `DATETIME_FORMAT`, and `YEAR_MONTH_FORMAT`.
++# • Includes custom Russian year suffix ('г.') in date/time formats.
+ DATE_FORMAT = 'j E Y г.'
+ TIME_FORMAT = 'G:i'
+ DATETIME_FORMAT = 'j E Y г. G:i'
+ YEAR_MONTH_FORMAT = 'F Y г.'
+ MONTH_DAY_FORMAT = 'j F'
++# • Defines `SHORT_DATE_FORMAT` and `SHORT_DATETIME_FORMAT`.
+ SHORT_DATE_FORMAT = 'd.m.Y'
+ SHORT_DATETIME_FORMAT = 'd.m.Y H:i'
++# • Sets `FIRST_DAY_OF_WEEK` to 1 (Monday).
+ FIRST_DAY_OF_WEEK = 1  # Monday
+ 
+ # The *_INPUT_FORMATS strings use the Python strftime format syntax,
+@@ -27,6 +32,7 @@ DATETIME_INPUT_FORMATS = [
+     '%d.%m.%y %H:%M',        # '25.10.06 14:30'
+     '%d.%m.%y',              # '25.10.06'
+ ]
++# • Defines `DECIMAL_SEPARATOR` as ',' and `THOUSAND_SEPARATOR` as a non-breaking space.
+ DECIMAL_SEPARATOR = ','
+ THOUSAND_SEPARATOR = '\xa0'  # non-breaking space
+ NUMBER_GROUPING = 3
+diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py
+index a0cfed0995..9ac2460546 100644
+--- a/django/contrib/auth/forms.py
++++ b/django/contrib/auth/forms.py
+@@ -20,10 +20,12 @@ from django.utils.translation import gettext, gettext_lazy as _
+ UserModel = get_user_model()
+ 
+ 
++# • The ReadOnlyPasswordHashWidget provides a read-only representation of a password hash.
+ class ReadOnlyPasswordHashWidget(forms.Widget):
+     template_name = 'auth/widgets/read_only_password_hash.html'
+     read_only = True
+ 
++    # ◦ It implements get_context to safely summarize the password hash status.
+     def get_context(self, name, value, attrs):
+         context = super().get_context(name, value, attrs)
+         summary = []
+@@ -41,6 +43,7 @@ class ReadOnlyPasswordHashWidget(forms.Widget):
+         return context
+ 
+ 
++# • ReadOnlyPasswordHashField acts as a non-editable field for displaying password hashes.
+ class ReadOnlyPasswordHashField(forms.Field):
+     widget = ReadOnlyPasswordHashWidget
+ 
+@@ -57,6 +60,7 @@ class ReadOnlyPasswordHashField(forms.Field):
+         return False
+ 
+ 
++# • UsernameField handles username input, enforcing NFKC normalization.
+ class UsernameField(forms.CharField):
+     def to_python(self, value):
+         return unicodedata.normalize('NFKC', super().to_python(value))
+@@ -69,6 +73,7 @@ class UsernameField(forms.CharField):
+         }
+ 
+ 
++# • UserCreationForm and UserChangeForm manage user creation and modification processes.
+ class UserCreationForm(forms.ModelForm):
+     """
+     A form that creates a user, with no privileges, from the given username and
+@@ -160,6 +165,7 @@ class UserChangeForm(forms.ModelForm):
+         return self.initial.get('password')
+ 
+ 
++# • AuthenticationForm handles user login via username and password validation.
+ class AuthenticationForm(forms.Form):
+     """
+     Base class for authenticating users. Extend this to get a form that accepts
+@@ -192,6 +198,7 @@ class AuthenticationForm(forms.Form):
+         # Set the max length and label for the "username" field.
+         self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+         self.fields['username'].max_length = self.username_field.max_length or 254
++        self.fields['username'].widget.attrs.update(self.fields['username'].widget_attrs(self.fields['username'].widget))
+         if self.fields['username'].label is None:
+             self.fields['username'].label = capfirst(self.username_field.verbose_name)
+ 
+@@ -236,6 +243,7 @@ class AuthenticationForm(forms.Form):
+         )
+ 
+ 
++# • PasswordResetForm manages the email-based password reset workflow.
+ class PasswordResetForm(forms.Form):
+     email = forms.EmailField(
+         label=_("Email"),
+@@ -307,6 +315,7 @@ class PasswordResetForm(forms.Form):
+             )
+ 
+ 
++# • SetPasswordForm and PasswordChangeForm facilitate password setting and changing.
+ class SetPasswordForm(forms.Form):
+     """
+     A form that lets a user change set their password without entering the old
+@@ -381,6 +390,7 @@ class PasswordChangeForm(SetPasswordForm):
+         return old_password
+ 
+ 
++# • AdminPasswordChangeForm provides a specialized form for changing passwords in the Django admin.
+ class AdminPasswordChangeForm(forms.Form):
+     """
+     A form used to change the password of a user in the admin interface.
+diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py
+index 9345c5cb0b..d1a3fc6a69 100644
+--- a/django/contrib/auth/validators.py
++++ b/django/contrib/auth/validators.py
+@@ -5,8 +5,12 @@ from django.utils.deconstruct import deconstructible
+ from django.utils.translation import gettext_lazy as _
+ 
+ 
++# • Both validators are marked with `@deconstructible` for serialization support in Django migrations.
+ @deconstructible
++# • Defines username validation classes inheriting from `RegexValidator`.
++# • `ASCIIUsernameValidator` restricts usernames to ASCII characters.
+ class ASCIIUsernameValidator(validators.RegexValidator):
++    # • Each class defines a specific `regex` for validation and a user-friendly error `message`.
+     regex = r'^[\w.@+-]+\Z'
+     message = _(
+         'Enter a valid username. This value may contain only English letters, '
+@@ -16,6 +20,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):
+ 
+ 
+ @deconstructible
++# • `UnicodeUsernameValidator` permits Unicode characters in usernames.
+ class UnicodeUsernameValidator(validators.RegexValidator):
+     regex = r'^[\w.@+-]+\Z'
+     message = _(
+diff --git a/django/contrib/postgres/functions.py b/django/contrib/postgres/functions.py
+index 819ce058e5..e1565db82a 100644
+--- a/django/contrib/postgres/functions.py
++++ b/django/contrib/postgres/functions.py
+@@ -1,11 +1,17 @@
++# • Defines database functions specifically for PostgreSQL.
+ from django.db.models import DateTimeField, Func, UUIDField
+ 
+ 
++# • Inherits from `django.db.models.Func` for SQL function representation.
++# • RandomUUID generates a random UUID using the PostgreSQL `GEN_RANDOM_UUID()` function.
+ class RandomUUID(Func):
+     template = 'GEN_RANDOM_UUID()'
++    # ◦ Configures the output field as a `UUIDField`.
+     output_field = UUIDField()
+ 
+ 
++# • TransactionNow returns the current transaction timestamp using `CURRENT_TIMESTAMP`.
+ class TransactionNow(Func):
+     template = 'CURRENT_TIMESTAMP'
++    # ◦ Configures the output field as a `DateTimeField`.
+     output_field = DateTimeField()
+diff --git a/django/contrib/postgres/signals.py b/django/contrib/postgres/signals.py
+index abfd89005d..388dd10dc9 100644
+--- a/django/contrib/postgres/signals.py
++++ b/django/contrib/postgres/signals.py
+@@ -8,7 +8,9 @@ from django.db import connections
+ from django.db.backends.base.base import NO_DB_ALIAS
+ 
+ 
++# ◦ Uses `@functools.lru_cache()` for performance.
+ @functools.lru_cache()
++# • `get_hstore_oids` and `get_citext_oids` retrieve OIDs for the respective types from the database.
+ def get_hstore_oids(connection_alias):
+     """Return hstore and hstore array OIDs."""
+     with connections[connection_alias].cursor() as cursor:
+@@ -34,13 +36,18 @@ def get_citext_oids(connection_alias):
+         return tuple(row[0] for row in cursor)
+ 
+ 
++# • Implements signal handlers to register PostgreSQL-specific type handlers.
++# • `register_type_handlers` performs the actual type registration.
+ def register_type_handlers(connection, **kwargs):
++    # ◦ Checks if the connection vendor is 'postgresql' and not `NO_DB_ALIAS`.
+     if connection.vendor != 'postgresql' or connection.alias == NO_DB_ALIAS:
+         return
+ 
+     try:
++        # ◦ Registers `hstore` using `psycopg2.extras.register_hstore`.
+         oids, array_oids = get_hstore_oids(connection.alias)
+         register_hstore(connection.connection, globally=True, oid=oids, array_oid=array_oids)
++    # • Includes `try-except ProgrammingError` blocks to handle cases where extensions are not installed.
+     except ProgrammingError:
+         # Hstore is not available on the database.
+         #
+@@ -53,6 +60,7 @@ def register_type_handlers(connection, **kwargs):
+         pass
+ 
+     try:
++        # ◦ Registers `citext` array types using `psycopg2.extensions.new_array_type`.
+         citext_oids = get_citext_oids(connection.alias)
+         array_type = psycopg2.extensions.new_array_type(citext_oids, 'citext[]', psycopg2.STRING)
+         psycopg2.extensions.register_type(array_type, None)
+diff --git a/django/core/management/commands/showmigrations.py b/django/core/management/commands/showmigrations.py
+index 48bea1f3f0..0b928ddf47 100644
+--- a/django/core/management/commands/showmigrations.py
++++ b/django/core/management/commands/showmigrations.py
+@@ -6,9 +6,11 @@ from django.db import DEFAULT_DB_ALIAS, connections
+ from django.db.migrations.loader import MigrationLoader
+ 
+ 
++# • Implements the `showmigrations` management command to inspect project migrations.
+ class Command(BaseCommand):
+     help = "Shows all available migrations for the current project"
+ 
++    # • Allows filtering by app labels and selecting a specific database.
+     def add_arguments(self, parser):
+         parser.add_argument(
+             'app_label', nargs='*',
+@@ -19,6 +21,7 @@ class Command(BaseCommand):
+             help='Nominates a database to synchronize. Defaults to the "default" database.',
+         )
+ 
++        # • Provides mutually exclusive output formats: `--list` (default) and `--plan`.
+         formats = parser.add_mutually_exclusive_group()
+         formats.add_argument(
+             '--list', '-l', action='store_const', dest='format', const='list',
+@@ -51,6 +54,7 @@ class Command(BaseCommand):
+         else:
+             return self.show_list(connection, options['app_label'])
+ 
++    # • Validates user-provided app names using `_validate_app_names`.
+     def _validate_app_names(self, loader, app_names):
+         has_bad_names = False
+         for app_name in app_names:
+@@ -62,12 +66,14 @@ class Command(BaseCommand):
+         if has_bad_names:
+             sys.exit(2)
+ 
++    # • `show_list` displays applied/unapplied migrations for apps, sorted by dependency order.
+     def show_list(self, connection, app_names=None):
+         """
+         Show a list of all migrations on the system, or only those of
+         some named apps.
+         """
+         # Load migrations from disk/DB
++        # • Uses `MigrationLoader` to interact with migration graph structures.
+         loader = MigrationLoader(connection, ignore_no_migrations=True)
+         graph = loader.graph
+         # If we were passed a list of apps, validate it
+@@ -92,6 +98,7 @@ class Command(BaseCommand):
+                         # Mark it as applied/unapplied
+                         if applied_migration:
+                             output = ' [X] %s' % title
++                            # • Offers detailed output when verbosity is 2 or higher.
+                             if self.verbosity >= 2:
+                                 output += ' (applied at %s)' % applied_migration.applied.strftime('%Y-%m-%d %H:%M:%S')
+                             self.stdout.write(output)
+@@ -102,6 +109,7 @@ class Command(BaseCommand):
+             if not shown:
+                 self.stdout.write(" (no migrations)", self.style.ERROR)
+ 
++    # • `show_plan` displays all known migrations in the order they will be applied, including dependency information.
+     def show_plan(self, connection, app_names=None):
+         """
+         Show all known migrations (or only those of the specified app_names)
+diff --git a/django/db/backends/postgresql/creation.py b/django/db/backends/postgresql/creation.py
+index 09af818b1e..20f01cdc39 100644
+--- a/django/db/backends/postgresql/creation.py
++++ b/django/db/backends/postgresql/creation.py
+@@ -6,11 +6,14 @@ from django.db.backends.base.creation import BaseDatabaseCreation
+ from django.db.backends.utils import strip_quotes
+ 
+ 
++# • Implements `DatabaseCreation` for managing PostgreSQL test databases.
+ class DatabaseCreation(BaseDatabaseCreation):
+ 
++    # • Provides methods to quote database names safely.
+     def _quote_name(self, name):
+         return self.connection.ops.quote_name(name)
+ 
++    # • `_get_database_create_suffix` constructs SQL suffixes for encoding and template options.
+     def _get_database_create_suffix(self, encoding=None, template=None):
+         suffix = ""
+         if encoding:
+@@ -19,6 +22,7 @@ class DatabaseCreation(BaseDatabaseCreation):
+             suffix += " TEMPLATE {}".format(self._quote_name(template))
+         return suffix and "WITH" + suffix
+ 
++    # • `sql_table_creation_suffix` validates test settings and generates the creation suffix.
+     def sql_table_creation_suffix(self):
+         test_settings = self.connection.settings_dict['TEST']
+         assert test_settings['COLLATION'] is None, (
+@@ -29,10 +33,12 @@ class DatabaseCreation(BaseDatabaseCreation):
+             template=test_settings.get('TEMPLATE'),
+         )
+ 
++    # • `_database_exists` checks for the presence of a database in `pg_database`.
+     def _database_exists(self, cursor, database_name):
+         cursor.execute('SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s', [strip_quotes(database_name)])
+         return cursor.fetchone() is not None
+ 
++    # • `_execute_create_test_db` handles database creation logic with error handling for duplicates.
+     def _execute_create_test_db(self, cursor, parameters, keepdb=False):
+         try:
+             if keepdb and self._database_exists(cursor, parameters['dbname']):
+@@ -50,6 +56,7 @@ class DatabaseCreation(BaseDatabaseCreation):
+                 # exists".
+                 raise e
+ 
++    # • `_clone_test_db` handles cloning existing test databases by closing connections and recreating the database.
+     def _clone_test_db(self, suffix, verbosity, keepdb=False):
+         # CREATE DATABASE ... WITH TEMPLATE ... requires closing connections
+         # to the template database.
+diff --git a/django/utils/translation/reloader.py b/django/utils/translation/reloader.py
+index 41d0623568..d9b2e64d2e 100644
+--- a/django/utils/translation/reloader.py
++++ b/django/utils/translation/reloader.py
+@@ -5,25 +5,32 @@ from asgiref.local import Local
+ from django.apps import apps
+ 
+ 
++# • Provides utilities for reloading translation files when `.mo` files change.
++# • `watch_for_translation_changes` registers file watchers for `locale` directories.
+ def watch_for_translation_changes(sender, **kwargs):
+     """Register file watchers for .mo files in potential locale paths."""
+     from django.conf import settings
+ 
+     if settings.USE_I18N:
++        # ◦ Uses Django app configs and settings to locate locale paths.
+         directories = [Path('locale')]
+         directories.extend(Path(config.path) / 'locale' for config in apps.get_app_configs())
+         directories.extend(Path(p) for p in settings.LOCALE_PATHS)
++        # ◦ Uses `sender.watch_dir` to monitor for `**/*.mo` files.
+         for path in directories:
+             sender.watch_dir(path, '**/*.mo')
+ 
+ 
++# • `translation_file_changed` handles the file change event.
+ def translation_file_changed(sender, file_path, **kwargs):
+     """Clear the internal translations cache if a .mo file is modified."""
+     if file_path.suffix == '.mo':
+         import gettext
+         from django.utils.translation import trans_real
++        # ◦ Clears `gettext` and `django.utils.translation.trans_real` translation caches upon modification.
+         gettext._translations = {}
+         trans_real._translations = {}
++        # ◦ Resets the active translation state.
+         trans_real._default = None
+         trans_real._active = Local()
+         return True

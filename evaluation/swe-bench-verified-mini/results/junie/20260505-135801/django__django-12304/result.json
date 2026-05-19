@@ -1,0 +1,16 @@
+{
+  "agent_seconds": 252.8,
+  "base_commit": "4c1b401e8250f9f520b3c7dc369554477ce8b15a",
+  "error": "",
+  "eval_returncode": 0,
+  "eval_seconds": 1.585,
+  "finished_at": "2026-05-05T11:02:41.814552+00:00",
+  "instance_id": "django__django-12304",
+  "junie_returncode": 0,
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/django__django-12304",
+  "repo": "django/django",
+  "started_at": "2026-05-05T10:58:14.106680+00:00",
+  "status": "passed",
+  "success": true,
+  "total_seconds": 267.707
+}

@@ -1,0 +1,83 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index ddfd2b365..89d148314 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -598,6 +598,12 @@ class Documenter:
+             attr_docs = self.analyzer.find_attr_docs()
+             if self.objpath:
+                 key = ('.'.join(self.objpath[:-1]), self.objpath[-1])
++                if key not in attr_docs and inspect.isclass(self.parent):
++                    for cls in inspect.getmro(self.parent):
++                        if (cls.__qualname__, self.objpath[-1]) in attr_docs:
++                            key = (cls.__qualname__, self.objpath[-1])
++                            break
++
+                 if key in attr_docs:
+                     no_docstring = True
+                     # make a copy of docstring for attributes to avoid cache
+@@ -689,6 +695,15 @@ class Documenter:
+         else:
+             attr_docs = {}
+ 
++        def is_on_attr_docs(name: str) -> bool:
++            if (namespace, name) in attr_docs:
++                return True
++            if inspect.isclass(self.object):
++                for cls in inspect.getmro(self.object):
++                    if (cls.__qualname__, name) in attr_docs:
++                        return True
++            return False
++
+         # process members and determine which to skip
+         for obj in members:
+             membername, member = obj
+@@ -746,7 +761,7 @@ class Documenter:
+                         keep = has_doc or self.options.undoc_members
+                 else:
+                     keep = False
+-            elif (namespace, membername) in attr_docs:
++            elif is_on_attr_docs(membername):
+                 if want_all and isprivate:
+                     if self.options.private_members is None:
+                         keep = False
+diff --git a/sphinx/util/images.py b/sphinx/util/images.py
+index 0ddf64908..539c837e0 100644
+--- a/sphinx/util/images.py
++++ b/sphinx/util/images.py
+@@ -9,7 +9,10 @@
+ """
+ 
+ import base64
+-import imghdr
++try:
++    import imghdr
++except ImportError:
++    imghdr = None
+ from collections import OrderedDict
+ from os import path
+ from typing import IO, NamedTuple, Optional, Tuple
+@@ -54,11 +57,12 @@ def get_image_size(filename: str) -> Optional[Tuple[int, int]]:
+ 
+ 
+ def guess_mimetype_for_stream(stream: IO, default: Optional[str] = None) -> Optional[str]:
+-    imgtype = imghdr.what(stream)
+-    if imgtype:
+-        return 'image/' + imgtype
+-    else:
+-        return default
++    if imghdr:
++        imgtype = imghdr.what(stream)
++        if imgtype:
++            return 'image/' + imgtype
++
++    return default
+ 
+ 
+ def guess_mimetype(filename: str = '', default: Optional[str] = None) -> Optional[str]:
+@@ -114,4 +118,5 @@ def test_svg(h: bytes, f: IO) -> Optional[str]:
+ 
+ # install test_svg() to imghdr
+ # refs: https://docs.python.org/3.6/library/imghdr.html#imghdr.tests
+-imghdr.tests.append(test_svg)
++if imghdr:
++    imghdr.tests.append(test_svg)

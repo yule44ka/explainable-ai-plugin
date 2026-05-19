@@ -1,0 +1,1 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/django39/bin/python tests/runtests.py --verbosity=2 queries.test_query.TestQuery.test_iterable_lookup_value

@@ -1,0 +1,73 @@
+diff --git a/sphinx/directives/other.py b/sphinx/directives/other.py
+index 35e16e623..d90ba5b32 100644
+--- a/sphinx/directives/other.py
++++ b/sphinx/directives/other.py
+@@ -119,16 +119,20 @@ class TocTree(SphinxDirective):
+                 if url_re.match(ref) or ref == 'self':
+                     toctree['entries'].append((title, ref))
+                 elif docname not in self.env.found_docs:
+-                    if excluded(self.env.doc2path(docname, False)):
+-                        message = __('toctree contains reference to excluded document %r')
+-                        subtype = 'excluded'
++                    if docname in {'genindex', 'modindex', 'search'} or \
++                       ref in {'genindex', 'modindex', 'search'}:
++                        toctree['entries'].append((title, ref))
+                     else:
+-                        message = __('toctree contains reference to nonexisting document %r')
+-                        subtype = 'not_readable'
+-
+-                    logger.warning(message, docname, type='toc', subtype=subtype,
+-                                   location=toctree)
+-                    self.env.note_reread()
++                        if excluded(self.env.doc2path(docname, False)):
++                            message = __('toctree contains reference to excluded document %r')
++                            subtype = 'excluded'
++                        else:
++                            message = __('toctree contains reference to nonexisting document %r')
++                            subtype = 'not_readable'
++
++                        logger.warning(message, docname, type='toc', subtype=subtype,
++                                       location=toctree)
++                        self.env.note_reread()
+                 else:
+                     if docname in all_docnames:
+                         all_docnames.remove(docname)
+diff --git a/sphinx/environment/adapters/toctree.py b/sphinx/environment/adapters/toctree.py
+index 9678e3c7c..66fba6a83 100644
+--- a/sphinx/environment/adapters/toctree.py
++++ b/sphinx/environment/adapters/toctree.py
+@@ -6,7 +6,7 @@ from docutils import nodes
+ from docutils.nodes import Element, Node
+ 
+ from sphinx import addnodes
+-from sphinx.locale import __
++from sphinx.locale import _, __
+ from sphinx.util import logging, url_re
+ from sphinx.util.matching import Matcher
+ from sphinx.util.nodes import clean_astext, process_only_nodes
+@@ -139,6 +139,25 @@ class TocTree:
+                         item = nodes.list_item('', para)
+                         # don't show subitems
+                         toc = nodes.bullet_list('', item)
++                    elif ref in {'genindex', 'modindex', 'search'}:
++                        if title is None:
++                            if ref == 'genindex':
++                                title = _('Index')
++                            elif ref == 'modindex':
++                                title = _('Module Index')
++                            elif ref == 'search':
++                                title = _('Search Page')
++
++                        if ref == 'modindex':
++                            ref = 'py-modindex'
++
++                        reference = nodes.reference('', '', internal=True,
++                                                    refuri=ref,
++                                                    anchorname='',
++                                                    *[nodes.Text(title)])
++                        para = addnodes.compact_paragraph('', '', reference)
++                        item = nodes.list_item('', para)
++                        toc = nodes.bullet_list('', item)
+                     else:
+                         if ref in parents:
+                             logger.warning(__('circular toctree references '

@@ -1,0 +1,7 @@
+reproduction/source/conf.py
+reproduction/source/index.rst
+reproduction/test_ast_unparse.py
+reproduction/test_module.py
+reproduction/test_parse_annotation.py
+reproduction/test_sig.py
+reproduction/test_sig_ast.py

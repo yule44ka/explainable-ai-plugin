@@ -1,0 +1,10 @@
+ M django/conf/locale/el/formats.py
+ M django/contrib/admin/options.py
+ M django/contrib/auth/migrations/0003_alter_user_email_max_length.py
+ M django/contrib/gis/forms/__init__.py
+ M django/contrib/sites/apps.py
+ M django/core/files/temp.py
+ M django/db/backends/mysql/base.py
+ M django/db/backends/oracle/operations.py
+ M django/urls/converters.py
+ M django/views/decorators/csrf.py

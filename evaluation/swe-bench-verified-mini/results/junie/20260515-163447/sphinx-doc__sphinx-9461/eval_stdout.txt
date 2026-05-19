@@ -1,0 +1,136 @@
+.FF..........................................................F           [100%]
+=================================== FAILURES ===================================
+_______________________________ test_properties ________________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_properties(app):
+        options = {"members": None}
+>       actual = do_autodoc(app, 'class', 'target.properties.Foo', options)
+
+tests/test_ext_autodoc_autoclass.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ext_autodoc.py:43: in do_autodoc
+    documenter.generate()
+sphinx/ext/autodoc/__init__.py:1764: in generate
+    return super().generate(more_content=more_content,
+sphinx/ext/autodoc/__init__.py:976: in generate
+    self.document_members(all_members)
+sphinx/ext/autodoc/__init__.py:1755: in document_members
+    super().document_members(all_members)
+sphinx/ext/autodoc/__init__.py:857: in document_members
+    documenter.generate(
+sphinx/ext/autodoc/__init__.py:966: in generate
+    self.add_directive_header(sig)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.ext.autodoc.PropertyDocumenter object at 0x10794a850>, sig = ''
+
+    def add_directive_header(self, sig: str) -> None:
+        super().add_directive_header(sig)
+        sourcename = self.get_sourcename()
+        if inspect.isabstractmethod(self.object):
+            self.add_line('   :abstractmethod:', sourcename)
+    
+>       obj = safe_getattr(self.parent.object, '__dict__', {}).get(self.object_name)
+E       AttributeError: type object 'Foo' has no attribute 'object'
+
+sphinx/ext/autodoc/__init__.py:2695: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-194/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-194/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v4.2.0+/939c7bb7f[39;49;00m
+
+# warning: 
+
+____________________________ test_class_properties _____________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_class_properties(app):
+>       actual = do_autodoc(app, 'property', 'target.properties.Foo.prop2')
+
+tests/test_ext_autodoc_autoproperty.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ext_autodoc.py:43: in do_autodoc
+    documenter.generate()
+sphinx/ext/autodoc/__init__.py:966: in generate
+    self.add_directive_header(sig)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.ext.autodoc.PropertyDocumenter object at 0x10797d8b0>, sig = ''
+
+    def add_directive_header(self, sig: str) -> None:
+        super().add_directive_header(sig)
+        sourcename = self.get_sourcename()
+        if inspect.isabstractmethod(self.object):
+            self.add_line('   :abstractmethod:', sourcename)
+    
+>       obj = safe_getattr(self.parent.object, '__dict__', {}).get(self.object_name)
+E       AttributeError: type object 'Foo' has no attribute 'object'
+
+sphinx/ext/autodoc/__init__.py:2695: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-194/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-194/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v4.2.0+/939c7bb7f[39;49;00m
+
+# warning: 
+
+_______________________________ test_properties ________________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_properties(app):
+>       actual = do_autodoc(app, 'property', 'target.properties.Foo.prop1')
+
+tests/test_ext_autodoc_autoproperty.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ext_autodoc.py:43: in do_autodoc
+    documenter.generate()
+sphinx/ext/autodoc/__init__.py:966: in generate
+    self.add_directive_header(sig)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.ext.autodoc.PropertyDocumenter object at 0x107f3b9a0>, sig = ''
+
+    def add_directive_header(self, sig: str) -> None:
+        super().add_directive_header(sig)
+        sourcename = self.get_sourcename()
+        if inspect.isabstractmethod(self.object):
+            self.add_line('   :abstractmethod:', sourcename)
+    
+>       obj = safe_getattr(self.parent.object, '__dict__', {}).get(self.object_name)
+E       AttributeError: type object 'Foo' has no attribute 'object'
+
+sphinx/ext/autodoc/__init__.py:2695: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-194/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-194/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v4.2.0+/939c7bb7f[39;49;00m
+
+# warning: 
+
+=============================== warnings summary ===============================
+tests/test_domain_py.py::test_pyproperty
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_ext_autodoc_autoclass.py::test_properties - AttributeError:...
+FAILED tests/test_ext_autodoc_autoproperty.py::test_class_properties - Attrib...
+FAILED tests/test_ext_autodoc_autoproperty.py::test_properties - AttributeErr...
+3 failed, 59 passed, 1 warning in 1.76s

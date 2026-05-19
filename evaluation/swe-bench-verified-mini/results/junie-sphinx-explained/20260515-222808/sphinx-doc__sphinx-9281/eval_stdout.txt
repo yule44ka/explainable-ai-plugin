@@ -1,0 +1,108 @@
+F.....F................................                                  [100%]
+=================================== FAILURES ===================================
+_________________________ test_object_description_enum _________________________
+
+    def test_object_description_enum():
+        class MyEnum(enum.Enum):
+            FOO = 1
+            BAR = 2
+    
+>       assert inspect.object_description(MyEnum.FOO) == "MyEnum.FOO"
+E       AssertionError: assert 'test_object_...s>.MyEnum.FOO' == 'MyEnum.FOO'
+E         
+E         - MyEnum.FOO
+E         + test_object_description_enum.<locals>.MyEnum.FOO
+
+tests/test_util_inspect.py:525: AssertionError
+__________________________ test_signature_annotations __________________________
+
+    def test_signature_annotations():
+        from .typing_test_data import (Node, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12,
+                                       f13, f14, f15, f16, f17, f18, f19, f20, f21)
+    
+        # Class annotations
+        sig = inspect.signature(f0)
+        assert stringify_signature(sig) == '(x: int, y: numbers.Integral) -> None'
+    
+        # Generic types with concrete parameters
+        sig = inspect.signature(f1)
+        assert stringify_signature(sig) == '(x: List[int]) -> List[int]'
+    
+        # TypeVars and generic types with TypeVars
+        sig = inspect.signature(f2)
+        if sys.version_info < (3, 7):
+            assert stringify_signature(sig) == '(x: List[T], y: List[T_co], z: T) -> List[T_contra]'
+        else:
+            assert stringify_signature(sig) == ('(x: List[tests.typing_test_data.T],'
+                                                ' y: List[tests.typing_test_data.T_co],'
+                                                ' z: tests.typing_test_data.T'
+                                                ') -> List[tests.typing_test_data.T_contra]')
+    
+        # Union types
+        sig = inspect.signature(f3)
+        assert stringify_signature(sig) == '(x: Union[str, numbers.Integral]) -> None'
+    
+        # Quoted annotations
+        sig = inspect.signature(f4)
+        assert stringify_signature(sig) == '(x: str, y: str) -> None'
+    
+        # Keyword-only arguments
+        sig = inspect.signature(f5)
+        assert stringify_signature(sig) == '(x: int, *, y: str, z: str) -> None'
+    
+        # Keyword-only arguments with varargs
+        sig = inspect.signature(f6)
+        assert stringify_signature(sig) == '(x: int, *args, y: str, z: str) -> None'
+    
+        # Space around '=' for defaults
+        sig = inspect.signature(f7)
+        assert stringify_signature(sig) == '(x: Optional[int] = None, y: dict = {}) -> None'
+    
+        # Callable types
+        sig = inspect.signature(f8)
+        assert stringify_signature(sig) == '(x: Callable[[int, str], int]) -> None'
+    
+        sig = inspect.signature(f9)
+        assert stringify_signature(sig) == '(x: Callable) -> None'
+    
+        # Tuple types
+        sig = inspect.signature(f10)
+        assert stringify_signature(sig) == '(x: Tuple[int, str], y: Tuple[int, ...]) -> None'
+    
+        # Instance annotations
+        sig = inspect.signature(f11)
+        assert stringify_signature(sig) == '(x: CustomAnnotation, y: 123) -> None'
+    
+        # tuple with more than two items
+        sig = inspect.signature(f12)
+        assert stringify_signature(sig) == '() -> Tuple[int, str, int]'
+    
+        # optional
+        sig = inspect.signature(f13)
+        assert stringify_signature(sig) == '() -> Optional[str]'
+    
+        # optional union
+        sig = inspect.signature(f20)
+        if sys.version_info < (3, 7):
+            assert stringify_signature(sig) in ('() -> Optional[Union[int, str]]',
+                                                '() -> Optional[Union[str, int]]')
+        else:
+>           assert stringify_signature(sig) == '() -> Optional[Union[int, str]]'
+E           AssertionError: assert '() -> Option...on[str, int]]' == '() -> Option...on[int, str]]'
+E             
+E             - () -> Optional[Union[int, str]]
+E             ?                         -----
+E             + () -> Optional[Union[str, int]]
+E             ?                      +++++
+
+tests/test_util_inspect.py:222: AssertionError
+=============================== warnings summary ===============================
+tests/test_util_inspect.py::test_signature_annotations_py38
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_util_inspect.py::test_object_description_enum - AssertionEr...
+FAILED tests/test_util_inspect.py::test_signature_annotations - AssertionErro...
+2 failed, 37 passed, 1 warning in 0.65s

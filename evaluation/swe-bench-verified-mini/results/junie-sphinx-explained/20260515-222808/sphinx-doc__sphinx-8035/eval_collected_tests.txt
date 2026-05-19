@@ -1,0 +1,3 @@
+tests/test_ext_autodoc_private_members.py::test_private_field
+tests/test_ext_autodoc_private_members.py::test_private_field_and_private_members
+tests/test_ext_autodoc_private_members.py::test_private_members

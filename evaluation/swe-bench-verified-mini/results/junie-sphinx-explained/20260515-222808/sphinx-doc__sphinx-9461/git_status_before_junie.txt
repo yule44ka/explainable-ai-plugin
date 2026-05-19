@@ -1,0 +1,13 @@
+ M setup.py
+ M sphinx/domains/python.py
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/ext/autosummary/__init__.py
+ M sphinx/ext/graphviz.py
+ M sphinx/ext/viewcode.py
+ M sphinx/theming.py
+ M sphinx/util/inspect.py
+ M sphinx/util/math.py
+ M tests/ext_napoleon_pep526_data_google.py
+ M tests/roots/test-ext-coverage/coverage_ignored.py
+ M tests/roots/test-extensions/write_parallel.py
+ M tests/roots/test-theming/test_theme/__init__.py

@@ -1,0 +1,22 @@
+test_get_context_does_not_mutate_attrs (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+test_render_check_exception (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest)
+Calling check_test() shouldn't swallow exceptions (#17888). ... ok
+test_render_check_test (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest)
+You can pass 'check_test' to the constructor. This is a callable that ... ok
+test_render_empty (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+test_render_false (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+test_render_int (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest)
+Integers are handled by value, not as booleans (#17114). ... ok
+test_render_none (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+test_render_true (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+test_render_value (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest)
+Using any value that's not in ('', None, False, True) will check the ... ok
+test_value_from_datadict (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest)
+The CheckboxInput widget will return False if the key is not found in ... ok
+test_value_from_datadict_string_int (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+test_value_omitted_from_data (forms_tests.widget_tests.test_checkboxinput.CheckboxInputTest) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.007s
+
+OK

@@ -1,0 +1,74 @@
+diff --git a/sphinx/jinja2glue.py b/sphinx/jinja2glue.py
+index e943cfb1e..06bba280c 100644
+--- a/sphinx/jinja2glue.py
++++ b/sphinx/jinja2glue.py
+@@ -12,7 +12,11 @@ from os import path
+ from pprint import pformat
+ from typing import Any, Callable, Dict, Iterator, List, Tuple, Union
+ 
+-from jinja2 import FileSystemLoader, BaseLoader, TemplateNotFound, contextfunction
++from jinja2 import FileSystemLoader, BaseLoader, TemplateNotFound
++try:
++    from jinja2 import pass_context as contextfunction
++except ImportError:
++    from jinja2 import contextfunction
+ from jinja2.environment import Environment
+ from jinja2.sandbox import SandboxedEnvironment
+ from jinja2.utils import open_if_exists
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 15f0d66e2..d55e28a29 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -521,10 +521,15 @@ def signature_from_str(signature: str) -> inspect.Signature:
+     params = []
+ 
+     if hasattr(args, "posonlyargs"):
+-        for arg in args.posonlyargs:  # type: ignore
++        for i, arg in enumerate(args.posonlyargs):  # type: ignore
++            if len(args.posonlyargs) + len(args.args) - i <= len(args.defaults):
++                default = ast_unparse(args.defaults[-len(args.posonlyargs) - len(args.args) + i])
++            else:
++                default = Parameter.empty
++
+             annotation = ast_unparse(arg.annotation) or Parameter.empty
+             params.append(Parameter(arg.arg, Parameter.POSITIONAL_ONLY,
+-                                    annotation=annotation))
++                                    default=default, annotation=annotation))
+ 
+     for i, arg in enumerate(args.args):
+         if len(args.args) - i <= len(args.defaults):
+diff --git a/sphinx/util/rst.py b/sphinx/util/rst.py
+index 33acaa0e7..525f62c12 100644
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -19,7 +19,10 @@ from docutils.parsers.rst.languages import en as english
+ from docutils.statemachine import StringList
+ from docutils.utils import Reporter
+ from jinja2 import Environment
+-from jinja2 import environmentfilter
++try:
++    from jinja2 import pass_environment as environmentfilter
++except ImportError:
++    from jinja2 import environmentfilter
+ 
+ from sphinx.locale import __
+ from sphinx.util import docutils
+diff --git a/tests/test_util_inspect.py b/tests/test_util_inspect.py
+index f16feb698..044b7b239 100644
+--- a/tests/test_util_inspect.py
++++ b/tests/test_util_inspect.py
+@@ -338,7 +338,14 @@ def test_signature_from_str_positionaly_only_args():
+     sig = inspect.signature_from_str('(a, /, b)')
+     assert list(sig.parameters.keys()) == ['a', 'b']
+     assert sig.parameters['a'].kind == Parameter.POSITIONAL_ONLY
++    assert sig.parameters['a'].default == Parameter.empty
++
++    sig = inspect.signature_from_str('(a=0, /, b=1)')
++    assert list(sig.parameters.keys()) == ['a', 'b']
++    assert sig.parameters['a'].kind == Parameter.POSITIONAL_ONLY
++    assert sig.parameters['a'].default == '0'
+     assert sig.parameters['b'].kind == Parameter.POSITIONAL_OR_KEYWORD
++    assert sig.parameters['b'].default == '1'
+ 
+ 
+ def test_signature_from_str_invalid():

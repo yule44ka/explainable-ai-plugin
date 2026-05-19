@@ -1,0 +1,8 @@
+A  imghdr.py
+A  repro.py
+A  repro_check.py
+M  sphinx/deprecation.py
+M  sphinx/domains/python.py
+M  sphinx/ext/autodoc/__init__.py
+M  sphinx/util/inspect.py
+M  sphinx/util/typing.py

@@ -1,0 +1,2 @@
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/util/images.py

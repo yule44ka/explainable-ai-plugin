@@ -1,0 +1,3 @@
+Unstaged changes after reset:
+M	sphinx/pycode/ast.py
+M	tests/test_pycode_ast.py

@@ -1,0 +1,11 @@
+ M sphinx/cmd/make_mode.py
+ M sphinx/directives/other.py
+ M sphinx/ext/doctest.py
+ M sphinx/util/matching.py
+ M tests/roots/test-copyright-multiline/conf.py
+ M tests/roots/test-ext-autosummary-module_all/autosummary_dummy_package_all/extra_dummy_module.py
+ M tests/roots/test-html_style/conf.py
+ M tests/roots/test-markup-citation/conf.py
+ M tests/roots/test-reST-code-block/conf.py
+ M tests/test_ext_viewcode.py
+ M tests/test_util_fileutil.py

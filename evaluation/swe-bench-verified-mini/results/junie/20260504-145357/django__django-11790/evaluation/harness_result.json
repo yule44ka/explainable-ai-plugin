@@ -1,0 +1,6 @@
+{
+  "predictions_path": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/predictions.jsonl",
+  "report_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-145357/harness",
+  "returncode": 1,
+  "run_id": "20260504-145357"
+}

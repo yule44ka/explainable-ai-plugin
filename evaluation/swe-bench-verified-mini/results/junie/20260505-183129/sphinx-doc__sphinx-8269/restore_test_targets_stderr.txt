@@ -1,0 +1,2 @@
+error: pathspec 'tests/roots/test-linkcheck-localserver/conf.py' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-linkcheck-localserver/index.rst' did not match any file(s) known to git

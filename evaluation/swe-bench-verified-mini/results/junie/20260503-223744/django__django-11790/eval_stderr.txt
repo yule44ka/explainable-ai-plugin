@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/repos/django__django/tests/runtests.py", line 14, in <module>
+    import django
+ModuleNotFoundError: No module named 'django'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/repos/django__django/tests/runtests.py", line 16, in <module>
+    raise RuntimeError(
+        'Django module not found, reference tests/README.rst for instructions.'
+    ) from e
+RuntimeError: Django module not found, reference tests/README.rst for instructions.

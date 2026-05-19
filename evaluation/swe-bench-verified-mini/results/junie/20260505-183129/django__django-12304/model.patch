@@ -1,0 +1,15 @@
+diff --git a/django/db/models/enums.py b/django/db/models/enums.py
+index f48143ddaf..9e698705cc 100644
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -39,6 +39,10 @@ class ChoicesMeta(enum.EnumMeta):
+             return any(x.value == member for x in cls)
+         return super().__contains__(member)
+ 
++    @property
++    def do_not_call_in_templates(cls):
++        return True
++
+     @property
+     def names(cls):
+         empty = ['__empty__'] if hasattr(cls, '__empty__') else []

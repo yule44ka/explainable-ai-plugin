@@ -1,0 +1,10 @@
+ M django/conf/locale/es_CO/formats.py
+ M django/contrib/admin/widgets.py
+ M django/contrib/auth/migrations/0005_alter_user_last_login_null.py
+ M django/contrib/auth/password_validation.py
+ M django/contrib/postgres/lookups.py
+ M django/contrib/sessions/backends/base.py
+ M django/core/checks/security/base.py
+ M django/db/backends/postgresql/introspection.py
+ M django/db/models/base.py
+ M django/urls/exceptions.py
