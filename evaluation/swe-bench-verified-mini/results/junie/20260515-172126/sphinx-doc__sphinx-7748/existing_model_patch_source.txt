@@ -1,0 +1,1 @@
+results/junie/20260515-163447/sphinx-doc__sphinx-7748/model.patch

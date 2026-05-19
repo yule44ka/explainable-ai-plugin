@@ -1,0 +1,2 @@
+ M sphinx/writers/latex.py
+ M tests/test_build_latex.py

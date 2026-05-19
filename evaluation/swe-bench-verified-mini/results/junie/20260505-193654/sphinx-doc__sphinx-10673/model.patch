@@ -1,0 +1,47 @@
+diff --git a/sphinx/directives/other.py b/sphinx/directives/other.py
+index 35e16e623..7c10652ed 100644
+--- a/sphinx/directives/other.py
++++ b/sphinx/directives/other.py
+@@ -116,8 +116,11 @@ class TocTree(SphinxDirective):
+                         break
+                 # absolutize filenames
+                 docname = docname_join(self.env.docname, docname)
+-                if url_re.match(ref) or ref == 'self':
++                if docname == 'self' or url_re.match(ref):
+                     toctree['entries'].append((title, ref))
++                elif docname in ('genindex', 'modindex', 'search'):
++                    toctree['entries'].append((title, docname))
++                    toctree['includefiles'].append(docname)
+                 elif docname not in self.env.found_docs:
+                     if excluded(self.env.doc2path(docname, False)):
+                         message = __('toctree contains reference to excluded document %r')
+diff --git a/sphinx/environment/adapters/toctree.py b/sphinx/environment/adapters/toctree.py
+index 9678e3c7c..0e24108da 100644
+--- a/sphinx/environment/adapters/toctree.py
++++ b/sphinx/environment/adapters/toctree.py
+@@ -6,7 +6,7 @@ from docutils import nodes
+ from docutils.nodes import Element, Node
+ 
+ from sphinx import addnodes
+-from sphinx.locale import __
++from sphinx.locale import _, __
+ from sphinx.util import logging, url_re
+ from sphinx.util.matching import Matcher
+ from sphinx.util.nodes import clean_astext, process_only_nodes
+@@ -139,6 +139,16 @@ class TocTree:
+                         item = nodes.list_item('', para)
+                         # don't show subitems
+                         toc = nodes.bullet_list('', item)
++                    elif ref in ('genindex', 'modindex', 'search'):
++                        title = title or (ref == 'genindex' and _('Index') or
++                                          ref == 'modindex' and _('Module Index') or
++                                          _('Search Page'))
++                        reference = nodes.reference('', '', internal=True,
++                                                    refuri=ref, anchorname='',
++                                                    *[nodes.Text(title)])
++                        para = addnodes.compact_paragraph('', '', reference)
++                        item = nodes.list_item('', para)
++                        toc = nodes.bullet_list('', item)
+                     else:
+                         if ref in parents:
+                             logger.warning(__('circular toctree references '

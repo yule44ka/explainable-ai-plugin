@@ -1,0 +1,11 @@
+ M sphinx/directives/code.py
+ M sphinx/util/jsdump.py
+ M sphinx/writers/html5.py
+ M tests/roots/test-config/conf.py
+ M tests/roots/test-ext-autodoc/conf.py
+ M tests/roots/test-ext-autodoc/target/imported_members.py
+ M tests/roots/test-ext-autodoc/target/methods.py
+ M tests/roots/test-ext-viewcode/conf.py
+ M tests/roots/test-extensions/conf.py
+ M tests/roots/test-extensions/read_serial.py
+ M tests/test_build_gettext.py

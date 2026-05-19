@@ -1,0 +1,1621 @@
+{
+  "files": [
+    {
+      "path": "labml_nn/gan/original/__init__.py",
+      "summary": {
+        "title": "GAN Loss Implementations",
+        "high_structured": "• The file provides specialized loss modules for GAN training.\n• DiscriminatorLogitsLoss implements the discriminator's loss function for GANs, using BCEWithLogitsLoss.\n• It manages labels using register_buffer, allowing for label smoothing and dynamic resizing based on input length.\n• The _create_labels function generates uniform labels within a specific range for smoothing.\n• forward method in DiscriminatorLogitsLoss calculates losses for true and false samples separately, handling dynamic label creation if necessary.\n• GeneratorLogitsLoss focuses on the generator's loss, calculating binary cross-entropy against fixed or dynamically resized fake labels.\n• The design uses PyTorch's module system for maintaining loss components as part of the model structure.\n• The use of register_buffer ensures labels are persistent and correctly moved between devices automatically.\n• Implementation assumes logits input, reflecting common practice for stability in GAN training.\n• Overall, these modules provide a clean, robust way to manage GAN loss calculations including label smoothing."
+      },
+      "mappings": {
+        "high_structured": [
+          {
+            "explanationComponent": "• The file provides specialized loss modules for GAN training.",
+            "codeSegments": [
+              {
+                "line": 1,
+                "code": "import torch"
+              },
+              {
+                "line": 2,
+                "code": "import torch.nn as nn"
+              },
+              {
+                "line": 3,
+                "code": "import torch.utils.data"
+              },
+              {
+                "line": 4,
+                "code": "import torch.utils.data"
+              },
+              {
+                "line": 5,
+                "code": ""
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• DiscriminatorLogitsLoss implements the discriminator's loss function for GANs, using BCEWithLogitsLoss.",
+            "codeSegments": [
+              {
+                "line": 6,
+                "code": "class DiscriminatorLogitsLoss(nn.Module):"
+              },
+              {
+                "line": 7,
+                "code": ""
+              },
+              {
+                "line": 8,
+                "code": "    def __init__(self, smoothing: float = 0.2):"
+              },
+              {
+                "line": 9,
+                "code": "        super().__init__()"
+              },
+              {
+                "line": 10,
+                "code": "        self.loss_true = nn.BCEWithLogitsLoss()"
+              },
+              {
+                "line": 11,
+                "code": "        self.loss_false = nn.BCEWithLogitsLoss()"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• It manages labels using register_buffer, allowing for label smoothing and dynamic resizing based on input length.",
+            "codeSegments": [
+              {
+                "line": 12,
+                "code": ""
+              },
+              {
+                "line": 13,
+                "code": "        self.smoothing = smoothing"
+              },
+              {
+                "line": 14,
+                "code": ""
+              },
+              {
+                "line": 15,
+                "code": "        self.register_buffer('labels_true', _create_labels(256, 1.0 - smoothing, 1.0), False)"
+              },
+              {
+                "line": 16,
+                "code": "        self.register_buffer('labels_false', _create_labels(256, 0.0, smoothing), False)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• forward method in DiscriminatorLogitsLoss calculates losses for true and false samples separately, handling dynamic label creation if necessary.",
+            "codeSegments": [
+              {
+                "line": 17,
+                "code": ""
+              },
+              {
+                "line": 18,
+                "code": "    def forward(self, logits_true: torch.Tensor, logits_false: torch.Tensor):"
+              },
+              {
+                "line": 19,
+                "code": "        if len(logits_true) > len(self.labels_true):"
+              },
+              {
+                "line": 20,
+                "code": "            self.register_buffer(\"labels_true\","
+              },
+              {
+                "line": 21,
+                "code": "                                 _create_labels(len(logits_true), 1.0 - self.smoothing, 1.0, logits_true.device), False)"
+              },
+              {
+                "line": 22,
+                "code": "        if len(logits_false) > len(self.labels_false):"
+              },
+              {
+                "line": 23,
+                "code": "            self.register_buffer(\"labels_false\","
+              },
+              {
+                "line": 24,
+                "code": "                                 _create_labels(len(logits_false), 0.0, self.smoothing, logits_false.device), False)"
+              },
+              {
+                "line": 25,
+                "code": ""
+              },
+              {
+                "line": 26,
+                "code": "        return (self.loss_true(logits_true, self.labels_true[:len(logits_true)]),"
+              },
+              {
+                "line": 27,
+                "code": "                self.loss_false(logits_false, self.labels_false[:len(logits_false)]))"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• GeneratorLogitsLoss focuses on the generator's loss, calculating binary cross-entropy against fixed or dynamically resized fake labels.",
+            "codeSegments": [
+              {
+                "line": 28,
+                "code": ""
+              },
+              {
+                "line": 29,
+                "code": "class GeneratorLogitsLoss(nn.Module):"
+              },
+              {
+                "line": 30,
+                "code": ""
+              },
+              {
+                "line": 31,
+                "code": "    def __init__(self, smoothing: float = 0.2):"
+              },
+              {
+                "line": 32,
+                "code": "        super().__init__()"
+              },
+              {
+                "line": 33,
+                "code": "        self.loss_true = nn.BCEWithLogitsLoss()"
+              },
+              {
+                "line": 34,
+                "code": "        self.smoothing = smoothing"
+              },
+              {
+                "line": 35,
+                "code": "        self.register_buffer('fake_labels', _create_labels(256, 1.0 - smoothing, 1.0), False)"
+              },
+              {
+                "line": 36,
+                "code": ""
+              },
+              {
+                "line": 37,
+                "code": "    def forward(self, logits: torch.Tensor):"
+              },
+              {
+                "line": 38,
+                "code": "        if len(logits) > len(self.fake_labels):"
+              },
+              {
+                "line": 39,
+                "code": "            self.register_buffer(\"fake_labels\","
+              },
+              {
+                "line": 40,
+                "code": "                                 _create_labels(len(logits), 1.0 - self.smoothing, 1.0, logits.device), False)"
+              },
+              {
+                "line": 41,
+                "code": ""
+              },
+              {
+                "line": 42,
+                "code": "        return self.loss_true(logits, self.fake_labels[:len(logits)])"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The _create_labels function generates uniform labels within a specific range for smoothing.",
+            "codeSegments": [
+              {
+                "line": 43,
+                "code": ""
+              },
+              {
+                "line": 44,
+                "code": "def _create_labels(n: int, r1: float, r2: float, device: torch.device = None):"
+              },
+              {
+                "line": 45,
+                "code": "    return torch.empty(n, 1, requires_grad=False, device=device).uniform_(r1, r2)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "labml_nn/lstm/__init__.py",
+      "summary": {
+        "title": "LSTM Implementation",
+        "high_structured": "• Defines an LSTMCell and LSTM model using PyTorch's nn.Module.\n• LSTMCell implements a single LSTM step with optional layer normalization.\n• The cell uses linear layers for hidden and input transformations.\n• If layer_norm is enabled, LayerNorm layers are applied, otherwise Identity is used.\n• Forward method in LSTMCell processes input and hidden states to calculate new cell and hidden states.\n• The LSTM class creates a stack of LSTM cells for multiple layers.\n• The forward pass of LSTM iterates through time steps and layers.\n• State handling allows for passing hidden and cell states for sequential processing.\n• Output is formed by stacking hidden states over time steps.\n• The architecture supports flexible configuration of layers and hidden sizes."
+      },
+      "mappings": {
+        "high_structured": [
+          {
+            "explanationComponent": "• Defines an LSTMCell and LSTM model using PyTorch's nn.Module.",
+            "codeSegments": [
+              {
+                "line": 1,
+                "code": "from typing import Optional, Tuple"
+              },
+              {
+                "line": 2,
+                "code": ""
+              },
+              {
+                "line": 3,
+                "code": "import torch"
+              },
+              {
+                "line": 4,
+                "code": "from torch import nn"
+              },
+              {
+                "line": 5,
+                "code": ""
+              },
+              {
+                "line": 6,
+                "code": "class LSTMCell(nn.Module):"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• LSTMCell implements a single LSTM step with optional layer normalization.",
+            "codeSegments": [
+              {
+                "line": 7,
+                "code": ""
+              },
+              {
+                "line": 8,
+                "code": "    def __init__(self, input_size: int, hidden_size: int, layer_norm: bool = False):"
+              },
+              {
+                "line": 9,
+                "code": "        super().__init__()"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The cell uses linear layers for hidden and input transformations.",
+            "codeSegments": [
+              {
+                "line": 10,
+                "code": ""
+              },
+              {
+                "line": 11,
+                "code": "        self.hidden_lin = nn.Linear(hidden_size, 4 * hidden_size)"
+              },
+              {
+                "line": 12,
+                "code": "        self.input_lin = nn.Linear(input_size, 4 * hidden_size, bias=False)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• If layer_norm is enabled, LayerNorm layers are applied, otherwise Identity is used.",
+            "codeSegments": [
+              {
+                "line": 13,
+                "code": ""
+              },
+              {
+                "line": 14,
+                "code": "        if layer_norm:"
+              },
+              {
+                "line": 15,
+                "code": "            self.layer_norm = nn.ModuleList([nn.LayerNorm(hidden_size) for _ in range(4)])"
+              },
+              {
+                "line": 16,
+                "code": "            self.layer_norm_c = nn.LayerNorm(hidden_size)"
+              },
+              {
+                "line": 17,
+                "code": "        else:"
+              },
+              {
+                "line": 18,
+                "code": "            self.layer_norm = nn.ModuleList([nn.Identity() for _ in range(4)])"
+              },
+              {
+                "line": 19,
+                "code": "            self.layer_norm_c = nn.Identity()"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Forward method in LSTMCell processes input and hidden states to calculate new cell and hidden states.",
+            "codeSegments": [
+              {
+                "line": 20,
+                "code": ""
+              },
+              {
+                "line": 21,
+                "code": "    def forward(self, x: torch.Tensor, h: torch.Tensor, c: torch.Tensor):"
+              },
+              {
+                "line": 22,
+                "code": "        ifgo = self.hidden_lin(h) + self.input_lin(x)"
+              },
+              {
+                "line": 23,
+                "code": "        ifgo = ifgo.chunk(4, dim=-1)"
+              },
+              {
+                "line": 24,
+                "code": ""
+              },
+              {
+                "line": 25,
+                "code": "        ifgo = [self.layer_norm[i](ifgo[i]) for i in range(4)]"
+              },
+              {
+                "line": 26,
+                "code": ""
+              },
+              {
+                "line": 27,
+                "code": "        i, f, g, o = ifgo"
+              },
+              {
+                "line": 28,
+                "code": ""
+              },
+              {
+                "line": 29,
+                "code": "        c_next = torch.sigmoid(f) * c + torch.sigmoid(i) * torch.tanh(g)"
+              },
+              {
+                "line": 30,
+                "code": ""
+              },
+              {
+                "line": 31,
+                "code": "        h_next = torch.sigmoid(o) * torch.tanh(self.layer_norm_c(c_next))"
+              },
+              {
+                "line": 32,
+                "code": ""
+              },
+              {
+                "line": 33,
+                "code": "        return h_next, c_next"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The LSTM class creates a stack of LSTM cells for multiple layers.",
+            "codeSegments": [
+              {
+                "line": 34,
+                "code": ""
+              },
+              {
+                "line": 35,
+                "code": "class LSTM(nn.Module):"
+              },
+              {
+                "line": 36,
+                "code": ""
+              },
+              {
+                "line": 37,
+                "code": "    def __init__(self, input_size: int, hidden_size: int, n_layers: int):"
+              },
+              {
+                "line": 38,
+                "code": ""
+              },
+              {
+                "line": 39,
+                "code": "        super().__init__()"
+              },
+              {
+                "line": 40,
+                "code": "        self.n_layers = n_layers"
+              },
+              {
+                "line": 41,
+                "code": "        self.hidden_size = hidden_size"
+              },
+              {
+                "line": 42,
+                "code": "        self.cells = nn.ModuleList([LSTMCell(input_size, hidden_size)] +"
+              },
+              {
+                "line": 43,
+                "code": "                                   [LSTMCell(hidden_size, hidden_size) for _ in range(n_layers - 1)])"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• State handling allows for passing hidden and cell states for sequential processing.",
+            "codeSegments": [
+              {
+                "line": 44,
+                "code": ""
+              },
+              {
+                "line": 45,
+                "code": "    def forward(self, x: torch.Tensor, state: Optional[Tuple[torch.Tensor, torch.Tensor]] = None):"
+              },
+              {
+                "line": 46,
+                "code": "        n_steps, batch_size = x.shape[:2]"
+              },
+              {
+                "line": 47,
+                "code": ""
+              },
+              {
+                "line": 48,
+                "code": "        if state is None:"
+              },
+              {
+                "line": 49,
+                "code": "            h = [x.new_zeros(batch_size, self.hidden_size) for _ in range(self.n_layers)]"
+              },
+              {
+                "line": 50,
+                "code": "            c = [x.new_zeros(batch_size, self.hidden_size) for _ in range(self.n_layers)]"
+              },
+              {
+                "line": 51,
+                "code": "        else:"
+              },
+              {
+                "line": 52,
+                "code": "            (h, c) = state"
+              },
+              {
+                "line": 53,
+                "code": "            h, c = list(torch.unbind(h)), list(torch.unbind(c))"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The forward pass of LSTM iterates through time steps and layers.",
+            "codeSegments": [
+              {
+                "line": 54,
+                "code": ""
+              },
+              {
+                "line": 55,
+                "code": "        out = []"
+              },
+              {
+                "line": 56,
+                "code": "        for t in range(n_steps):"
+              },
+              {
+                "line": 57,
+                "code": "            inp = x[t]"
+              },
+              {
+                "line": 58,
+                "code": "            for layer in range(self.n_layers):"
+              },
+              {
+                "line": 59,
+                "code": "                h[layer], c[layer] = self.cells[layer](inp, h[layer], c[layer])"
+              },
+              {
+                "line": 60,
+                "code": "                inp = h[layer]"
+              },
+              {
+                "line": 61,
+                "code": "            out.append(h[-1])"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Output is formed by stacking hidden states over time steps.",
+            "codeSegments": [
+              {
+                "line": 62,
+                "code": ""
+              },
+              {
+                "line": 63,
+                "code": "        out = torch.stack(out)"
+              },
+              {
+                "line": 64,
+                "code": "        h = torch.stack(h)"
+              },
+              {
+                "line": 65,
+                "code": "        c = torch.stack(c)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The architecture supports flexible configuration of layers and hidden sizes.",
+            "codeSegments": [
+              {
+                "line": 66,
+                "code": ""
+              },
+              {
+                "line": 67,
+                "code": "        return out, (h, c)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "labml_nn/optimizers/adam.py",
+      "summary": {
+        "title": "Adam Optimizer Implementation",
+        "high_structured": "• Implements the Adam optimizer as a subclass of GenericAdaptiveOptimizer.\n• The class maintains state for first and second moments (exp_avg, exp_avg_sq).\n• init_state initializes the moment tensors as zeros of the same shape as the parameter.\n• get_mv calculates updated first and second moments based on the gradient.\n• adam_update applies the Adam update rule, including bias correction and adaptive learning rates.\n• An optimized update path is provided for efficiency, calculating the denominator using a fused operation.\n• Weight decay is applied to the gradients before moment calculation.\n• The step_param method orchestrates the optimization step.\n• Maintains tracking for the number of steps to apply bias correction correctly.\n• Offers both standard and optimized update implementations for flexibility."
+      },
+      "mappings": {
+        "high_structured": [
+          {
+            "explanationComponent": "• Implements the Adam optimizer as a subclass of GenericAdaptiveOptimizer.",
+            "codeSegments": [
+              {
+                "line": 1,
+                "code": "import math"
+              },
+              {
+                "line": 2,
+                "code": "from typing import Dict, Any, Tuple, Optional"
+              },
+              {
+                "line": 3,
+                "code": ""
+              },
+              {
+                "line": 4,
+                "code": "import torch"
+              },
+              {
+                "line": 5,
+                "code": "from labml import tracker"
+              },
+              {
+                "line": 6,
+                "code": "from torch import nn"
+              },
+              {
+                "line": 7,
+                "code": ""
+              },
+              {
+                "line": 8,
+                "code": "from labml_nn.optimizers import GenericAdaptiveOptimizer, WeightDecay"
+              },
+              {
+                "line": 9,
+                "code": ""
+              },
+              {
+                "line": 10,
+                "code": "class Adam(GenericAdaptiveOptimizer):"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The class maintains state for first and second moments (exp_avg, exp_avg_sq).",
+            "codeSegments": [
+              {
+                "line": 11,
+                "code": ""
+              },
+              {
+                "line": 12,
+                "code": "    def __init__(self, params,"
+              },
+              {
+                "line": 13,
+                "code": "                 lr: float = 1e-3, betas: Tuple[float, float] = (0.9, 0.999), eps: float = 1e-16,"
+              },
+              {
+                "line": 14,
+                "code": "                 weight_decay: WeightDecay = WeightDecay(),"
+              },
+              {
+                "line": 15,
+                "code": "                 optimized_update: bool = True,"
+              },
+              {
+                "line": 16,
+                "code": "                 defaults: Optional[Dict[str, Any]] = None):"
+              },
+              {
+                "line": 17,
+                "code": "        defaults = {} if defaults is None else defaults"
+              },
+              {
+                "line": 18,
+                "code": "        defaults.update(weight_decay.defaults())"
+              },
+              {
+                "line": 19,
+                "code": "        super().__init__(params, defaults, lr, betas, eps)"
+              },
+              {
+                "line": 20,
+                "code": ""
+              },
+              {
+                "line": 21,
+                "code": "        self.weight_decay = weight_decay"
+              },
+              {
+                "line": 22,
+                "code": "        self.optimized_update = optimized_update"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• init_state initializes the moment tensors as zeros of the same shape as the parameter.",
+            "codeSegments": [
+              {
+                "line": 23,
+                "code": ""
+              },
+              {
+                "line": 24,
+                "code": "    def init_state(self, state: Dict[str, any], group: Dict[str, any], param: nn.Parameter):"
+              },
+              {
+                "line": 25,
+                "code": ""
+              },
+              {
+                "line": 26,
+                "code": "        state['step'] = 0"
+              },
+              {
+                "line": 27,
+                "code": "        state['exp_avg'] = torch.zeros_like(param, memory_format=torch.preserve_format)"
+              },
+              {
+                "line": 28,
+                "code": "        state['exp_avg_sq'] = torch.zeros_like(param, memory_format=torch.preserve_format)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• get_mv calculates updated first and second moments based on the gradient.",
+            "codeSegments": [
+              {
+                "line": 29,
+                "code": ""
+              },
+              {
+                "line": 30,
+                "code": "    def get_mv(self, state: Dict[str, Any], group: Dict[str, Any], grad: torch.Tensor):"
+              },
+              {
+                "line": 31,
+                "code": ""
+              },
+              {
+                "line": 32,
+                "code": "        beta1, beta2 = group['betas']"
+              },
+              {
+                "line": 33,
+                "code": ""
+              },
+              {
+                "line": 34,
+                "code": "        m, v = state['exp_avg'], state['exp_avg_sq']"
+              },
+              {
+                "line": 35,
+                "code": ""
+              },
+              {
+                "line": 36,
+                "code": "        m.mul_(beta1).add_(grad, alpha=1 - beta1)"
+              },
+              {
+                "line": 37,
+                "code": "        v.mul_(beta2).addcmul_(grad, grad, value=1 - beta2)"
+              },
+              {
+                "line": 38,
+                "code": ""
+              },
+              {
+                "line": 39,
+                "code": "        return m, v"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The adam_update method applies the Adam update rule, including bias correction and adaptive learning rates.",
+            "codeSegments": [
+              {
+                "line": 40,
+                "code": ""
+              },
+              {
+                "line": 41,
+                "code": "    def get_lr(self, state: Dict[str, any], group: Dict[str, any]):"
+              },
+              {
+                "line": 42,
+                "code": "        return group['lr']"
+              },
+              {
+                "line": 43,
+                "code": ""
+              },
+              {
+                "line": 44,
+                "code": "    def adam_update(self, state: Dict[str, any], group: Dict[str, any], param: torch.nn.Parameter,"
+              },
+              {
+                "line": 45,
+                "code": "                    m: torch.Tensor, v: torch.Tensor):"
+              },
+              {
+                "line": 46,
+                "code": ""
+              },
+              {
+                "line": 47,
+                "code": "        beta1, beta2 = group['betas']"
+              },
+              {
+                "line": 48,
+                "code": "        bias_correction1 = 1 - beta1 ** state['step']"
+              },
+              {
+                "line": 49,
+                "code": "        bias_correction2 = 1 - beta2 ** state['step']"
+              },
+              {
+                "line": 50,
+                "code": ""
+              },
+              {
+                "line": 51,
+                "code": "        lr = self.get_lr(state, group)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• An optimized update path is provided for efficiency, calculating the denominator using a fused operation.",
+            "codeSegments": [
+              {
+                "line": 52,
+                "code": ""
+              },
+              {
+                "line": 53,
+                "code": "        if self.optimized_update:"
+              },
+              {
+                "line": 54,
+                "code": "            denominator = v.sqrt().add_(group['eps'])"
+              },
+              {
+                "line": 55,
+                "code": "            step_size = lr * math.sqrt(bias_correction2) / bias_correction1"
+              },
+              {
+                "line": 56,
+                "code": "            param.data.addcdiv_(m, denominator, value=-step_size)"
+              },
+              {
+                "line": 57,
+                "code": "        else:"
+              },
+              {
+                "line": 58,
+                "code": "            denominator = (v.sqrt() / math.sqrt(bias_correction2)).add_(group['eps'])"
+              },
+              {
+                "line": 59,
+                "code": "            step_size = lr / bias_correction1"
+              },
+              {
+                "line": 60,
+                "code": "            param.data.addcdiv_(m, denominator, value=-step_size)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Weight decay is applied to the gradients before moment calculation.",
+            "codeSegments": [
+              {
+                "line": 61,
+                "code": ""
+              },
+              {
+                "line": 62,
+                "code": "    def step_param(self, state: Dict[str, any], group: Dict[str, any], grad: torch.Tensor, param: torch.nn.Parameter):"
+              },
+              {
+                "line": 63,
+                "code": ""
+              },
+              {
+                "line": 64,
+                "code": "        grad = self.weight_decay(param, grad, group)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The step_param method orchestrates the optimization step.",
+            "codeSegments": [
+              {
+                "line": 65,
+                "code": ""
+              },
+              {
+                "line": 66,
+                "code": "        m, v = self.get_mv(state, group, grad)"
+              },
+              {
+                "line": 67,
+                "code": ""
+              },
+              {
+                "line": 68,
+                "code": "        state['step'] += 1"
+              },
+              {
+                "line": 69,
+                "code": ""
+              },
+              {
+                "line": 70,
+                "code": "        self.adam_update(state, group, param, m, v)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "labml_nn/normalization/batch_norm/__init__.py",
+      "summary": {
+        "title": "Batch Normalization Implementation",
+        "high_structured": "• Implements a custom Batch Normalization layer in PyTorch.\n• The class initializes learnable scale (affine) and shift parameters and running statistics (mean/var).\n• Affine parameters are registered as parameters, and running statistics as buffers.\n• The forward method handles both training and inference modes, updating statistics in training mode.\n• During forward pass, input is reshaped to (batch, channels, -1) to compute mean and variance per channel.\n• Running stats update uses a moving average with momentum.\n• Normalization is applied by subtracting the mean and dividing by the standard deviation.\n• Affine transformation (scale/shift) is applied after normalization.\n• Supports setting track_running_stats and affine to False if required.\n• Includes a test function for basic verification."
+      },
+      "mappings": {
+        "high_structured": [
+          {
+            "explanationComponent": "• Implements a custom Batch Normalization layer in PyTorch.",
+            "codeSegments": [
+              {
+                "line": 1,
+                "code": "import torch"
+              },
+              {
+                "line": 2,
+                "code": "from torch import nn"
+              },
+              {
+                "line": 3,
+                "code": ""
+              },
+              {
+                "line": 4,
+                "code": "class BatchNorm(nn.Module):"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The class initializes learnable scale (affine) and shift parameters and running statistics (mean/var).",
+            "codeSegments": [
+              {
+                "line": 5,
+                "code": ""
+              },
+              {
+                "line": 6,
+                "code": "    def __init__(self, channels: int, *,"
+              },
+              {
+                "line": 7,
+                "code": "                 eps: float = 1e-5, momentum: float = 0.1,"
+              },
+              {
+                "line": 8,
+                "code": "                 affine: bool = True, track_running_stats: bool = True):"
+              },
+              {
+                "line": 9,
+                "code": "        super().__init__()"
+              },
+              {
+                "line": 10,
+                "code": ""
+              },
+              {
+                "line": 11,
+                "code": "        self.channels = channels"
+              },
+              {
+                "line": 12,
+                "code": ""
+              },
+              {
+                "line": 13,
+                "code": "        self.eps = eps"
+              },
+              {
+                "line": 14,
+                "code": "        self.momentum = momentum"
+              },
+              {
+                "line": 15,
+                "code": "        self.affine = affine"
+              },
+              {
+                "line": 16,
+                "code": "        self.track_running_stats = track_running_stats"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Affine parameters are registered as parameters, and running statistics as buffers.",
+            "codeSegments": [
+              {
+                "line": 17,
+                "code": "        if self.affine:"
+              },
+              {
+                "line": 18,
+                "code": "            self.scale = nn.Parameter(torch.ones(channels))"
+              },
+              {
+                "line": 19,
+                "code": "            self.shift = nn.Parameter(torch.zeros(channels))"
+              },
+              {
+                "line": 20,
+                "code": "        if self.track_running_stats:"
+              },
+              {
+                "line": 21,
+                "code": "            self.register_buffer('exp_mean', torch.zeros(channels))"
+              },
+              {
+                "line": 22,
+                "code": "            self.register_buffer('exp_var', torch.ones(channels))"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The forward method handles both training and inference modes, updating statistics in training mode.",
+            "codeSegments": [
+              {
+                "line": 23,
+                "code": ""
+              },
+              {
+                "line": 24,
+                "code": "    def forward(self, x: torch.Tensor):"
+              },
+              {
+                "line": 25,
+                "code": "        x_shape = x.shape"
+              },
+              {
+                "line": 26,
+                "code": "        batch_size = x_shape[0]"
+              },
+              {
+                "line": 27,
+                "code": "        assert self.channels == x.shape[1]"
+              },
+              {
+                "line": 28,
+                "code": ""
+              },
+              {
+                "line": 29,
+                "code": "        x = x.view(batch_size, self.channels, -1)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• During forward pass, input is reshaped to (batch, channels, -1) to compute mean and variance per channel.",
+            "codeSegments": [
+              {
+                "line": 30,
+                "code": ""
+              },
+              {
+                "line": 31,
+                "code": "        if self.training or not self.track_running_stats:"
+              },
+              {
+                "line": 32,
+                "code": "            mean = x.mean(dim=[0, 2])"
+              },
+              {
+                "line": 33,
+                "code": "            mean_x2 = (x ** 2).mean(dim=[0, 2])"
+              },
+              {
+                "line": 34,
+                "code": "            var = mean_x2 - mean ** 2"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Running stats update uses a moving average with momentum.",
+            "codeSegments": [
+              {
+                "line": 35,
+                "code": ""
+              },
+              {
+                "line": 36,
+                "code": "            if self.training and self.track_running_stats:"
+              },
+              {
+                "line": 37,
+                "code": "                self.exp_mean = (1 - self.momentum) * self.exp_mean + self.momentum * mean"
+              },
+              {
+                "line": 38,
+                "code": "                self.exp_var = (1 - self.momentum) * self.exp_var + self.momentum * var"
+              },
+              {
+                "line": 39,
+                "code": "        else:"
+              },
+              {
+                "line": 40,
+                "code": "            mean = self.exp_mean"
+              },
+              {
+                "line": 41,
+                "code": "            var = self.exp_var"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Normalization is applied by subtracting the mean and dividing by the standard deviation.",
+            "codeSegments": [
+              {
+                "line": 42,
+                "code": ""
+              },
+              {
+                "line": 43,
+                "code": "        x_norm = (x - mean.view(1, -1, 1)) / torch.sqrt(var + self.eps).view(1, -1, 1)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Affine transformation (scale/shift) is applied after normalization.",
+            "codeSegments": [
+              {
+                "line": 44,
+                "code": "        if self.affine:"
+              },
+              {
+                "line": 45,
+                "code": "            x_norm = self.scale.view(1, -1, 1) * x_norm + self.shift.view(1, -1, 1)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Includes a test function for basic verification.",
+            "codeSegments": [
+              {
+                "line": 46,
+                "code": ""
+              },
+              {
+                "line": 47,
+                "code": "        return x_norm.view(x_shape)"
+              },
+              {
+                "line": 48,
+                "code": ""
+              },
+              {
+                "line": 49,
+                "code": "def _test():"
+              },
+              {
+                "line": 50,
+                "code": "    from labml.logger import inspect"
+              },
+              {
+                "line": 51,
+                "code": ""
+              },
+              {
+                "line": 52,
+                "code": "    x = torch.zeros([2, 3, 2, 4])"
+              },
+              {
+                "line": 53,
+                "code": "    inspect(x.shape)"
+              },
+              {
+                "line": 54,
+                "code": "    bn = BatchNorm(3)"
+              },
+              {
+                "line": 55,
+                "code": ""
+              },
+              {
+                "line": 56,
+                "code": "    x = bn(x)"
+              },
+              {
+                "line": 57,
+                "code": "    inspect(x.shape)"
+              },
+              {
+                "line": 58,
+                "code": "    inspect(bn.exp_var.shape)"
+              },
+              {
+                "line": 59,
+                "code": ""
+              },
+              {
+                "line": 60,
+                "code": "if __name__ == '__main__':"
+              },
+              {
+                "line": 61,
+                "code": "    _test()"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "labml_nn/distillation/__init__.py",
+      "summary": {
+        "title": "Knowledge Distillation Implementation",
+        "high_structured": "• Implements knowledge distillation where a small student model learns from a large teacher model.\n• Configs class inherits from CIFAR10Configs, defining the small student model and large teacher model.\n• Loss functions include KL divergence for soft targets and cross-entropy for hard targets.\n• The temperature parameter controls the softness of probability distributions from the teacher model.\n• Forward pass computes logits from both teacher (in eval mode) and student models.\n• Loss is a weighted combination of KL divergence loss (soft targets) and label loss (hard targets).\n• The trainer step method tracks global steps, logs losses, updates accuracy, and performs backpropagation.\n• The _large_model and _small_student_model methods handle model instantiation as options.\n• get_saved_model function loads a pretrained teacher model from a run experiment.\n• main function sets up the distillation experiment, loading the teacher and training the student."
+      },
+      "mappings": {
+        "high_structured": [
+          {
+            "explanationComponent": "• Implements knowledge distillation where a small student model learns from a large teacher model.",
+            "codeSegments": [
+              {
+                "line": 1,
+                "code": "import torch"
+              },
+              {
+                "line": 2,
+                "code": "import torch.nn.functional"
+              },
+              {
+                "line": 3,
+                "code": "from torch import nn"
+              },
+              {
+                "line": 4,
+                "code": ""
+              },
+              {
+                "line": 5,
+                "code": "from labml import experiment, tracker"
+              },
+              {
+                "line": 6,
+                "code": "from labml.configs import option"
+              },
+              {
+                "line": 7,
+                "code": "from labml_nn.helpers.trainer  import BatchIndex"
+              },
+              {
+                "line": 8,
+                "code": "from labml_nn.distillation.large import LargeModel"
+              },
+              {
+                "line": 9,
+                "code": "from labml_nn.distillation.small import SmallModel"
+              },
+              {
+                "line": 10,
+                "code": "from labml_nn.experiments.cifar10 import CIFAR10Configs"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Configs class inherits from CIFAR10Configs, defining the small student model and large teacher model.",
+            "codeSegments": [
+              {
+                "line": 11,
+                "code": ""
+              },
+              {
+                "line": 12,
+                "code": "class Configs(CIFAR10Configs):"
+              },
+              {
+                "line": 13,
+                "code": "    model: SmallModel"
+              },
+              {
+                "line": 14,
+                "code": "    large: LargeModel"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Loss functions include KL divergence for soft targets and cross-entropy for hard targets.",
+            "codeSegments": [
+              {
+                "line": 15,
+                "code": "    kl_div_loss = nn.KLDivLoss(log_target=True)"
+              },
+              {
+                "line": 16,
+                "code": "    loss_func = nn.CrossEntropyLoss()"
+              },
+              {
+                "line": 17,
+                "code": "    temperature: float = 5."
+              },
+              {
+                "line": 18,
+                "code": "    soft_targets_weight: float = 100."
+              },
+              {
+                "line": 19,
+                "code": "    label_loss_weight: float = 0.5"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Forward pass computes logits from both teacher (in eval mode) and student models.",
+            "codeSegments": [
+              {
+                "line": 20,
+                "code": ""
+              },
+              {
+                "line": 21,
+                "code": "    def step(self, batch: any, batch_idx: BatchIndex):"
+              },
+              {
+                "line": 22,
+                "code": ""
+              },
+              {
+                "line": 23,
+                "code": "        self.model.train(self.mode.is_train)"
+              },
+              {
+                "line": 24,
+                "code": "        self.large.eval()"
+              },
+              {
+                "line": 25,
+                "code": ""
+              },
+              {
+                "line": 26,
+                "code": "        data, target = batch[0].to(self.device), batch[1].to(self.device)"
+              },
+              {
+                "line": 27,
+                "code": ""
+              },
+              {
+                "line": 28,
+                "code": "        if self.mode.is_train:"
+              },
+              {
+                "line": 29,
+                "code": "            tracker.add_global_step(len(data))"
+              },
+              {
+                "line": 30,
+                "code": ""
+              },
+              {
+                "line": 31,
+                "code": "        with torch.no_grad():"
+              },
+              {
+                "line": 32,
+                "code": "            large_logits = self.large(data)"
+              },
+              {
+                "line": 33,
+                "code": ""
+              },
+              {
+                "line": 34,
+                "code": "        output = self.model(data)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• Loss is a weighted combination of KL divergence loss (soft targets) and label loss (hard targets).",
+            "codeSegments": [
+              {
+                "line": 35,
+                "code": ""
+              },
+              {
+                "line": 36,
+                "code": "        soft_targets = nn.functional.log_softmax(large_logits / self.temperature, dim=-1)"
+              },
+              {
+                "line": 37,
+                "code": "        soft_prob = nn.functional.log_softmax(output / self.temperature, dim=-1)"
+              },
+              {
+                "line": 38,
+                "code": ""
+              },
+              {
+                "line": 39,
+                "code": "        soft_targets_loss = self.kl_div_loss(soft_prob, soft_targets)"
+              },
+              {
+                "line": 40,
+                "code": "        label_loss = self.loss_func(output, target)"
+              },
+              {
+                "line": 41,
+                "code": "        loss = self.soft_targets_weight * soft_targets_loss + self.label_loss_weight * label_loss"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The trainer step method tracks global steps, logs losses, updates accuracy, and performs backpropagation.",
+            "codeSegments": [
+              {
+                "line": 42,
+                "code": "        tracker.add({\"loss.kl_div.\": soft_targets_loss,"
+              },
+              {
+                "line": 43,
+                "code": "                     \"loss.nll\": label_loss,"
+              },
+              {
+                "line": 44,
+                "code": "                     \"loss.\": loss})"
+              },
+              {
+                "line": 45,
+                "code": ""
+              },
+              {
+                "line": 46,
+                "code": "        self.accuracy(output, target)"
+              },
+              {
+                "line": 47,
+                "code": "        self.accuracy.track()"
+              },
+              {
+                "line": 48,
+                "code": ""
+              },
+              {
+                "line": 49,
+                "code": "        if self.mode.is_train:"
+              },
+              {
+                "line": 50,
+                "code": "            loss.backward()"
+              },
+              {
+                "line": 51,
+                "code": "            self.optimizer.step()"
+              },
+              {
+                "line": 52,
+                "code": "            if batch_idx.is_last:"
+              },
+              {
+                "line": 53,
+                "code": "                tracker.add('model', self.model)"
+              },
+              {
+                "line": 54,
+                "code": "            self.optimizer.zero_grad()"
+              },
+              {
+                "line": 55,
+                "code": ""
+              },
+              {
+                "line": 56,
+                "code": "        tracker.save()"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• The _large_model and _small_student_model methods handle model instantiation as options.",
+            "codeSegments": [
+              {
+                "line": 57,
+                "code": ""
+              },
+              {
+                "line": 58,
+                "code": "@option(Configs.large)"
+              },
+              {
+                "line": 59,
+                "code": "def _large_model(c: Configs):"
+              },
+              {
+                "line": 60,
+                "code": "    return LargeModel().to(c.device)"
+              },
+              {
+                "line": 61,
+                "code": ""
+              },
+              {
+                "line": 62,
+                "code": "@option(Configs.model)"
+              },
+              {
+                "line": 63,
+                "code": "def _small_student_model(c: Configs):"
+              },
+              {
+                "line": 64,
+                "code": "    return SmallModel().to(c.device)"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• get_saved_model function loads a pretrained teacher model from a run experiment.",
+            "codeSegments": [
+              {
+                "line": 65,
+                "code": ""
+              },
+              {
+                "line": 66,
+                "code": "def get_saved_model(run_uuid: str, checkpoint: int):"
+              },
+              {
+                "line": 67,
+                "code": ""
+              },
+              {
+                "line": 68,
+                "code": "    from labml_nn.distillation.large import Configs as LargeConfigs"
+              },
+              {
+                "line": 69,
+                "code": ""
+              },
+              {
+                "line": 70,
+                "code": "    experiment.evaluate()"
+              },
+              {
+                "line": 71,
+                "code": "    conf = LargeConfigs()"
+              },
+              {
+                "line": 72,
+                "code": "    experiment.configs(conf, experiment.load_configs(run_uuid))"
+              },
+              {
+                "line": 73,
+                "code": "    experiment.add_pytorch_models({'model': conf.model})"
+              },
+              {
+                "line": 74,
+                "code": "    experiment.load(run_uuid, checkpoint)"
+              },
+              {
+                "line": 75,
+                "code": "    experiment.start()"
+              },
+              {
+                "line": 76,
+                "code": ""
+              },
+              {
+                "line": 77,
+                "code": "    return conf.model"
+              }
+            ]
+          },
+          {
+            "explanationComponent": "• main function sets up the distillation experiment, loading the teacher and training the student.",
+            "codeSegments": [
+              {
+                "line": 78,
+                "code": ""
+              },
+              {
+                "line": 79,
+                "code": "def main(run_uuid: str, checkpoint: int):"
+              },
+              {
+                "line": 80,
+                "code": "    large_model = get_saved_model(run_uuid, checkpoint)"
+              },
+              {
+                "line": 81,
+                "code": "    experiment.create(name='distillation', comment='cifar10')"
+              },
+              {
+                "line": 82,
+                "code": "    conf = Configs()"
+              },
+              {
+                "line": 83,
+                "code": "    conf.large = large_model"
+              },
+              {
+                "line": 84,
+                "code": "    experiment.configs(conf, {"
+              },
+              {
+                "line": 85,
+                "code": "        'optimizer.optimizer': 'Adam',"
+              },
+              {
+                "line": 86,
+                "code": "        'optimizer.learning_rate': 2.5e-4,"
+              },
+              {
+                "line": 87,
+                "code": "        'model': '_small_student_model',"
+              },
+              {
+                "line": 88,
+                "code": "    })"
+              },
+              {
+                "line": 89,
+                "code": "    experiment.add_pytorch_models({'model': conf.model})"
+              },
+              {
+                "line": 90,
+                "code": "    experiment.load(None, None)"
+              },
+              {
+                "line": 91,
+                "code": "    with experiment.start():"
+              },
+              {
+                "line": 92,
+                "code": "        conf.run()"
+              },
+              {
+                "line": 93,
+                "code": ""
+              },
+              {
+                "line": 94,
+                "code": "if __name__ == '__main__':"
+              },
+              {
+                "line": 95,
+                "code": "    main('d46cd53edaec11eb93c38d6538aee7d6', 1_000_000)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

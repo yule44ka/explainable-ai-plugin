@@ -1,0 +1,4 @@
+error: pathspec 'tests/roots/test-directive-include/baz/baz.rst' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-directive-include/conf.py' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-directive-include/foo.rst' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-directive-include/text.txt' did not match any file(s) known to git

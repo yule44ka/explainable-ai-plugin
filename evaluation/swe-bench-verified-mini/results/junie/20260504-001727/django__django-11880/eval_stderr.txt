@@ -1,0 +1,14 @@
+test_field_deep_copy_error_messages (forms_tests.tests.test_forms.FormsTestCase) ... FAIL
+
+======================================================================
+FAIL: test_field_deep_copy_error_messages (forms_tests.tests.test_forms.FormsTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-11880/django__django/tests/forms_tests/tests/test_forms.py", line 3697, in test_field_deep_copy_error_messages
+    self.assertIsNot(field_copy.error_messages, field.error_messages)
+AssertionError: unexpectedly identical: {'required': 'This field is required.', 'invalid': 'Form custom error message.'}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

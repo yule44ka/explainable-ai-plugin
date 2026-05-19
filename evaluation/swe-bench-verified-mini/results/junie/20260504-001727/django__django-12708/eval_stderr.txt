@@ -1,0 +1,26 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Creating test database for alias 'other' ('file:memorydb_other?mode=memory&cache=shared')...
+test_alter_index_together_remove_with_unique_together (migrations.test_operations.OperationTests) ... ERROR
+
+======================================================================
+ERROR: test_alter_index_together_remove_with_unique_together (migrations.test_operations.OperationTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12708/django__django/django/test/testcases.py", line 1215, in skip_wrapper
+    return test_func(*args, **kwargs)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12708/django__django/tests/migrations/test_operations.py", line 1781, in test_alter_index_together_remove_with_unique_together
+    operation.database_forwards(app_label, editor, project_state, new_state)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12708/django__django/django/db/migrations/operations/models.py", line 508, in database_forwards
+    alter_together(
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12708/django__django/django/db/backends/base/schema.py", line 396, in alter_index_together
+    self._delete_composed_index(model, fields, {'index': True}, self.sql_delete_index)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12708/django__django/django/db/backends/base/schema.py", line 411, in _delete_composed_index
+    raise ValueError("Found wrong number (%s) of constraints for %s(%s)" % (
+ValueError: Found wrong number (2) of constraints for test_alintoremove_wunto_pony(pink, weight)
+
+----------------------------------------------------------------------
+Ran 1 test in 0.029s
+
+FAILED (errors=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Destroying test database for alias 'other' ('file:memorydb_other?mode=memory&cache=shared')...

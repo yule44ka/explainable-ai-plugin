@@ -1,0 +1,10 @@
+A  reproduction/source/conf.py
+A  reproduction/source/index.rst
+A  reproduction/test_ast_unparse.py
+A  reproduction/test_module.py
+A  reproduction/test_parse_annotation.py
+A  reproduction/test_sig.py
+A  reproduction/test_sig_ast.py
+M  sphinx/domains/python.py
+M  sphinx/pycode/ast.py
+M  tests/test_pycode_ast.py

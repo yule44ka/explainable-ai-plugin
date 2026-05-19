@@ -1,0 +1,2 @@
+Unstaged changes after reset:
+M	sphinx/util/docfields.py

@@ -30,6 +30,20 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
+     * Check if Junie CLI Token is configured
+     */
+    fun isJunieTokenConfigured(): Boolean {
+        return settings.isJunieTokenConfigured()
+    }
+    
+    /**
+     * Check if all required credentials are configured
+     */
+    fun isFullyConfigured(): Boolean {
+        return isConfigured() && isJunieTokenConfigured()
+    }
+    
+    /**
      * Show notification about the need to configure API key
      */
     fun showConfigurationWarning() {
@@ -38,6 +52,20 @@ class OpenAIService(private val project: Project) {
             .createNotification(
                 "OpenAI API Key Not Configured",
                 "Please configure your OpenAI API key in Settings -> Tools -> Explainable AI",
+                NotificationType.WARNING
+            )
+            .notify(project)
+    }
+    
+    /**
+     * Show notification about the need to configure Junie API Key
+     */
+    fun showJunieConfigurationWarning() {
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup("Explainable AI")
+            .createNotification(
+                "Junie API Key Not Configured",
+                "Please configure your Junie API Key in Settings -> Tools -> Explainable AI. Get your key at https://junie.jetbrains.com/cli",
                 NotificationType.WARNING
             )
             .notify(project)
@@ -91,13 +119,32 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
+     * Get Junie CLI Token (for use in requests)
+     */
+    fun getJunieToken(): String? {
+        return settings.getJunieToken()
+    }
+    
+    /**
+     * Check and get Junie CLI Token, show warning if not configured
+     */
+    fun getJunieTokenOrWarn(): String? {
+        val token = getJunieToken()
+        if (token.isNullOrEmpty()) {
+            showJunieConfigurationWarning()
+            return null
+        }
+        return token
+    }
+    
+    /**
      * Get settings for API requests
      */
     fun getApiEndpoint(): String = settings.apiEndpoint
     fun getModel(): String = settings.model
     fun getTemperature(): Double = settings.temperature
     fun getMaxTokens(): Int = settings.maxTokens
-    
+
     /**
      * Create OpenAI client with current settings
      */
@@ -140,7 +187,7 @@ class OpenAIService(private val project: Project) {
     suspend fun explainCode(code: String): Result<String> {
         return sendPrompt(
             prompt = "Explain the following code:\n\n$code",
-            systemMessage = "You are a helpful coding assistant that explains code clearly and concisely."
+            systemMessage = "You are a helpful coding assistant that explains code clearly and concisely. Do not use emojis."
         )
     }
     
@@ -150,7 +197,7 @@ class OpenAIService(private val project: Project) {
     suspend fun analyzeCode(code: String): Result<String> {
         return sendPrompt(
             prompt = "Analyze the following code and identify potential issues, bugs, or improvements:\n\n$code",
-            systemMessage = "You are an expert code reviewer. Provide constructive feedback on code quality, potential bugs, and improvements."
+            systemMessage = "You are an expert code reviewer. Provide constructive feedback on code quality, potential bugs, and improvements. Do not use emojis."
         )
     }
     
@@ -160,7 +207,7 @@ class OpenAIService(private val project: Project) {
     suspend fun suggestImprovements(code: String): Result<String> {
         return sendPrompt(
             prompt = "Suggest improvements for the following code:\n\n$code",
-            systemMessage = "You are an expert programmer. Suggest specific improvements for code readability, performance, and best practices."
+            systemMessage = "You are an expert programmer. Suggest specific improvements for code readability, performance, and best practices. Do not use emojis."
         )
     }
     
@@ -175,15 +222,18 @@ class OpenAIService(private val project: Project) {
     }
     
     /**
-     * Generate multi-level summary for selected code
-     * @param code Selected code for analysis
+     * Generate multi-level summary for selected code or diff
+     * @param contentToExplain Selected code or diff for analysis
      * @param fileContext Full file context for better understanding
+     * @param isDiffInput Whether the main input is a diff rather than a code snippet
      * @param model Model to use for generation (if null, uses default from settings)
      * @return CodeSummary object with different levels of detail
      */
     suspend fun generateCodeSummary(
-        code: String, 
+        contentToExplain: String,
         fileContext: String, 
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
         model: String? = null
     ): Result<CodeSummary> = withContext(Dispatchers.IO) {
         val client = createClient() 
@@ -192,9 +242,27 @@ class OpenAIService(private val project: Project) {
             )
         
         val modelToUse = model ?: getModel()
+        val normalizedAgentTrace = agentTrace?.trim().orEmpty()
+        val explainedEntity = if (isDiffInput) "code diff" else "code snippet"
+        val additionalContext = buildString {
+            if (normalizedAgentTrace.isNotEmpty()) {
+                appendLine()
+                appendLine("Agent Trace:")
+                appendLine(normalizedAgentTrace)
+            }
+        }.trimEnd()
+
+        logSummaryGenerationContext(
+            provider = "OpenAI API",
+            model = modelToUse,
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = normalizedAgentTrace
+        )
         
         val prompt = """
-You are an expert code summarizer. For the following code, generate 6 summaries, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
+You are an expert code explainer. For the following $explainedEntity, generate 6 explanations of the whole input, one for each combination of detail level (low, medium, high) and structure (unstructured, i.e., paragraph, structured, i.e., bulleted):
 - low_unstructured: One-sentence, low-detail, paragraph style.
 - low_structured: 2-3 short bullet points, low-detail, as a single string. Each bullet must start with "•" and be separated by \n. Never return an array.
 - medium_unstructured: 2-3 sentences, medium-detail, paragraph style.
@@ -203,22 +271,34 @@ You are an expert code summarizer. For the following code, generate 6 summaries,
 - high_structured: 4-8 bullet points, high-detail, as a single string. Use "•" for first-level bullets, and ENCOURAGE the use of two-level bullets (use "◦" for the second level, and indent the second-level bullet with 2 spaces before the "◦") when logical groupings exist. Bullets must be separated by \n. Never return an array.
 
 IMPORTANT:
+- You MUST cover the ENTIRE $explainedEntity in the explanation — every relevant part must be addressed and explained. Do not skip any part.
+- You MUST explain only the provided $explainedEntity, not the entire file.
 - For medium_structured and high_structured, if there are logical groupings, you should use two-level bullets ("•" and "◦"). For the second-level bullet ("◦"), always indent with 2 spaces before the "◦".
-- The file context below is provided ONLY for reference to help understand the code's environment.
-- Your summary MUST focus ONLY on the specific code snippet provided.
+- The file context and agent trace below are provided for reference to help understand the code's environment, why the code changed, and what the agent was doing.
+- Use the agent trace to improve the explanation with relevant intent and sequence of changes when it helps, but do NOT turn the answer into a log recap.
+- Your explanation MUST focus ONLY on the specific $explainedEntity provided.
+- Do NOT use emojis anywhere in your response.
 - Return your response as a JSON object with keys: title, low_unstructured, low_structured, medium_unstructured, medium_structured, high_unstructured, high_structured.
 
 File Context (for reference only):
 $fileContext
 
-Code to summarize:
-$code
+$additionalContext
+
+Input to explain:
+$contentToExplain
         """.trimIndent()
+
+        logModelPrompt(
+            source = "OpenAIService.generateCodeSummary",
+            model = modelToUse,
+            prompt = prompt
+        )
         
         try {
             val result = client.sendPrompt(
                 prompt = prompt,
-                systemMessage = "You are an expert code analyzer that generates structured summaries.",
+                systemMessage = "You are an expert code analyzer that generates structured explanations.",
                 model = modelToUse,
                 temperature = getTemperature(),
                 maxTokens = getMaxTokens()
@@ -232,6 +312,45 @@ $code
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun logSummaryGenerationContext(
+        provider: String,
+        model: String,
+        contentToExplain: String,
+        fileContext: String,
+        isDiffInput: Boolean,
+        agentTrace: String
+    ) {
+        println(
+            buildString {
+                appendLine("[OpenAIService] Summary generation context")
+                appendLine("Provider: $provider")
+                appendLine("Model: $model")
+                appendLine("Input type: ${if (isDiffInput) "code diff" else "code snippet"}")
+                appendLine("--- Content to explain ---")
+                appendLine(contentToExplain)
+                appendLine("--- File context ---")
+                appendLine(fileContext)
+                if (agentTrace.isNotEmpty()) {
+                    appendLine("--- Agent trace ---")
+                    appendLine(agentTrace)
+                }
+                appendLine("--- End summary context ---")
+            }
+        )
+    }
+
+    private fun logModelPrompt(source: String, model: String, prompt: String) {
+        println(
+            buildString {
+                appendLine("[$source] Full prompt sent to model")
+                appendLine("Model: $model")
+                appendLine("--- Prompt start ---")
+                appendLine(prompt)
+                appendLine("--- Prompt end ---")
+            }
+        )
     }
     
     /**
@@ -270,25 +389,28 @@ $code
             .joinToString("\n")
         
         val prompt = """
-You are an expert at code-to-summary mapping. Given the following code and summary, extract up to 10 key summary components (phrases or semantic units) from the summary.
+You are an expert at code-to-explanation mapping. Given the following code and explanation, extract up to 10 key explanation components (phrases or semantic units) from the explanation.
 
 IMPORTANT:
-1. Each summaryComponent you extract MUST be a substring (exact part) of the summary text below.
-2. Extract summaryComponents in the exact order they appear in the summary text.
-3. Do NOT hallucinate or invent summary components that do not appear in the summary.
+1. Each explanationComponent you extract MUST be a substring (exact part) of the explanation text below.
+2. Extract explanationComponents in the exact order they appear in the explanation text.
+3. Do NOT hallucinate or invent explanation components that do not appear in the explanation.
+4. FULL COVERAGE REQUIRED: Every line of the code MUST be covered by at least one mapping. Go through all lines of code and ensure each line appears in at least one codeSegments entry. Do not leave any line unmapped.
+5. Do NOT use emojis anywhere in your response.
 
-For each summaryComponent, extract one or more relevant code segments from the code that best match the meaning of the summary component.
+For each explanationComponent, extract one or more relevant code segments from the code that best match the meaning of the explanation component.
 - For each code segment, return both the code fragment (as a string) and its line number.
 - CRITICAL: The line number MUST be the EXACT line number shown before the colon in the code below (e.g., if the code line is "7: int x = 5;", the line number is 7).
-- Prefer to use a complete code statement (such as a full line, assignment, function definition, or block) as the code segment if it clearly represents the summary component's meaning.
+- Prefer to use a complete code statement (such as a full line, assignment, function definition, or block) as the code segment if it clearly represents the explanation component's meaning.
 - If a full statement is not appropriate or would be ambiguous, you should use a smaller, relevant fragment (such as a variable, function name, operator, or part of an expression).
 - Only include enough code to make the mapping meaningful and unambiguous.
 - If a code segment contains multiple lines, split them into separate objects in the codeSegments array.
+- After building all mappings, verify that every line of the code appears in at least one codeSegments entry. If any lines are missing, add them to the most relevant existing explanationComponent.
 
 Return as a JSON array of objects:
 [
   {
-    "summaryComponent": "exact phrase from summary",
+    "explanationComponent": "exact phrase from explanation",
     "codeSegments": [
       { "code": "relevant code fragment", "line": 5 },
       { "code": "another relevant code fragment", "line": 10 }
@@ -300,9 +422,15 @@ Return as a JSON array of objects:
 Code (each line is prefixed with its absolute line number):
 $codeWithLineNumbers
 
-Summary:
+Explanation:
 $summaryText
         """.trimIndent()
+
+        logModelPrompt(
+            source = "OpenAIService.buildSummaryMapping",
+            model = modelToUse,
+            prompt = prompt
+        )
         
         try {
             val result = client.sendPrompt(
@@ -314,8 +442,7 @@ $summaryText
             )
             
             result.mapCatching { response ->
-                // Parse JSON response
-                val jsonResponse = response.trim().removePrefix("```json").removeSuffix("```").trim()
+                val jsonResponse = extractJsonArray(response)
                 val json = kotlinx.serialization.json.Json { 
                     ignoreUnknownKeys = true 
                     isLenient = true
@@ -338,7 +465,7 @@ $summaryText
                             )
                         }
                         SummaryMapping(
-                            summaryComponent = mapping.summaryComponent,
+                            explanationComponent = mapping.explanationComponent,
                             codeSegments = correctedSegments
                         )
                     } else {
@@ -346,19 +473,85 @@ $summaryText
                     }
                 }
                 
-                // Filter mappings where summaryComponent is not found in summaryText
-                correctedMappings.filter { mapping ->
-                    if (!summaryText.contains(mapping.summaryComponent)) {
-                        println("[buildSummaryMapping] summaryComponent not found in summary: ${mapping.summaryComponent}")
-                        false
+                correctedMappings.mapNotNull { mapping ->
+                    val exactMatch = summaryText.contains(mapping.explanationComponent)
+                    if (exactMatch) {
+                        mapping
                     } else {
-                        true
+                        val fuzzy = findFuzzyMatchInText(summaryText, mapping.explanationComponent)
+                        if (fuzzy != null) {
+                            println("[buildSummaryMapping] fuzzy-remapped \"${mapping.explanationComponent}\" → \"$fuzzy\"")
+                            SummaryMapping(explanationComponent = fuzzy, codeSegments = mapping.codeSegments)
+                        } else {
+                            println("[buildSummaryMapping] explanationComponent not found in summary (dropped): ${mapping.explanationComponent}")
+                            null
+                        }
                     }
                 }
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    suspend fun generateCodeSummaryWithMappings(
+        contentToExplain: String,
+        fileContext: String,
+        mappingCode: String,
+        realStartLine: Int = 1,
+        isDiffInput: Boolean = false,
+        agentTrace: String? = null,
+        model: String? = null
+    ): Result<CodeSummaryWithMappings> {
+        val summary = generateCodeSummary(
+            contentToExplain = contentToExplain,
+            fileContext = fileContext,
+            isDiffInput = isDiffInput,
+            agentTrace = agentTrace,
+            model = model
+        ).getOrElse { throwable ->
+            return Result.failure(throwable)
+        }
+
+        val highStructuredMappings = buildSummaryMapping(
+            code = mappingCode,
+            summaryText = summary.high_structured,
+            realStartLine = realStartLine,
+            model = model
+        ).getOrElse { throwable ->
+            return Result.failure(throwable)
+        }
+
+        return Result.success(
+            CodeSummaryWithMappings(
+                summary = summary,
+                mappings = SummaryMappings(high_structured = highStructuredMappings)
+            )
+        )
+    }
+
+    private fun extractJsonArray(rawResponse: String): String {
+        val trimmed = rawResponse.trim()
+
+        // Prefer fenced JSON payload if present
+        val fencedMatch = Regex("```(?:json)?\\s*([\\s\\S]*?)\\s*```", RegexOption.IGNORE_CASE)
+            .find(trimmed)
+        if (fencedMatch != null) {
+            val fencedPayload = fencedMatch.groupValues[1].trim()
+            if (fencedPayload.startsWith("[") && fencedPayload.endsWith("]")) {
+                return fencedPayload
+            }
+        }
+
+        // Fallback: pick the outermost JSON array in the response
+        val start = trimmed.indexOf('[')
+        val end = trimmed.lastIndexOf(']')
+        if (start != -1 && end > start) {
+            return trimmed.substring(start, end + 1).trim()
+        }
+
+        // Last fallback keeps previous behavior to surface parse error to caller
+        return trimmed.removePrefix("```json").removeSuffix("```").trim()
     }
 }
 
@@ -390,13 +583,14 @@ data class CodeSegment(
  */
 @kotlinx.serialization.Serializable
 data class SummaryMapping(
-    val summaryComponent: String,
+    val explanationComponent: String,
     val codeSegments: List<CodeSegment>
 )
 
 /**
  * Container for all summary mappings
  */
+@kotlinx.serialization.Serializable
 data class SummaryMappings(
     val low_unstructured: List<SummaryMapping> = emptyList(),
     val low_structured: List<SummaryMapping> = emptyList(),
@@ -405,3 +599,82 @@ data class SummaryMappings(
     val high_unstructured: List<SummaryMapping> = emptyList(),
     val high_structured: List<SummaryMapping> = emptyList()
 )
+
+@kotlinx.serialization.Serializable
+data class CodeSummaryWithMappings(
+    val summary: CodeSummary = CodeSummary(),
+    val mappings: SummaryMappings = SummaryMappings()
+)
+
+// -----------------------------------------------------------------------------
+// Fuzzy matching utilities (mirrors findBestMatch logic in messageHandler.ts)
+// -----------------------------------------------------------------------------
+
+private const val FUZZY_MATCH_THRESHOLD = 0.75
+private const val FUZZY_MAX_PATTERN_LENGTH = 300
+
+/**
+ * Tries to find [pattern] inside [text] using three strategies:
+ *  1. Exact substring match
+ *  2. Case-insensitive substring match
+ *  3. Sliding-window normalised Levenshtein similarity (only for patterns
+ *     shorter than [FUZZY_MAX_PATTERN_LENGTH])
+ *
+ * Returns the actual matching substring from [text] so callers can replace a
+ * paraphrased explanationComponent with the real text from the summary.
+ * Returns null when no match with acceptable quality is found.
+ */
+fun findFuzzyMatchInText(text: String, pattern: String, threshold: Double = FUZZY_MATCH_THRESHOLD): String? {
+    if (pattern.isEmpty()) return null
+
+    // 1. Exact match
+    if (text.contains(pattern)) return pattern
+
+    // 2. Case-insensitive match
+    val lowerText = text.lowercase()
+    val lowerPattern = pattern.lowercase()
+    val ciIdx = lowerText.indexOf(lowerPattern)
+    if (ciIdx != -1) return text.substring(ciIdx, ciIdx + pattern.length)
+
+    // 3. Sliding-window similarity (skip for very long patterns — too costly)
+    if (pattern.length > FUZZY_MAX_PATTERN_LENGTH || pattern.length > text.length) return null
+
+    val windowSize = pattern.length
+    var bestScore = 0.0
+    var bestWindow: String? = null
+
+    for (i in 0..text.length - windowSize) {
+        val window = text.substring(i, i + windowSize)
+        val score = stringSimilarity(window, pattern)
+        if (score > bestScore) {
+            bestScore = score
+            bestWindow = window
+        }
+    }
+
+    return if (bestScore >= threshold) bestWindow else null
+}
+
+private fun stringSimilarity(a: String, b: String): Double {
+    val maxLen = maxOf(a.length, b.length)
+    if (maxLen == 0) return 1.0
+    return 1.0 - levenshteinDistance(a, b).toDouble() / maxLen
+}
+
+private fun levenshteinDistance(a: String, b: String): Int {
+    val m = a.length
+    val n = b.length
+    val dp = Array(m + 1) { IntArray(n + 1) }
+    for (i in 0..m) dp[i][0] = i
+    for (j in 0..n) dp[0][j] = j
+    for (i in 1..m) {
+        for (j in 1..n) {
+            dp[i][j] = if (a[i - 1] == b[j - 1]) {
+                dp[i - 1][j - 1]
+            } else {
+                1 + minOf(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+            }
+        }
+    }
+    return dp[m][n]
+}

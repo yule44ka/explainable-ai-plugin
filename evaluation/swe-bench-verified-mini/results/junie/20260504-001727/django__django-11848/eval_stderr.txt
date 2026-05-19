@@ -1,0 +1,14 @@
+test_parsing_rfc850 (utils_tests.test_http.HttpDateProcessingTests) ... test_parsing_year_less_than_70 (utils_tests.test_http.HttpDateProcessingTests) ... ok
+
+======================================================================
+FAIL: test_parsing_rfc850 (utils_tests.test_http.HttpDateProcessingTests) (rfc850str='Wednesday, 31-Dec-70 08:49:37 GMT')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-11848/django__django/tests/utils_tests/test_http.py", line 340, in test_parsing_rfc850
+    self.assertEqual(datetime.utcfromtimestamp(parsed), expected_date)
+AssertionError: datetime.datetime(1970, 12, 31, 8, 49, 37) != datetime.datetime(2070, 12, 31, 8, 49, 37)
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+FAILED (failures=1)

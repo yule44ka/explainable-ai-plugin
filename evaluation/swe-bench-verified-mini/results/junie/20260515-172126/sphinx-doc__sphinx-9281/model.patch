@@ -1,0 +1,18 @@
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index a415a7074..4ff5cb20f 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -457,6 +457,13 @@ def object_description(object: Any) -> str:
+         else:
+             return "frozenset({%s})" % ", ".join(object_description(x)
+                                                  for x in sorted_values)
++    if isenumattribute(object):
++        if getattr(object, 'name', None) is not None:
++            return "%s.%s" % (object.__class__.__name__, object.name)
++        else:
++            # For combined flags in python < 3.11
++            return str(object)
++
+     try:
+         s = repr(object)
+     except Exception as exc:

@@ -1,0 +1,16 @@
+test_formfield_overrides_m2m_filter_widget (admin_widgets.tests.AdminFormfieldForDBFieldTests)
+The autocomplete_fields, raw_id_fields, filter_vertical, and ... FAIL
+
+======================================================================
+FAIL: test_formfield_overrides_m2m_filter_widget (admin_widgets.tests.AdminFormfieldForDBFieldTests)
+The autocomplete_fields, raw_id_fields, filter_vertical, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12713/django__django/tests/admin_widgets/tests.py", line 156, in test_formfield_overrides_m2m_filter_widget
+    self.assertIsInstance(field.widget.widget, forms.CheckboxSelectMultiple)
+AssertionError: <django.contrib.admin.widgets.FilteredSelectMultiple object at 0x107135520> is not an instance of <class 'django.forms.widgets.CheckboxSelectMultiple'>
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

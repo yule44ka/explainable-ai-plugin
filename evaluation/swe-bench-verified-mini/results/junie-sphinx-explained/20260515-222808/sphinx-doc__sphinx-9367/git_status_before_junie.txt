@@ -1,0 +1,11 @@
+ M sphinx/builders/latex/nodes.py
+ M sphinx/builders/linkcheck.py
+ M sphinx/cmd/__init__.py
+ M sphinx/ext/autodoc/directive.py
+ M sphinx/pycode/ast.py
+ M sphinx/util/typing.py
+ M tests/roots/test-apidoc-subpackage-in-toc/parent/__init__.py
+ M tests/roots/test-apidoc-toc/mypackage/main.py
+ M tests/roots/test-build-text/conf.py
+ M tests/test_theming.py
+ M utils/jssplitter_generator.py

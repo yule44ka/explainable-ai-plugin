@@ -1,0 +1,102 @@
+F.........                                                               [100%]
+=================================== FAILURES ===================================
+______________________________ test_toctree_index ______________________________
+
+app = <SphinxTestApp buildername='xml'>
+
+    @pytest.mark.sphinx('xml', testroot='toctree-index')
+    def test_toctree_index(app):
+        app.build()
+        toctree = app.env.tocs['index']
+        assert_node(toctree,
+                    [bullet_list, ([list_item, (compact_paragraph,  # [0][0]
+                                                [bullet_list, (addnodes.toctree,  # [0][1][0]
+                                                               addnodes.toctree)])])])  # [0][1][1]
+>       assert_node(toctree[0][1][1], addnodes.toctree,
+                    caption="Indices", glob=False, hidden=False,
+                    titlesonly=False, maxdepth=-1, numbered=0,
+                    entries=[(None, 'genindex'), (None, 'modindex'), (None, 'search')])
+
+tests/test_environment_toctree.py:359: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+node = <toctree: >, cls = <class 'sphinx.addnodes.toctree'>, xpath = ''
+kwargs = {'caption': 'Indices', 'entries': [(None, 'genindex'), (None, 'modindex'), (None, 'search')], 'glob': False, 'hidden': False, ...}
+key = 'entries'
+value = [(None, 'genindex'), (None, 'modindex'), (None, 'search')]
+
+    def assert_node(node: Node, cls: Any = None, xpath: str = "", **kwargs: Any) -> None:
+        if cls:
+            if isinstance(cls, list):
+                assert_node(node, cls[0], xpath=xpath, **kwargs)
+                if cls[1:]:
+                    if isinstance(cls[1], tuple):
+                        assert_node(node, cls[1], xpath=xpath, **kwargs)
+                    else:
+                        assert isinstance(node, nodes.Element), \
+                            'The node%s does not have any children' % xpath
+                        assert len(node) == 1, \
+                            'The node%s has %d child nodes, not one' % (xpath, len(node))
+                        assert_node(node[0], cls[1:], xpath=xpath + "[0]", **kwargs)
+            elif isinstance(cls, tuple):
+                assert isinstance(node, (list, nodes.Element)), \
+                    'The node%s does not have any items' % xpath
+                assert len(node) == len(cls), \
+                    'The node%s has %d child nodes, not %r' % (xpath, len(node), len(cls))
+                for i, nodecls in enumerate(cls):
+                    path = xpath + "[%d]" % i
+                    assert_node(node[i], nodecls, xpath=path, **kwargs)
+            elif isinstance(cls, str):
+                assert node == cls, 'The node %r is not %r: %r' % (xpath, cls, node)
+            else:
+                assert isinstance(node, cls), \
+                    'The node%s is not subclass of %r: %r' % (xpath, cls, node)
+    
+        if kwargs:
+            assert isinstance(node, nodes.Element), \
+                'The node%s does not have any attributes' % xpath
+    
+            for key, value in kwargs.items():
+                assert key in node, \
+                    'The node%s does not have %r attribute: %r' % (xpath, key, node)
+>               assert node[key] == value, \
+                    'The node%s[%s] is not %r: %r' % (xpath, key, value, node[key])
+E               AssertionError: The node[entries] is not [(None, 'genindex'), (None, 'modindex'), (None, 'search')]: []
+
+sphinx/testing/util.py:74: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: xml
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-109/toctree-index
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-109/toctree-index/_build/xml
+# status: 
+[01mRunning Sphinx v5.2.0+/f35d2a6cc[39;49;00m
+[01mbuilding [mo]: [39;49;00mtargets for 0 po files that are out of date
+[01mbuilding [xml]: [39;49;00mtargets for 2 source files that are out of date
+[01mupdating environment: [39;49;00m[new config] 2 added, 0 changed, 0 removed
+[01mreading sources... [39;49;00m[ 50%] [35mfoo[39;49;00m                                                  
+[01mreading sources... [39;49;00m[100%] [35mindex[39;49;00m                                                
+[01mlooking for now-outdated files... [39;49;00mnone found
+[01mpickling environment... [39;49;00mdone
+[01mchecking consistency... [39;49;00mdone
+[01mpreparing documents... [39;49;00mdone
+[01mwriting output... [39;49;00m[ 50%] [32mfoo[39;49;00m                                                   
+[01mwriting output... [39;49;00m[100%] [32mindex[39;49;00m                                                 
+[01mbuild succeeded, 3 warnings.[39;49;00m
+
+The XML files are in ../../../../../../../../../../../private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-109/toctree-index/_build/xml.
+
+# warning: 
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-109/toctree-index/index.rst:9: WARNING: toctree contains reference to nonexisting document 'genindex'[39;49;00m
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-109/toctree-index/index.rst:9: WARNING: toctree contains reference to nonexisting document 'modindex'[39;49;00m
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-109/toctree-index/index.rst:9: WARNING: toctree contains reference to nonexisting document 'search'[39;49;00m
+
+=============================== warnings summary ===============================
+tests/test_environment_toctree.py::test_toctree_index
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_environment_toctree.py::test_toctree_index - AssertionError...
+1 failed, 9 passed, 1 warning in 0.40s

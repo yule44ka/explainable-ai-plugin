@@ -1,0 +1,290 @@
+diff --git a/imghdr.py b/imghdr.py
+new file mode 100644
+index 000000000..7e5240e1f
+--- /dev/null
++++ b/imghdr.py
+@@ -0,0 +1,5 @@
++
++def what(filename, h=None):
++    return None
++
++tests = []
+diff --git a/repro.py b/repro.py
+new file mode 100644
+index 000000000..0cd59d87e
+--- /dev/null
++++ b/repro.py
+@@ -0,0 +1,116 @@
++
++import sys
++import os
++from unittest.mock import Mock
++
++# Add current directory to sys.path
++sys.path.insert(0, os.path.abspath("."))
++
++import sphinx
++from sphinx.ext.autodoc.directive import DocumenterBridge, process_documenter_options
++from sphinx.util.docutils import LoggingReporter
++from sphinx.testing.util import SphinxTestApp
++from docutils.statemachine import ViewList
++
++from sphinx.testing.path import path
++
++from abc import ABC, abstractmethod
++
++class A:
++    """Class A"""
++    @classmethod
++    @property
++    def f(cls):
++        """Some class property."""
++        return "property value"
++
++class B:
++    """Class B"""
++    @property
++    def g(self):
++        """Some property."""
++        return "property value"
++
++class C(ABC):
++    """Class C"""
++    @classmethod
++    @property
++    @abstractmethod
++    def h(cls):
++        """Some abstract class property."""
++        return "property value"
++
++def test_autodoc():
++    # Setup Sphinx App
++    srcdir = path("test_repro_dir").abspath()
++    if not srcdir.exists():
++        srcdir.makedirs()
++    with open(srcdir / "conf.py", "w") as f:
++        f.write("extensions = ['sphinx.ext.autodoc']\n")
++    with open(srcdir / "index.rst", "w") as f:
++        f.write("Test\n====\n\n.. py:property:: A.f\n   :classmethod:\n")
++    
++    app = SphinxTestApp(srcdir=srcdir)
++    try:
++        app.build()
++        
++        from sphinx.ext.autodoc import ALL, Options
++        options = Options(
++            inherited_members = False,
++            undoc_members = True,
++            private_members = False,
++            special_members = False,
++            imported_members = False,
++            show_inheritance = False,
++            noindex = False,
++            annotation = None,
++            synopsis = '',
++            platform = '',
++            deprecated = False,
++            members = ALL,
++            member_order = 'alphabetical',
++            exclude_members = set(),
++            ignore_module_all = False,
++        )
++        doccls = app.registry.documenters['class']
++        state = Mock()
++        state.document.settings.tab_width = 8
++        bridge = DocumenterBridge(app.env, LoggingReporter(''), options, 1, state)
++        
++        # We want to document class A
++        # To do that we need A to be importable. 
++        # For simplicity, let's put it in a module.
++        import types
++        mod = types.ModuleType("repro_mod")
++        mod.A = A
++        mod.B = B
++        mod.C = C
++        sys.modules["repro_mod"] = mod
++        
++        print("--- Documenting A ---")
++        documenter = doccls(bridge, "repro_mod.A")
++        documenter.generate()
++        content_a = "\n".join(bridge.result)
++        print(content_a)
++        
++        bridge.result = ViewList()
++        print("--- Documenting B ---")
++        documenter = doccls(bridge, "repro_mod.B")
++        documenter.generate()
++        content_b = "\n".join(bridge.result)
++        print(content_b)
++
++        bridge.result = ViewList()
++        print("--- Documenting C ---")
++        documenter = doccls(bridge, "repro_mod.C")
++        documenter.generate()
++        content_c = "\n".join(bridge.result)
++        print(content_c)
++
++    finally:
++        app.cleanup()
++        import shutil
++        shutil.rmtree(srcdir)
++
++if __name__ == "__main__":
++    test_autodoc()
+diff --git a/repro_check.py b/repro_check.py
+new file mode 100644
+index 000000000..e87c0de6b
+--- /dev/null
++++ b/repro_check.py
+@@ -0,0 +1,46 @@
++
++import sys
++import os
++import inspect as py_inspect
++
++# Add current directory to sys.path so we can import sphinx
++sys.path.insert(0, os.path.abspath("."))
++
++from sphinx.util import inspect as sphinx_inspect
++
++from abc import abstractmethod
++
++class A:
++    @classmethod
++    @property
++    def f(cls):
++        """Some class property."""
++        return "property value"
++
++class C:
++    @classmethod
++    @property
++    @abstractmethod
++    def h(cls):
++        """Some abstract class property."""
++        return "property value"
++
++def check(obj, name):
++    print(f"Checking {name}:")
++    print(f"  type: {type(obj)}")
++    print(f"  py_inspect.isroutine: {py_inspect.isroutine(obj)}")
++    print(f"  sphinx_inspect.isproperty: {sphinx_inspect.isproperty(obj)}")
++    print(f"  sphinx_inspect.isabstractmethod: {sphinx_inspect.isabstractmethod(obj)}")
++    try:
++        print(f"  isinstance(obj, classmethod): {isinstance(obj, classmethod)}")
++        if isinstance(obj, classmethod):
++             print(f"  obj.__wrapped__: {obj.__wrapped__}")
++             print(f"  sphinx_inspect.isproperty(obj.__wrapped__): {sphinx_inspect.isproperty(obj.__wrapped__)}")
++             print(f"  sphinx_inspect.isabstractmethod(obj.__wrapped__): {sphinx_inspect.isabstractmethod(obj.__wrapped__)}")
++    except AttributeError:
++        print(f"  obj has no __wrapped__")
++
++print(f"Python version: {sys.version}")
++check(A.__dict__['f'], "A.__dict__['f']")
++check(A.f, "A.f")
++print(f"A.f.__doc__: {A.f.__doc__}")
+diff --git a/sphinx/deprecation.py b/sphinx/deprecation.py
+index 3963e6361..6b0bdd158 100644
+--- a/sphinx/deprecation.py
++++ b/sphinx/deprecation.py
+@@ -14,6 +14,10 @@ from importlib import import_module
+ from typing import Any, Dict, Type
+ 
+ 
++class RemovedInSphinx40Warning(DeprecationWarning):
++    pass
++
++
+ class RemovedInSphinx50Warning(DeprecationWarning):
+     pass
+ 
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index d79de154e..758920a8e 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -852,6 +852,7 @@ class PyProperty(PyObject):
+     option_spec = PyObject.option_spec.copy()
+     option_spec.update({
+         'abstractmethod': directives.flag,
++        'classmethod': directives.flag,
+         'type': directives.unchanged,
+     })
+ 
+@@ -868,6 +869,8 @@ class PyProperty(PyObject):
+         prefix = ['property']
+         if 'abstractmethod' in self.options:
+             prefix.insert(0, 'abstract')
++        if 'classmethod' in self.options:
++            prefix.insert(0, 'class')
+ 
+         return ' '.join(prefix) + ' '
+ 
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1cecb1f79..0f8c7dec1 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -2661,7 +2661,23 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+     @classmethod
+     def can_document_member(cls, member: Any, membername: str, isattr: bool, parent: Any
+                             ) -> bool:
+-        return inspect.isproperty(member) and isinstance(parent, ClassDocumenter)
++        if not isinstance(parent, ClassDocumenter):
++            return False
++        if inspect.isproperty(member):
++            return True
++        elif safe_getattr(parent.object, '__dict__', {}).get(membername):
++            obj = safe_getattr(parent.object, '__dict__', {}).get(membername)
++            if inspect.isproperty(obj):
++                return True
++        return False
++
++    def import_object(self, raiseerror: bool = False) -> bool:
++        ret = super().import_object(raiseerror)
++        if ret and isinstance(self.parent, ClassDocumenter):
++            obj = safe_getattr(self.parent.object, '__dict__', {}).get(self.object_name)
++            if isinstance(obj, classmethod) and isinstance(getattr(obj, '__wrapped__', None), property):
++                self.object = obj.__wrapped__
++        return ret
+ 
+     def document_members(self, all_members: bool = False) -> None:
+         pass
+@@ -2676,6 +2692,10 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+         if inspect.isabstractmethod(self.object):
+             self.add_line('   :abstractmethod:', sourcename)
+ 
++        obj = safe_getattr(self.parent.object, '__dict__', {}).get(self.object_name)
++        if inspect.isclassmethod(obj):
++            self.add_line('   :classmethod:', sourcename)
++
+         if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
+             try:
+                 signature = inspect.signature(self.object.fget,
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 23dd9e930..b0c651c53 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -390,7 +390,10 @@ def isproperty(obj: Any) -> bool:
+         if isinstance(obj, cached_property):
+             return True
+ 
+-    return isinstance(obj, property)
++    if isinstance(obj, property):
++        return True
++
++    return isinstance(obj, classmethod) and isinstance(getattr(obj, '__wrapped__', None), property)
+ 
+ 
+ def isgenericalias(obj: Any) -> bool:
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index 4e1b184e0..a9fcdc07b 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -34,7 +34,7 @@ else:
+             return ref._eval_type(globalns, localns)
+ 
+ if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++    from types import UnionType as types_Union
+ else:
+     types_Union = None
+ 

@@ -1,0 +1,30 @@
+diff --git a/sphinx/directives/other.py b/sphinx/directives/other.py
+index 87cdfa031..852130132 100644
+--- a/sphinx/directives/other.py
++++ b/sphinx/directives/other.py
+@@ -385,7 +385,24 @@ class Include(BaseInclude, SphinxDirective):
+         rel_filename, filename = self.env.relfn2path(self.arguments[0])
+         self.arguments[0] = filename
+         self.env.note_included(filename)
+-        return super().run()
++
++        from docutils import io
++        class SphinxIncludeFileInput(io.FileInput):
++            def read(_self) -> Any:
++                data = super().read()
++                arg = [data]
++                docname = self.env.path2doc(_self.source_path)
++                if docname is None:
++                    docname = self.env.docname
++                self.env.events.emit('source-read', docname, arg)
++                return arg[0]
++
++        old_FileInput = io.FileInput
++        io.FileInput = SphinxIncludeFileInput
++        try:
++            return super().run()
++        finally:
++            io.FileInput = old_FileInput
+ 
+ 
+ # The `setup` function registers all these directives with the Sphinx application, ensuring they are available for use in documentation.

@@ -1,0 +1,56 @@
+diff --git a/sphinx/pycode/ast.py b/sphinx/pycode/ast.py
+index 9bafff11c..57a75ade5 100644
+--- a/sphinx/pycode/ast.py
++++ b/sphinx/pycode/ast.py
+@@ -151,7 +151,10 @@ class _UnparseVisitor(ast.NodeVisitor):
+         return "{" + ", ".join(items) + "}"
+ 
+     def visit_Index(self, node: ast.Index) -> str:
+-        return self.visit(node.value)
++        if isinstance(node.value, ast.Tuple) and len(node.value.elts) > 1:
++            return ", ".join(self.visit(e) for e in node.value.elts)
++        else:
++            return self.visit(node.value)
+ 
+     def visit_Lambda(self, node: ast.Lambda) -> str:
+         return "lambda %s: ..." % self.visit(node.args)
+@@ -166,16 +169,22 @@ class _UnparseVisitor(ast.NodeVisitor):
+         return "{" + ", ".join(self.visit(e) for e in node.elts) + "}"
+ 
+     def visit_Subscript(self, node: ast.Subscript) -> str:
+-        return "%s[%s]" % (self.visit(node.value), self.visit(node.slice))
++        if isinstance(node.slice, ast.Tuple) and len(node.slice.elts) > 1:
++            return "%s[%s]" % (self.visit(node.value),
++                               ", ".join(self.visit(e) for e in node.slice.elts))
++        else:
++            return "%s[%s]" % (self.visit(node.value), self.visit(node.slice))
+ 
+     def visit_UnaryOp(self, node: ast.UnaryOp) -> str:
+         return "%s %s" % (self.visit(node.op), self.visit(node.operand))
+ 
+     def visit_Tuple(self, node: ast.Tuple) -> str:
+-        if node.elts:
+-            return ", ".join(self.visit(e) for e in node.elts)
+-        else:
++        if len(node.elts) == 0:
+             return "()"
++        elif len(node.elts) == 1:
++            return "(" + self.visit(node.elts[0]) + ",)"
++        else:
++            return "(" + ", ".join(self.visit(e) for e in node.elts) + ")"
+ 
+     if sys.version_info >= (3, 6):
+         def visit_Constant(self, node: ast.Constant) -> str:
+diff --git a/tests/test_pycode_ast.py b/tests/test_pycode_ast.py
+index 9b12d24d5..61f6c5b8d 100644
+--- a/tests/test_pycode_ast.py
++++ b/tests/test_pycode_ast.py
+@@ -53,7 +53,7 @@ from sphinx.pycode import ast
+     ("+ a", "+ a"),                             # UAdd
+     ("- 1", "- 1"),                             # UnaryOp
+     ("- a", "- a"),                             # USub
+-    ("(1, 2, 3)", "1, 2, 3"),                   # Tuple
++    ("(1, 2, 3)", "(1, 2, 3)"),                 # Tuple
+     ("()", "()"),                               # Tuple (empty)
+ ])
+ def test_unparse(source, expected):

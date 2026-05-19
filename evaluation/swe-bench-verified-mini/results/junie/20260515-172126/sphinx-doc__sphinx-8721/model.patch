@@ -1,0 +1,51 @@
+diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py
+index a7d52a91c..c84c66e41 100644
+--- a/sphinx/ext/viewcode.py
++++ b/sphinx/ext/viewcode.py
+@@ -54,10 +54,10 @@ def doctree_read(app: Sphinx, doctree: Node) -> None:
+     env = app.builder.env
+     if not hasattr(env, '_viewcode_modules'):
+         env._viewcode_modules = {}  # type: ignore
+-    if app.builder.name == "singlehtml":
+-        return
+     if app.builder.name.startswith("epub") and not env.config.viewcode_enable_epub:
+         return
++    if app.builder.name == "singlehtml":
++        return
+ 
+     def has_tag(modname: str, fullname: str, docname: str, refname: str) -> bool:
+         entry = env._viewcode_modules.get(modname, None)  # type: ignore
+@@ -116,7 +116,10 @@ def doctree_read(app: Sphinx, doctree: Node) -> None:
+             names.add(fullname)
+             pagename = posixpath.join(OUTPUT_DIRNAME, modname.replace('.', '/'))
+             inline = nodes.inline('', _('[source]'), classes=['viewcode-link'])
+-            onlynode = addnodes.only(expr='html')
++            if env.config.viewcode_enable_epub:
++                onlynode = addnodes.only(expr='html')
++            else:
++                onlynode = addnodes.only(expr='html and not epub')
+             onlynode += addnodes.pending_xref('', inline, reftype='viewcode', refdomain='std',
+                                               refexplicit=False, reftarget=pagename,
+                                               refid=fullname, refdoc=env.docname)
+@@ -138,6 +141,10 @@ def missing_reference(app: Sphinx, env: BuildEnvironment, node: Element, contnod
+                       ) -> Optional[Node]:
+     # resolve our "viewcode" reference nodes -- they need special treatment
+     if node['reftype'] == 'viewcode':
++        if app.builder.name.startswith("epub") and not env.config.viewcode_enable_epub:
++            return None
++        if app.builder.name == "singlehtml":
++            return None
+         return make_refnode(app.builder, node['refdoc'], node['reftarget'],
+                             node['refid'], contnode)
+ 
+@@ -182,6 +189,10 @@ def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], Non
+     env = app.builder.env
+     if not hasattr(env, '_viewcode_modules'):
+         return
++    if app.builder.name.startswith("epub") and not env.config.viewcode_enable_epub:
++        return
++    if app.builder.name == "singlehtml":
++        return
+     highlighter = app.builder.highlighter  # type: ignore
+     urito = app.builder.get_relative_uri
+ 

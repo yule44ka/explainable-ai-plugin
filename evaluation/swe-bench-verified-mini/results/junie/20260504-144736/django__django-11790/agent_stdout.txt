@@ -1,0 +1,15 @@
+Cannot find authorization. Please authenticate before running Junie.
+
+To authenticate, you can:
+
+1. Run Junie in interactive mode to set up authentication:
+   junie
+
+2. Use the --auth flag with your API key:
+   junie --auth your_api_key
+
+3. Set your API key using the JUNIE_API_KEY environment variable:
+   export JUNIE_API_KEY=your_api_key
+
+Visit https://junie.jetbrains.com/cli to generate an API key.
+

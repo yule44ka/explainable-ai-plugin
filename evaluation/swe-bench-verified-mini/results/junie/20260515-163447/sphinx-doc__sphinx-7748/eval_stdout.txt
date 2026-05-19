@@ -1,0 +1,136 @@
+FF............                                                           [100%]
+=================================== FAILURES ===================================
+_____________ test_autoclass_content_and_docstring_signature_init ______________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_autoclass_content_and_docstring_signature_init(app):
+        app.config.autoclass_content = 'init'
+        options = {"members": None,
+                   "undoc-members": None}
+        actual = do_autodoc(app, 'module', 'target.docstring_signature', options)
+>       assert list(actual) == [
+            '',
+            '.. py:module:: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: A(foo, bar)',
+            '   :module: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: B(foo, bar, baz)',
+            '   :module: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: C(foo, bar, baz)',
+            '   :module: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: D(foo, bar, baz)',
+            '   :module: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: E(foo: int, bar: int, baz: int) -> None',
+            '              E(foo: str, bar: str, baz: str) -> None',
+            '   :module: target.docstring_signature',
+            ''
+        ]
+E       AssertionError: assert ['', '.. py:m...gnature', ...] == ['', '.. py:m...gnature', ...]
+E         
+E         At index 20 diff: '.. py:class:: E(foo: int, bar: int, baz: int) -> None \\' != '.. py:class:: E(foo: int, bar: int, baz: int) -> None'
+E         Use -v to get more diff
+
+tests/test_ext_autodoc_configs.py:363: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-169/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-169/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v3.1.0+/9988d5ce2[39;49;00m
+
+# warning: 
+
+_____________ test_autoclass_content_and_docstring_signature_both ______________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_autoclass_content_and_docstring_signature_both(app):
+        app.config.autoclass_content = 'both'
+        options = {"members": None,
+                   "undoc-members": None}
+        actual = do_autodoc(app, 'module', 'target.docstring_signature', options)
+>       assert list(actual) == [
+            '',
+            '.. py:module:: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: A(foo, bar)',
+            '   :module: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: B(foo, bar)',
+            '   :module: target.docstring_signature',
+            '',
+            '   B(foo, bar, baz)',
+            '',
+            '',
+            '.. py:class:: C(foo, bar)',
+            '   :module: target.docstring_signature',
+            '',
+            '   C(foo, bar, baz)',
+            '',
+            '',
+            '.. py:class:: D(foo, bar, baz)',
+            '   :module: target.docstring_signature',
+            '',
+            '',
+            '.. py:class:: E(foo: int, bar: int, baz: int) -> None',
+            '              E(foo: str, bar: str, baz: str) -> None',
+            '   :module: target.docstring_signature',
+            '',
+        ]
+E       AssertionError: assert ['', '.. py:m...gnature', ...] == ['', '.. py:m...gnature', ...]
+E         
+E         At index 24 diff: '.. py:class:: E(foo: int, bar: int, baz: int) -> None \\' != '.. py:class:: E(foo: int, bar: int, baz: int) -> None'
+E         Use -v to get more diff
+
+tests/test_ext_autodoc_configs.py:397: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-169/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-169/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v3.1.0+/9988d5ce2[39;49;00m
+
+# warning: 
+
+=============================== warnings summary ===============================
+sphinx/util/rst.py:58
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-7748/sphinx-doc__sphinx/sphinx/util/rst.py:58: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+sphinx/jinja2glue.py:106
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-7748/sphinx-doc__sphinx/sphinx/jinja2glue.py:106: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    def warning(context: Dict, message: str, *args: Any, **kwargs: Any) -> str:
+
+tests/test_ext_autodoc_configs.py::test_autoclass_content_and_docstring_signature_init
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+tests/test_ext_autodoc_configs.py: 13 warnings
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-7748/sphinx-doc__sphinx/sphinx/jinja2glue.py:184: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    self.environment.globals['debug'] = contextfunction(pformat)
+
+tests/test_ext_autodoc_configs.py: 13 warnings
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-7748/sphinx-doc__sphinx/sphinx/jinja2glue.py:186: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    self.environment.globals['accesskey'] = contextfunction(accesskey)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_ext_autodoc_configs.py::test_autoclass_content_and_docstring_signature_init
+FAILED tests/test_ext_autodoc_configs.py::test_autoclass_content_and_docstring_signature_both
+2 failed, 12 passed, 29 warnings in 1.52s

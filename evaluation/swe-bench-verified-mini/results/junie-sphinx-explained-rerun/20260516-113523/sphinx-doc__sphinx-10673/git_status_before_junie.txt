@@ -1,0 +1,13 @@
+ M sphinx/builders/xml.py
+ M sphinx/directives/other.py
+ M sphinx/environment/adapters/toctree.py
+ M sphinx/environment/collectors/toctree.py
+ M tests/roots/test-apidoc-pep420/a/b/c/d.py
+ M tests/roots/test-apidoc-subpackage-in-toc/parent/__init__.py
+ M tests/roots/test-build-html-translator/conf.py
+ M tests/roots/test-config/conf.py
+ M tests/roots/test-ext-autodoc/target/callable.py
+ M tests/roots/test-ext-intersphinx-cppdomain/conf.py
+ M tests/roots/test-inheritance/dummy/__init__.py
+ M tests/roots/test-markup-rubric/conf.py
+ M tests/test_ext_autodoc_autoproperty.py

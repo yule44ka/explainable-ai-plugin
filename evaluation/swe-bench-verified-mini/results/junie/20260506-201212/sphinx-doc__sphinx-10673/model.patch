@@ -1,0 +1,109 @@
+diff --git a/sphinx/deprecation.py b/sphinx/deprecation.py
+index 969533c8b..394c4a037 100644
+--- a/sphinx/deprecation.py
++++ b/sphinx/deprecation.py
+@@ -6,6 +6,14 @@ from importlib import import_module
+ from typing import Any, Dict, Type
+ 
+ 
++class RemovedInSphinx40Warning(DeprecationWarning):
++    pass
++
++
++class RemovedInSphinx50Warning(DeprecationWarning):
++    pass
++
++
+ class RemovedInSphinx60Warning(DeprecationWarning):
+     pass
+ 
+diff --git a/sphinx/directives/other.py b/sphinx/directives/other.py
+index 35e16e623..fef05cd87 100644
+--- a/sphinx/directives/other.py
++++ b/sphinx/directives/other.py
+@@ -116,7 +116,7 @@ class TocTree(SphinxDirective):
+                         break
+                 # absolutize filenames
+                 docname = docname_join(self.env.docname, docname)
+-                if url_re.match(ref) or ref == 'self':
++                if url_re.match(ref) or ref in ('self', 'genindex', 'modindex', 'search'):
+                     toctree['entries'].append((title, ref))
+                 elif docname not in self.env.found_docs:
+                     if excluded(self.env.doc2path(docname, False)):
+diff --git a/sphinx/environment/adapters/toctree.py b/sphinx/environment/adapters/toctree.py
+index 9678e3c7c..bc6ffc244 100644
+--- a/sphinx/environment/adapters/toctree.py
++++ b/sphinx/environment/adapters/toctree.py
+@@ -6,7 +6,7 @@ from docutils import nodes
+ from docutils.nodes import Element, Node
+ 
+ from sphinx import addnodes
+-from sphinx.locale import __
++from sphinx.locale import _, __
+ from sphinx.util import logging, url_re
+ from sphinx.util.matching import Matcher
+ from sphinx.util.nodes import clean_astext, process_only_nodes
+@@ -139,6 +139,22 @@ class TocTree:
+                         item = nodes.list_item('', para)
+                         # don't show subitems
+                         toc = nodes.bullet_list('', item)
++                    elif ref in ('genindex', 'modindex', 'search'):
++                        if title is None:
++                            if ref == 'genindex':
++                                title = _('Index')
++                            elif ref == 'modindex':
++                                title = _('Module Index')
++                            elif ref == 'search':
++                                title = _('Search Page')
++                        reference = nodes.reference('', '', internal=True,
++                                                    refuri=ref,
++                                                    anchorname='',
++                                                    *[nodes.Text(title)])
++                        para = addnodes.compact_paragraph('', '', reference)
++                        item = nodes.list_item('', para)
++                        # don't show subitems
++                        toc = nodes.bullet_list('', item)
+                     else:
+                         if ref in parents:
+                             logger.warning(__('circular toctree references '
+diff --git a/sphinx/util/images.py b/sphinx/util/images.py
+index 2def252f4..939e230ae 100644
+--- a/sphinx/util/images.py
++++ b/sphinx/util/images.py
+@@ -1,7 +1,10 @@
+ """Image utility functions for Sphinx."""
+ 
+ import base64
+-import imghdr
++try:
++    import imghdr
++except ImportError:
++    imghdr = None  # type: ignore
+ from collections import OrderedDict
+ from os import path
+ from typing import IO, BinaryIO, NamedTuple, Optional, Tuple
+@@ -48,11 +51,12 @@ def get_image_size(filename: str) -> Optional[Tuple[int, int]]:
+ 
+ 
+ def guess_mimetype_for_stream(stream: IO, default: Optional[str] = None) -> Optional[str]:
+-    imgtype = imghdr.what(stream)
+-    if imgtype:
+-        return 'image/' + imgtype
+-    else:
+-        return default
++    if imghdr:
++        imgtype = imghdr.what(stream)
++        if imgtype:
++            return 'image/' + imgtype
++
++    return default
+ 
+ 
+ def guess_mimetype(filename: str = '', default: Optional[str] = None) -> Optional[str]:
+@@ -108,4 +112,5 @@ def test_svg(h: bytes, f: Optional[BinaryIO]) -> Optional[str]:
+ 
+ # install test_svg() to imghdr
+ # refs: https://docs.python.org/3.6/library/imghdr.html#imghdr.tests
+-imghdr.tests.append(test_svg)
++if imghdr:
++    imghdr.tests.append(test_svg)

@@ -1,0 +1,21 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_descending_columns_list_sql (indexes.tests.SchemaIndexesTests) ... ok
+test_columns_list_sql (indexes.tests.SchemaIndexesTests) ... ok
+test_index_name (indexes.tests.SchemaIndexesTests)
+Index names on the built-in database backends:: ... ok
+test_index_name_hash (indexes.tests.SchemaIndexesTests)
+Index names should be deterministic. ... ok
+test_index_together (indexes.tests.SchemaIndexesTests) ... ok
+test_index_together_single_list (indexes.tests.SchemaIndexesTests) ... ok
+test_create_index_ignores_opclasses (indexes.tests.SchemaIndexesNotPostgreSQLTests) ... ok
+test_boolean_restriction_partial (indexes.tests.PartialIndexTests) ... ok
+test_integer_restriction_partial (indexes.tests.PartialIndexTests) ... ok
+test_is_null_condition (indexes.tests.PartialIndexTests) ... ok
+test_multiple_conditions (indexes.tests.PartialIndexTests) ... ok
+test_partial_index (indexes.tests.PartialIndexTests) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.046s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

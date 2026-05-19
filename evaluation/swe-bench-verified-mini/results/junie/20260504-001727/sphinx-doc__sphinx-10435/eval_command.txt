@@ -1,0 +1,1 @@
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m pytest -q tests/test_build_latex.py::test_latex_code_role

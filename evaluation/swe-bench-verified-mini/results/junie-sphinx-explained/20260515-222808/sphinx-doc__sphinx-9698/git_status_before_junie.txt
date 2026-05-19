@@ -1,0 +1,11 @@
+ M setup.py
+ M sphinx/application.py
+ M sphinx/domains/python.py
+ M sphinx/testing/__init__.py
+ M sphinx/writers/xml.py
+ M tests/roots/test-build-html-translator/conf.py
+ M tests/roots/test-ext-autodoc/target/partialfunction.py
+ M tests/roots/test-ext-inheritance_diagram/conf.py
+ M tests/roots/test-ext-math-simple/conf.py
+ M tests/roots/test-extensions/read_parallel.py
+ M tests/roots/test-pycode/cp_1251_coded.py

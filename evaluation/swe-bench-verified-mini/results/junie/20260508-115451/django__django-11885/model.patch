@@ -1,0 +1,38 @@
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index bf80edc56c..9332b3a67a 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -221,6 +221,7 @@ class Collector:
+         if collect_related:
+             if keep_parents:
+                 parents = set(model._meta.get_parent_list())
++            fast_deletes = {}
+             for related in get_candidate_relations_to_delete(model._meta):
+                 # Preserve parent reverse relationships if keep_parents=True.
+                 if keep_parents and related.model in parents:
+@@ -229,10 +230,14 @@ class Collector:
+                 if field.remote_field.on_delete == DO_NOTHING:
+                     continue
+                 batches = self.get_del_batches(new_objs, field)
+-                for batch in batches:
++                for i, batch in enumerate(batches):
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        key = (sub_objs.model, i)
++                        if key in fast_deletes:
++                            fast_deletes[key] |= sub_objs
++                        else:
++                            fast_deletes[key] = sub_objs
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -250,6 +255,8 @@ class Collector:
+                             sub_objs = sub_objs.only(*tuple(referenced_fields))
+                         if sub_objs:
+                             field.remote_field.on_delete(self, field, sub_objs, self.using)
++            for qs in fast_deletes.values():
++                self.fast_deletes.append(qs)
+             for field in model._meta.private_fields:
+                 if hasattr(field, 'bulk_related_objects'):
+                     # It's something like generic foreign key.

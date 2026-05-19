@@ -1,0 +1,2 @@
+tests/roots/test-linkcheck/links.txt
+tests/test_build_linkcheck.py

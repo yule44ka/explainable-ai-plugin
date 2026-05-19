@@ -1,0 +1,36 @@
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[(1,
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[a
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[1
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[{'key1':
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[Tuple[int,
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[~
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[lambda
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[[1,
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[not
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[{1,
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[+
+(no match in any of [<Module test_pycode_ast.py>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-8265/sphinx-doc__sphinx/tests/test_pycode_ast.py::test_unparse[-
+(no match in any of [<Module test_pycode_ast.py>])
+

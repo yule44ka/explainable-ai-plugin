@@ -1,0 +1,1 @@
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m pytest -q tests/test_ext_viewcode.py::test_viewcode_epub_default tests/test_ext_viewcode.py::test_viewcode_epub_enabled tests/test_ext_viewcode.py::test_linkcode tests/test_ext_viewcode.py::test_local_source_files

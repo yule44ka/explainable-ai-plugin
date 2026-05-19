@@ -1,0 +1,11 @@
+ M sphinx/builders/html/__init__.py
+ M sphinx/io.py
+ M sphinx/util/console.py
+ M sphinx/util/docfields.py
+ M sphinx/util/math.py
+ M tests/roots/test-add_source_parser-conflicts-with-users-setting/source_parser.py
+ M tests/roots/test-builder-gettext-dont-rebuild-mo/conf.py
+ M tests/roots/test-ext-coverage/coverage_ignored.py
+ M tests/test_build_epub.py
+ M tests/test_ext_napoleon_iterators.py
+ M tests/test_util_inspect.py

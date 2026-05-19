@@ -1,0 +1,10 @@
+Authenticated successfully
+[38;5;78m●[0m [1mFound "_delete_composed_index" in django/db/backends/base/schema.py[0m
+[38;5;247mdjango/db/backends/base/schema.py [378—382][0m
+[38;5;247mdjango/db/backends/base/schema.py [394—398][0m
+[38;5;247mdjango/db/backends/base/schema.py [400—404][0m
+[38;5;78m●[0m [1mOpened file[0m
+[38;5;247mdjango/db/backends/base/schema.py [402 - 502][0m
+[38;5;247mThe schema.py file in the database backend was opened and its code related to index and foreign key constraint handling was accessed.[0m
+[38;5;78m●[0m [1mFound "def _constraint_names" in django/db/backends/base/schema.py[0m
+[38;5;247mdjango/db/backends/base/schema.py [1140—1144][0m

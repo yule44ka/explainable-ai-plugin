@@ -1,0 +1,11 @@
+ M sphinx/builders/latex/__init__.py
+ M sphinx/builders/linkcheck.py
+ M sphinx/domains/javascript.py
+ M tests/roots/test-apidoc-trailing-underscore/package_/__init__.py
+ M tests/roots/test-circular/conf.py
+ M tests/roots/test-ext-autodoc/conf.py
+ M tests/roots/test-ext-autodoc/target/imported_members.py
+ M tests/roots/test-ext-autodoc/target/inheritance.py
+ M tests/test_build_epub.py
+ M tests/test_domain_std.py
+ M utils/checks.py

@@ -1,0 +1,9 @@
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8056/sphinx-doc__sphinx/tests/test_ext_napoleon_docstring.py::TestNumpyDocstring::test_escape_args_and_kwargs[x,
+(no match in any of [<Class TestNumpyDocstring>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8056/sphinx-doc__sphinx/tests/test_ext_napoleon_docstring.py::TestNumpyDocstring::test_escape_args_and_kwargs[*args,
+(no match in any of [<Class TestNumpyDocstring>])
+
+ERROR: not found: /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8056/sphinx-doc__sphinx/tests/test_ext_napoleon_docstring.py::TestNumpyDocstring::test_escape_args_and_kwargs[*x,
+(no match in any of [<Class TestNumpyDocstring>])
+

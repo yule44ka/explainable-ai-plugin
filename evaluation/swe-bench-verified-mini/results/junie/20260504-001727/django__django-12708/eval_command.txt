@@ -1,0 +1,1 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/django39/bin/python tests/runtests.py --verbosity=2 migrations.test_operations.OperationTests.test_alter_index_together_remove_with_unique_together

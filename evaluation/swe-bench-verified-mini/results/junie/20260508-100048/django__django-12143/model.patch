@@ -1,0 +1,199 @@
+diff --git a/django/conf/locale/eu/formats.py b/django/conf/locale/eu/formats.py
+index 33e6305352..4fe9d5a499 100644
+--- a/django/conf/locale/eu/formats.py
++++ b/django/conf/locale/eu/formats.py
+@@ -1,3 +1,4 @@
++# Configures date and time formatting strings for the Basque locale.
+ # This file is distributed under the same license as the Django package.
+ #
+ # The *_FORMAT strings use the Django date format syntax,
+@@ -16,6 +17,7 @@ FIRST_DAY_OF_WEEK = 1  # Astelehena
+ # DATE_INPUT_FORMATS =
+ # TIME_INPUT_FORMATS =
+ # DATETIME_INPUT_FORMATS =
++# Configures number formatting separators (`DECIMAL_SEPARATOR`, `THOUSAND_SEPARATOR`) and `NUMBER_GROUPING`.
+ DECIMAL_SEPARATOR = ','
+ THOUSAND_SEPARATOR = '.'
+ NUMBER_GROUPING = 3
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+index 137e6faa0f..d5acb5d5f6 100644
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -96,6 +96,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
+ csrf_protect_m = method_decorator(csrf_protect)
+ 
+ 
++# Implements `BaseModelAdmin` to provide shared admin configuration like `autocomplete_fields`, `list_display`, and `readonly_fields`.
+ class BaseModelAdmin(metaclass=forms.MediaDefiningClass):
+     """Functionality common to both ModelAdmin and InlineAdmin."""
+ 
+@@ -128,6 +129,7 @@ class BaseModelAdmin(metaclass=forms.MediaDefiningClass):
+             overrides.setdefault(k, {}).update(v)
+         self.formfield_overrides = overrides
+ 
++    # Manages form field creation via `formfield_for_dbfield`, utilizing `formfield_overrides` and specific logic for relationships.
+     def formfield_for_dbfield(self, db_field, request, **kwargs):
+         """
+         Hook for specifying the form Field instance for a given database Field
+@@ -464,6 +466,7 @@ class BaseModelAdmin(metaclass=forms.MediaDefiningClass):
+ 
+         return False
+ 
++    # Manages permissions (`has_add_permission`, `has_change_permission`, etc.) for object-level and module-level access.
+     def has_add_permission(self, request):
+         """
+         Return True if the given request has permission to add an object.
+@@ -539,6 +542,7 @@ class BaseModelAdmin(metaclass=forms.MediaDefiningClass):
+         return request.user.has_module_perms(self.opts.app_label)
+ 
+ 
++# Defines the `ModelAdmin` class to encapsulate all admin options, templates, and functionality for a specific model.
+ class ModelAdmin(BaseModelAdmin):
+     """Encapsulate all admin options and functionality for a given model."""
+ 
+@@ -599,6 +603,7 @@ class ModelAdmin(BaseModelAdmin):
+ 
+         return inline_instances
+ 
++    # Configures custom templates and admin URLs for changelist, add, change, history, and delete operations.
+     def get_urls(self):
+         from django.urls import path
+ 
+@@ -658,6 +663,7 @@ class ModelAdmin(BaseModelAdmin):
+     def _get_form_for_get_fields(self, request, obj):
+         return self.get_form(request, obj, fields=None)
+ 
++    # Provides infrastructure for constructing forms and formsets, including `get_form`, `get_changelist_form`, and `_create_formsets`.
+     def get_form(self, request, obj=None, change=False, **kwargs):
+         """
+         Return a Form class for use in the admin add view. This is used by
+@@ -793,6 +799,7 @@ class ModelAdmin(BaseModelAdmin):
+     def get_paginator(self, request, queryset, per_page, orphans=0, allow_empty_first_page=True):
+         return self.paginator(queryset, per_page, orphans, allow_empty_first_page)
+ 
++    # Manages object lifecycle logging (`log_addition`, `log_change`, `log_deletion`) for admin audit trails.
+     def log_addition(self, request, object, message):
+         """
+         Log that an object has been successfully added.
+@@ -1509,6 +1516,7 @@ class ModelAdmin(BaseModelAdmin):
+         url = reverse('admin:index', current_app=self.admin_site.name)
+         return HttpResponseRedirect(url)
+ 
++    # Coordinates the changeform view lifecycle, rendering forms, validating data, and handling saving, in `changeform_view`.
+     @csrf_protect_m
+     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+         with transaction.atomic(using=router.db_for_write(self.model)):
+@@ -1651,6 +1659,7 @@ class ModelAdmin(BaseModelAdmin):
+         return queryset.filter(pk__in=object_pks)
+ 
+     @csrf_protect_m
++    # Handles changelist view logic, including pagination, filtering, searching (`get_search_results`), and actions.
+     def changelist_view(self, request, extra_context=None):
+         """
+         The 'change list' admin view for this model.
+@@ -1960,6 +1969,7 @@ class ModelAdmin(BaseModelAdmin):
+         return formsets, inline_instances
+ 
+ 
++# Implements `InlineModelAdmin` for managing related models in an inline interface, including handling of `fk_name`, `extra`, and protected deletions.
+ class InlineModelAdmin(BaseModelAdmin):
+     """
+     Options for inline editing of ``model`` instances.
+diff --git a/django/contrib/auth/migrations/0007_alter_validators_add_error_messages.py b/django/contrib/auth/migrations/0007_alter_validators_add_error_messages.py
+index 42f5087730..0f955602eb 100644
+--- a/django/contrib/auth/migrations/0007_alter_validators_add_error_messages.py
++++ b/django/contrib/auth/migrations/0007_alter_validators_add_error_messages.py
+@@ -2,12 +2,14 @@ from django.contrib.auth import validators
+ from django.db import migrations, models
+ 
+ 
++# Defines a Django migration in `django.contrib.auth.migrations`.
+ class Migration(migrations.Migration):
+ 
+     dependencies = [
+         ('auth', '0006_require_contenttypes_0002'),
+     ]
+ 
++    # Modifies the `User` model's `username` field.
+     operations = [
+         migrations.AlterField(
+             model_name='user',
+diff --git a/django/contrib/gis/gdal/raster/source.py b/django/contrib/gis/gdal/raster/source.py
+index 05475434c4..cad5b63dcf 100644
+--- a/django/contrib/gis/gdal/raster/source.py
++++ b/django/contrib/gis/gdal/raster/source.py
+@@ -56,6 +56,7 @@ class TransformPoint(list):
+         self._raster.geotransform = gtf
+ 
+ 
++# Provides `GDALRaster` as a wrapper around GDAL's raster datasource, facilitating interaction with raster data.
+ class GDALRaster(GDALRasterBase):
+     """
+     Wrap a raster GDAL Data Source object.
+diff --git a/django/contrib/gis/utils/srs.py b/django/contrib/gis/utils/srs.py
+index b10cf263b3..9bcfdbc126 100644
+--- a/django/contrib/gis/utils/srs.py
++++ b/django/contrib/gis/utils/srs.py
+@@ -2,6 +2,7 @@ from django.contrib.gis.gdal import SpatialReference
+ from django.db import DEFAULT_DB_ALIAS, connections
+ 
+ 
++# Provides `add_srs_entry` for inserting spatial reference system (SRS) information into the database's `spatial_ref_sys` table.
+ def add_srs_entry(srs, auth_name='EPSG', auth_srid=None, ref_sys_name=None,
+                   database=None):
+     """
+diff --git a/django/core/files/__init__.py b/django/core/files/__init__.py
+index 58a6fd8f85..209b8b04d3 100644
+--- a/django/core/files/__init__.py
++++ b/django/core/files/__init__.py
+@@ -1,3 +1,6 @@
++# Serves as the package initialization for the `django.core.files` module.
++# • Imports the `File` class from `django.core.files.base` for ease of access.
+ from django.core.files.base import File
++# Defines `__all__` to explicitly expose `File` when importing the module.
+ 
+ __all__ = ['File']
+diff --git a/django/core/management/commands/flush.py b/django/core/management/commands/flush.py
+index e8ed3967f7..075ee30905 100644
+--- a/django/core/management/commands/flush.py
++++ b/django/core/management/commands/flush.py
+@@ -7,6 +7,7 @@ from django.core.management.sql import emit_post_migrate_signal, sql_flush
+ from django.db import DEFAULT_DB_ALIAS, connections
+ 
+ 
++# Defines a Django management command `flush` to clear all data from the database.
+ class Command(BaseCommand):
+     help = (
+         'Removes ALL DATA from the database, including data added during '
+diff --git a/django/core/serializers/json.py b/django/core/serializers/json.py
+index 5d35440a6c..508d964919 100644
+--- a/django/core/serializers/json.py
++++ b/django/core/serializers/json.py
+@@ -16,6 +16,7 @@ from django.utils.functional import Promise
+ from django.utils.timezone import is_aware
+ 
+ 
++# Implements a JSON serializer in `Serializer` class, extending `PythonSerializer`.
+ class Serializer(PythonSerializer):
+     """Convert a queryset to JSON."""
+     internal_use_only = False
+diff --git a/django/db/models/sql/where.py b/django/db/models/sql/where.py
+index bf0828dc8b..c95327dbce 100644
+--- a/django/db/models/sql/where.py
++++ b/django/db/models/sql/where.py
+@@ -11,6 +11,7 @@ AND = 'AND'
+ OR = 'OR'
+ 
+ 
++# Provides `WhereNode` as a recursive tree structure for SQL WHERE clauses, extending `tree.Node`.
+ class WhereNode(tree.Node):
+     """
+     An SQL WHERE clause.
+@@ -62,6 +63,7 @@ class WhereNode(tree.Node):
+         where_node = self.__class__(where_parts, self.connector, self.negated) if where_parts else None
+         return where_node, having_node
+ 
++    # Implements `as_sql` for compiling `WhereNode` into SQL string and parameter lists.
+     def as_sql(self, compiler, connection):
+         """
+         Return the SQL version of the where clause and the value to be

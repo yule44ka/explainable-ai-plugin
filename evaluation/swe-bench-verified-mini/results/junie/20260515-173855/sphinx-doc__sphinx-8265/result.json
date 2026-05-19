@@ -1,0 +1,16 @@
+{
+  "agent_seconds": 0.02,
+  "base_commit": "b428cd2404675475a5c3dc2a2b0790ba57676202",
+  "error": "",
+  "eval_returncode": 0,
+  "eval_seconds": 1.536,
+  "finished_at": "2026-05-15T14:39:00.484160+00:00",
+  "instance_id": "sphinx-doc__sphinx-8265",
+  "junie_returncode": "",
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-173855/sphinx-doc__sphinx-8265",
+  "repo": "sphinx-doc/sphinx",
+  "started_at": "2026-05-15T14:38:57.194360+00:00",
+  "status": "passed",
+  "success": true,
+  "total_seconds": 3.29
+}

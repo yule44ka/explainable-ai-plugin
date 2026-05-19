@@ -1,0 +1,106 @@
+F..................................                                      [100%]
+=================================== FAILURES ===================================
+___________________________ test_info_field_list_var ___________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    def test_info_field_list_var(app):
+        text = (".. py:class:: Class\n"
+                "\n"
+                "   :var int attr: blah blah\n")
+        doctree = restructuredtext.parse(app, text)
+    
+        assert_node(doctree, (addnodes.index,
+                              [desc, (desc_signature,
+                                      [desc_content, nodes.field_list, nodes.field])]))
+        assert_node(doctree[1][1][0][0], ([nodes.field_name, "Variables"],
+                                          [nodes.field_body, nodes.paragraph]))
+    
+        # :var int attr:
+>       assert_node(doctree[1][1][0][0][1][0],
+                    ([addnodes.literal_strong, "attr"],
+                     " (",
+                     [pending_xref, addnodes.literal_emphasis, "int"],
+                     ")",
+                     " -- ",
+                     "blah blah"))
+
+tests/test_domain_py.py:854: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/util.py:68: in assert_node
+    assert_node(node[i], nodecls, xpath=path, **kwargs)
+sphinx/testing/util.py:51: in assert_node
+    assert_node(node, cls[0], xpath=xpath, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+node = <pending_xref: <literal_strong...>>
+cls = <class 'sphinx.addnodes.literal_strong'>, xpath = '[0]', kwargs = {}
+
+    def assert_node(node: Node, cls: Any = None, xpath: str = "", **kwargs: Any) -> None:
+        if cls:
+            if isinstance(cls, list):
+                assert_node(node, cls[0], xpath=xpath, **kwargs)
+                if cls[1:]:
+                    if isinstance(cls[1], tuple):
+                        assert_node(node, cls[1], xpath=xpath, **kwargs)
+                    else:
+                        assert isinstance(node, nodes.Element), \
+                            'The node%s does not have any children' % xpath
+                        assert len(node) == 1, \
+                            'The node%s has %d child nodes, not one' % (xpath, len(node))
+                        assert_node(node[0], cls[1:], xpath=xpath + "[0]", **kwargs)
+            elif isinstance(cls, tuple):
+                assert isinstance(node, (list, nodes.Element)), \
+                    'The node%s does not have any items' % xpath
+                assert len(node) == len(cls), \
+                    'The node%s has %d child nodes, not %r' % (xpath, len(node), len(cls))
+                for i, nodecls in enumerate(cls):
+                    path = xpath + "[%d]" % i
+                    assert_node(node[i], nodecls, xpath=path, **kwargs)
+            elif isinstance(cls, str):
+                assert node == cls, 'The node %r is not %r: %r' % (xpath, cls, node)
+            else:
+>               assert isinstance(node, cls), \
+                    'The node%s is not subclass of %r: %r' % (xpath, cls, node)
+E               AssertionError: The node[0] is not subclass of <class 'sphinx.addnodes.literal_strong'>: <pending_xref: <literal_strong...>>
+
+sphinx/testing/util.py:72: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-177/root
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-177/root/_build/html
+# status: 
+[01mRunning Sphinx v4.0.0+/4b452338f[39;49;00m
+
+# warning: 
+
+=============================== warnings summary ===============================
+sphinx/util/smartypants.py:37
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8638/sphinx-doc__sphinx/sphinx/util/smartypants.py:37: RemovedInSphinx60Warning: sphinx.util.smartypants is deprecated.
+    warnings.warn('sphinx.util.smartypants is deprecated.',
+
+sphinx/util/rst.py:56
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8638/sphinx-doc__sphinx/sphinx/util/rst.py:56: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+tests/test_domain_py.py::test_info_field_list_var
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8638/sphinx-doc__sphinx/sphinx/jinja2glue.py:105: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    def warning(context: Dict, message: str, *args: Any, **kwargs: Any) -> str:
+
+tests/test_domain_py.py::test_info_field_list_var
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+tests/test_domain_py.py: 29 warnings
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8638/sphinx-doc__sphinx/sphinx/jinja2glue.py:183: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    self.environment.globals['debug'] = contextfunction(pformat)
+
+tests/test_domain_py.py: 29 warnings
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8638/sphinx-doc__sphinx/sphinx/jinja2glue.py:185: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    self.environment.globals['accesskey'] = contextfunction(accesskey)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_domain_py.py::test_info_field_list_var - AssertionError: Th...
+1 failed, 34 passed, 62 warnings in 1.57s

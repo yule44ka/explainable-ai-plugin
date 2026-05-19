@@ -1,0 +1,48 @@
+diff --git a/sphinx/util/docfields.py b/sphinx/util/docfields.py
+index 56517f1e3..cd29bc22d 100644
+--- a/sphinx/util/docfields.py
++++ b/sphinx/util/docfields.py
+@@ -304,7 +304,8 @@ class DocFieldTransformer:
+             # also support syntax like ``:param type name:``
+             if typedesc.is_typed:
+                 try:
+-                    argtype, argname = fieldarg.split(None, 1)
++                    # use rsplit() to allow types with spaces (e.g. dict(str, str))
++                    argtype, argname = fieldarg.rsplit(None, 1)
+                 except ValueError:
+                     pass
+                 else:
+diff --git a/sphinx/util/images.py b/sphinx/util/images.py
+index a2a31f55b..ad6e494b4 100644
+--- a/sphinx/util/images.py
++++ b/sphinx/util/images.py
+@@ -9,7 +9,15 @@
+ """
+ 
+ import base64
+-import imghdr
++try:
++    import imghdr
++except ImportError:
++    # Python 3.13+
++    class imghdr:  # type: ignore
++        @staticmethod
++        def what(stream, h=None):
++            return None
++        tests = []
+ from collections import OrderedDict
+ from os import path
+ from typing import IO, BinaryIO, NamedTuple, Optional, Tuple
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index af6edcae0..e47b0af36 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -34,7 +34,7 @@ else:
+             return ref._eval_type(globalns, localns)
+ 
+ if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++    from types import UnionType as types_Union
+ else:
+     types_Union = None
+ 

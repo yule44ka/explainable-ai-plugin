@@ -1,0 +1,3 @@
+Unstaged changes after reset:
+M	sphinx/directives/other.py
+M	sphinx/environment/adapters/toctree.py

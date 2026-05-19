@@ -1,0 +1,95 @@
+diff --git a/sphinx/deprecation.py b/sphinx/deprecation.py
+index 8a242d7da..82b3cb3b7 100644
+--- a/sphinx/deprecation.py
++++ b/sphinx/deprecation.py
+@@ -5,6 +5,22 @@ from __future__ import annotations
+ import warnings
+ 
+ 
++class RemovedInSphinx40Warning(DeprecationWarning):
++    pass
++
++
++class RemovedInSphinx50Warning(DeprecationWarning):
++    pass
++
++
++class RemovedInSphinx60Warning(DeprecationWarning):
++    pass
++
++
++class RemovedInSphinx70Warning(DeprecationWarning):
++    pass
++
++
+ class RemovedInSphinx80Warning(DeprecationWarning):
+     pass
+ 
+diff --git a/sphinx/directives/code.py b/sphinx/directives/code.py
+index 8de166137..d58a0bbb4 100644
+--- a/sphinx/directives/code.py
++++ b/sphinx/directives/code.py
+@@ -195,6 +195,8 @@ class LiteralIncludeReader:
+     def __init__(self, filename: str, options: dict[str, Any], config: Config) -> None:
+         self.filename = filename
+         self.options = options
++        self.config = config
++        self.env: BuildEnvironment | None = None
+         self.encoding = options.get('encoding', config.source_encoding)
+         self.lineno_start = self.options.get('lineno-start', 1)
+ 
+@@ -215,6 +217,15 @@ class LiteralIncludeReader:
+                 if 'tab-width' in self.options:
+                     text = text.expandtabs(self.options['tab-width'])
+ 
++                # emit "source-read" event
++                if self.env:
++                    docname = self.env.path2doc(filename)
++                    if docname is None:
++                        docname = self.env.project.relpath(filename)
++                    arg = [text]
++                    self.env.events.emit('source-read', docname, arg)
++                    text = arg[0]
++
+                 return text.splitlines(True)
+         except OSError as exc:
+             raise OSError(__('Include file %r not found or reading it failed') %
+@@ -433,6 +444,7 @@ class LiteralInclude(SphinxDirective):
+             self.env.note_dependency(rel_filename)
+ 
+             reader = LiteralIncludeReader(filename, self.options, self.config)
++            reader.env = self.env
+             text, lines = reader.read(location=location)
+ 
+             retnode: Element = nodes.literal_block(text, text, source=filename)
+diff --git a/sphinx/directives/other.py b/sphinx/directives/other.py
+index 19f7c0a8d..eed03c9fc 100644
+--- a/sphinx/directives/other.py
++++ b/sphinx/directives/other.py
+@@ -376,7 +376,25 @@ class Include(BaseInclude, SphinxDirective):
+         rel_filename, filename = self.env.relfn2path(self.arguments[0])
+         self.arguments[0] = filename
+         self.env.note_included(filename)
+-        return super().run()
++
++        from docutils import io
++        _FileInput = io.FileInput
++
++        class SphinxFileInput(_FileInput):
++            def read(_self) -> str:
++                content = super().read()
++                docname = self.env.path2doc(_self.source_path)
++                if docname is None:
++                    docname = self.env.project.relpath(_self.source_path)
++                arg = [content]
++                self.env.events.emit('source-read', docname, arg)
++                return arg[0]
++
++        io.FileInput = SphinxFileInput
++        try:
++            return super().run()
++        finally:
++            io.FileInput = _FileInput
+ 
+ 
+ def setup(app: Sphinx) -> dict[str, Any]:

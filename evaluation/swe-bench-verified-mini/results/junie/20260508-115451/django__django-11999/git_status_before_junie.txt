@@ -1,0 +1,11 @@
+ M django/conf/locale/cy/formats.py
+ M django/contrib/auth/backends.py
+ M django/contrib/contenttypes/admin.py
+ M django/contrib/contenttypes/migrations/0002_remove_content_type_name.py
+ M django/contrib/gis/db/backends/postgis/features.py
+ M django/contrib/gis/db/models/functions.py
+ M django/contrib/messages/views.py
+ M django/core/mail/backends/smtp.py
+ M django/db/models/fields/__init__.py
+ M django/urls/base.py
+ M django/utils/functional.py

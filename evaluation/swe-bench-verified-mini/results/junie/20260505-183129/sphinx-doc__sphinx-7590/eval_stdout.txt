@@ -1,0 +1,1312 @@
+F...............EEEEEEEEE                                                [100%]
+==================================== ERRORS ====================================
+__________ ERROR at setup of test_build_domain_cpp_multi_decl_lookup ___________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10731bcd0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10731baf0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10731baf0>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'nitpicky': True}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107241430>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10731b400>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10731bcd0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10731baf0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+__ ERROR at setup of test_build_domain_cpp_warn_template_param_qualified_name __
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107ce1940>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107bbf220>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107bbf220>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'nitpicky': True}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107c88c10>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107bbf0d0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107ce1940>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107bbf220>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+_____________ ERROR at setup of test_build_domain_cpp_backslash_ok _____________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107e6f040>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107099bb0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107099bb0>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'nitpicky': True, 'strip_signature_backslash': True}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107c93700>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107099700>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107e6f040>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107099bb0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+______________ ERROR at setup of test_build_domain_cpp_semicolon _______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10728f9a0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10728fb80>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10728fb80>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'nitpicky': True}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107d168b0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x10728fdc0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10728f9a0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10728fb80>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+____________ ERROR at setup of test_build_domain_cpp_anon_dup_decl _____________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107ca0340>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107ca08b0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107ca08b0>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'nitpicky': True}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107e491f0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107ca0cd0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107ca0340>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107ca08b0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+___________ ERROR at setup of test_build_domain_cpp_misuse_of_roles ____________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107c54d90>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107c549a0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107c549a0>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107d2a550>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107c54fa0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107c54d90>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107c549a0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+_ ERROR at setup of test_build_domain_cpp_with_add_function_parentheses_is_True _
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107e44160>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107e44310>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107e44310>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'add_function_parentheses': True}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107c770d0>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107e44970>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107e44160>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107e44310>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+_ ERROR at setup of test_build_domain_cpp_with_add_function_parentheses_is_False _
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107b6e550>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107b6e8b0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107b6e8b0>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'confoverrides': {'add_function_parentheses': False}, 'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107d16790>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107b46fd0>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107b6e550>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107b6e8b0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+___________________ ERROR at setup of test_xref_consistency ____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107b8ff10>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107b8fee0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+>                   metadata = setup(app)
+
+sphinx/registry.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:240: in setup
+    app.require_sphinx('5.0')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107b8fee0>
+version = '5.0'
+
+    def require_sphinx(self, version: str) -> None:
+        """Check the Sphinx version if requested.
+    
+        Compare *version* (which must be a ``major.minor`` version string, e.g.
+        ``'1.1'``) with the version of the running Sphinx, and abort the build
+        when it is too old.
+    
+        .. versionadded:: 1.0
+        """
+        if version > sphinx.__display_version__[:3]:
+>           raise VersionRequirementError(version)
+E           sphinx.errors.VersionRequirementError: 5.0
+
+sphinx/application.py:410: VersionRequirementError
+
+During handling of the above exception, another exception occurred:
+
+test_params = {'shared_result': None}
+app_params = app_params(args=[], kwargs={'srcdir': path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-46/domain-cpp')})
+make_app = <function make_app.<locals>.make at 0x107bac820>
+shared_result = <sphinx.testing.fixtures.SharedResult object at 0x107b8fa60>
+
+    @pytest.fixture(scope='function')
+    def app(test_params: Dict, app_params: Tuple[Dict, Dict], make_app: Callable,
+            shared_result: SharedResult) -> Generator[SphinxTestApp, None, None]:
+        """
+        provides sphinx.application.Sphinx object
+        """
+        args, kwargs = app_params
+>       app_ = make_app(*args, **kwargs)
+
+sphinx/testing/fixtures.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:181: in make
+    app_ = SphinxTestApp(*args, **kwargs)  # type: Any
+sphinx/testing/util.py:134: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:240: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:398: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x107b8ff10>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x107b8fee0>
+extname = 'sphinxcontrib.applehelp'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # alread loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+                raise ExtensionError(__('Could not import extension %s') % extname, err)
+    
+            setup = getattr(mod, 'setup', None)
+            if setup is None:
+                logger.warning(__('extension %r has no setup() function; is it really '
+                                  'a Sphinx extension module?'), extname)
+                metadata = {}  # type: Dict[str, Any]
+            else:
+                try:
+                    metadata = setup(app)
+                except VersionRequirementError as err:
+                    # add the extension name to the version required
+>                   raise VersionRequirementError(
+                        __('The %s extension used by this project needs at least '
+                           'Sphinx v%s; it therefore cannot be built with this '
+                           'version.') % (extname, err)
+                    )
+E                   sphinx.errors.VersionRequirementError: The sphinxcontrib.applehelp extension used by this project needs at least Sphinx v5.0; it therefore cannot be built with this version.
+
+sphinx/registry.py:417: VersionRequirementError
+=================================== FAILURES ===================================
+_______________________________ test_expressions _______________________________
+
+    def test_expressions():
+        def exprCheck(expr, id, id4=None):
+            ids = 'IE1CIA%s_1aE'
+            idDict = {2: ids % expr, 3: ids % id}
+            if id4 is not None:
+                idDict[4] = ids % id4
+            check('class', 'template<> C<a[%s]>' % expr, idDict)
+    
+            class Config:
+                cpp_id_attributes = ["id_attr"]
+                cpp_paren_attributes = ["paren_attr"]
+    
+            parser = DefinitionParser(expr, location=None,
+                                      config=Config())
+            parser.allowFallbackExpressionParsing = False
+            ast = parser.parse_expression()
+            res = str(ast)
+            if res != expr:
+                print("")
+                print("Input:    ", expr)
+                print("Result:   ", res)
+                raise DefinitionError("")
+        # primary
+        exprCheck('nullptr', 'LDnE')
+        exprCheck('true', 'L1E')
+        exprCheck('false', 'L0E')
+        ints = ['5', '0', '075', '0x0123456789ABCDEF', '0XF', '0b1', '0B1']
+        unsignedSuffix = ['', 'u', 'U']
+        longSuffix = ['', 'l', 'L', 'll', 'LL']
+        for i in ints:
+            for u in unsignedSuffix:
+                for l in longSuffix:
+                    expr = i + u + l
+                    exprCheck(expr, 'L' + expr + 'E')
+                    expr = i + l + u
+                    exprCheck(expr, 'L' + expr + 'E')
+        decimalFloats = ['5e42', '5e+42', '5e-42',
+                      '5.', '5.e42', '5.e+42', '5.e-42',
+                      '.5', '.5e42', '.5e+42', '.5e-42',
+                      '5.0', '5.0e42', '5.0e+42', '5.0e-42']
+        hexFloats = ['ApF', 'Ap+F', 'Ap-F',
+                     'A.', 'A.pF', 'A.p+F', 'A.p-F',
+                     '.A', '.ApF', '.Ap+F', '.Ap-F',
+                     'A.B', 'A.BpF', 'A.Bp+F', 'A.Bp-F']
+        for suffix in ['', 'f', 'F', 'l', 'L']:
+            for e in decimalFloats:
+                expr = e + suffix
+                exprCheck(expr, 'L' + expr + 'E')
+            for e in hexFloats:
+                expr = "0x" + e + suffix
+                exprCheck(expr, 'L' + expr + 'E')
+        exprCheck('"abc\\"cba"', 'LA8_KcE')  # string
+        exprCheck('this', 'fpT')
+        # character literals
+        charPrefixAndIds = [('', 'c'), ('u8', 'c'), ('u', 'Ds'), ('U', 'Di'), ('L', 'w')]
+        chars = [('a', '97'), ('\\n', '10'), ('\\012', '10'), ('\\0', '0'),
+                 ('\\x0a', '10'), ('\\x0A', '10'), ('\\u0a42', '2626'), ('\\u0A42', '2626'),
+                 ('\\U0001f34c', '127820'), ('\\U0001F34C', '127820')]
+        for p, t in charPrefixAndIds:
+            for c, val in chars:
+                exprCheck("{}'{}'".format(p, c), t + val)
+        # user-defined literals
+        for i in ints:
+>           exprCheck(i + '_udl', 'clL_Zli4_udlEL' + i + 'EE')
+
+tests/test_domain_cpp.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_domain_cpp.py:119: in exprCheck
+    check('class', 'template<> C<a[%s]>' % expr, idDict)
+tests/test_domain_cpp.py:88: in check
+    _check(name, input, idDict, output)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'class', input = 'template<> C<a[5_udl]>'
+idDict = {2: 'IE1CIA5_udl_1aE', 3: 'IE1CIAclL_Zli4_udlEL5EE_1aE'}
+output = 'template<> C<a[5_udl]>'
+
+    def _check(name, input, idDict, output):
+        # first a simple check of the AST
+        ast = parse(name, input)
+        res = str(ast)
+        if res != output:
+            print("")
+            print("Input:    ", input)
+            print("Result:   ", res)
+            print("Expected: ", output)
+            raise DefinitionError("")
+        rootSymbol = Symbol(None, None, None, None, None, None)
+        symbol = rootSymbol.add_declaration(ast, docname="TestDoc")
+        parentNode = addnodes.desc()
+        signode = addnodes.desc_signature(input, '')
+        parentNode += signode
+        ast.describe_signature(signode, 'lastIsName', symbol, options={})
+    
+        idExpected = [None]
+        for i in range(1, _max_id + 1):
+            if i in idDict:
+                idExpected.append(idDict[i])
+            else:
+                idExpected.append(idExpected[i - 1])
+        idActual = [None]
+        for i in range(1, _max_id + 1):
+            try:
+                id = ast.get_id(version=i)
+                assert id is not None
+                idActual.append(id[len(_id_prefix[i]):])
+            except NoOldIdError:
+                idActual.append(None)
+    
+        res = [True]
+        for i in range(1, _max_id + 1):
+            res.append(idExpected[i] == idActual[i])
+    
+        if not all(res):
+            print("input:    %s" % input.rjust(20))
+            for i in range(1, _max_id + 1):
+                if res[i]:
+                    continue
+                print("Error in id version %d." % i)
+                print("result:   %s" % idActual[i])
+                print("expected: %s" % idExpected[i])
+            print(rootSymbol.dump(0))
+>           raise DefinitionError("")
+E           sphinx.util.cfamily.DefinitionError
+
+tests/test_domain_cpp.py:81: DefinitionError
+----------------------------- Captured stdout call -----------------------------
+input:    template<> C<a[5_udl]>
+Error in id version 3.
+result:   IE1CIAL5_udlE_1aE
+expected: IE1CIAclL_Zli4_udlEL5EE_1aE
+Error in id version 4.
+result:   IE1CIAL5_udlE_1aE
+expected: IE1CIAclL_Zli4_udlEL5EE_1aE
+::
+  template<> 
+  C<a[5_udl]>: template<> C<a[5_udl]>	(TestDoc)
+
+=============================== warnings summary ===============================
+sphinx/util/rst.py:58
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-7590/sphinx-doc__sphinx/sphinx/util/rst.py:58: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+sphinx/jinja2glue.py:106
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/worktrees/sphinx-doc__sphinx-7590/sphinx-doc__sphinx/sphinx/jinja2glue.py:106: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    def warning(context: Dict, message: str, *args: Any, **kwargs: Any) -> str:
+
+tests/test_domain_cpp.py::test_build_domain_cpp_multi_decl_lookup
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_domain_cpp.py::test_expressions - sphinx.util.cfamily.Defin...
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_multi_decl_lookup - sph...
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_warn_template_param_qualified_name
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_backslash_ok - sphinx.e...
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_semicolon - sphinx.erro...
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_anon_dup_decl - sphinx....
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_misuse_of_roles - sphin...
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_with_add_function_parentheses_is_True
+ERROR tests/test_domain_cpp.py::test_build_domain_cpp_with_add_function_parentheses_is_False
+ERROR tests/test_domain_cpp.py::test_xref_consistency - sphinx.errors.Version...
+1 failed, 15 passed, 3 warnings, 9 errors in 2.11s

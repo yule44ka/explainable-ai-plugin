@@ -1,0 +1,4 @@
+ M sphinx/domains/python.py
+ M sphinx/pycode/ast.py
+ M tests/test_pycode_ast.py
+?? reproduction/

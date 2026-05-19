@@ -1,0 +1,480 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+________________________ test_include_source_read_event ________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='directive-include')
+    def test_include_source_read_event(app):
+        sources_reported = {}
+    
+        def source_read_handler(app, doc, source):
+            sources_reported[doc] = source[0]
+    
+        app.connect("source-read", source_read_handler)
+        text = (".. include:: baz/baz.rst\n"
+                "   :start-line: 4\n\n"
+                ".. include:: text.txt\n"
+                "   :literal:    \n")
+        app.env.find_files(app.config, app.builder)
+>       restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10bf0ee50>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/directive-include
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/directive-include/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+________________ test_include_source_read_event_nested_includes ________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='directive-include')
+    def test_include_source_read_event_nested_includes(app):
+    
+        def source_read_handler(app, doc, source):
+            text = source[0].replace("#magical", "amazing")
+            source[0] = text
+    
+        app.connect("source-read", source_read_handler)
+        text = (".. include:: baz/baz.rst\n")
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10c463a60>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/directive-include
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/directive-include/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+_________________________________ test_toctree _________________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_toctree(app):
+        text = (".. toctree::\n"
+                "\n"
+                "   foo\n"
+                "   bar/index\n"
+                "   baz\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10c31d3a0>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+____________________________ test_relative_toctree _____________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_relative_toctree(app):
+        text = (".. toctree::\n"
+                "\n"
+                "   bar_1\n"
+                "   bar_2\n"
+                "   bar_3\n"
+                "   ../quux\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'bar/index')
+
+tests/test_directive_other.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10c135340>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+_________________________ test_toctree_urls_and_titles _________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_toctree_urls_and_titles(app):
+        text = (".. toctree::\n"
+                "\n"
+                "   Sphinx <https://www.sphinx-doc.org/>\n"
+                "   https://readthedocs.org/\n"
+                "   The BAR <bar/index>\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10c3607f0>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+______________________________ test_toctree_glob _______________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_toctree_glob(app):
+        text = (".. toctree::\n"
+                "   :glob:\n"
+                "\n"
+                "   *\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10c2e03a0>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+__________________________ test_toctree_glob_and_url ___________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_toctree_glob_and_url(app):
+        text = (".. toctree::\n"
+                "   :glob:\n"
+                "\n"
+                "   https://example.com/?q=sphinx\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10c360190>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+____________________________ test_reversed_toctree _____________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_reversed_toctree(app):
+        text = (".. toctree::\n"
+                "   :reversed:\n"
+                "\n"
+                "   foo\n"
+                "   bar/index\n"
+                "   baz\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10bf281c0>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+
+______________________________ test_toctree_twice ______________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx(testroot='toctree-glob')
+    def test_toctree_twice(app):
+        text = (".. toctree::\n"
+                "\n"
+                "   foo\n"
+                "   foo\n")
+    
+        app.env.find_files(app.config, app.builder)
+>       doctree = restructuredtext.parse(app, text, 'index')
+
+tests/test_directive_other.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/restructuredtext.py:21: in parse
+    return publish_doctree(
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:482: in publish_doctree
+    output = pub.publish(enable_exit_status=enable_exit_status)
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:219: in publish
+    self.apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/core.py:200: in apply_transforms
+    self.document.transformer.apply_transforms()
+sphinx/transforms/__init__.py:83: in apply_transforms
+    super().apply_transforms()
+../../../../../../.venvs/sphinx39/lib/python3.9/site-packages/docutils/transforms/__init__.py:171: in apply_transforms
+    transform.apply(**kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.transforms.ApplySourceWorkaround object at 0x10bee5e80>
+kwargs = {}
+
+    def apply(self, **kwargs: Any) -> None:
+>       for node in self.document.findall():  # type: Node
+E       AttributeError: 'document' object has no attribute 'findall'
+
+sphinx/transforms/__init__.py:224: AttributeError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/_build/html
+# status: 
+[01mRunning Sphinx v7.2.0+/6cb783c00[39;49;00m
+
+# warning: 
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-116/toctree-glob/index.rst:1: WARNING: duplicated entry found in toctree: foo[39;49;00m
+
+=============================== warnings summary ===============================
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+tests/test_directive_other.py::test_include_source_read_event
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:24: RemovedInSphinx80Warning: The alias 'sphinx.util.SkipProgressMessage' is deprecated, use 'sphinx.util.display.SkipProgressMessage' instead. Check CHANGES for Sphinx API modifications.
+    from sphinx.util import SkipProgressMessage, progress_message
+
+tests/test_directive_other.py::test_include_source_read_event
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/applehelp/__init__.py:24: RemovedInSphinx80Warning: The alias 'sphinx.util.progress_message' is deprecated, use 'sphinx.http_date.epoch_to_rfc1123' instead. Check CHANGES for Sphinx API modifications.
+    from sphinx.util import SkipProgressMessage, progress_message
+
+tests/test_directive_other.py::test_include_source_read_event
+tests/test_directive_other.py::test_include_source_read_event
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/sphinxcontrib/htmlhelp/__init__.py:34: RemovedInSphinx80Warning: The alias 'sphinx.util.progress_message' is deprecated, use 'sphinx.http_date.epoch_to_rfc1123' instead. Check CHANGES for Sphinx API modifications.
+    from sphinx.util import progress_message
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_directive_other.py::test_include_source_read_event - Attrib...
+FAILED tests/test_directive_other.py::test_include_source_read_event_nested_includes
+FAILED tests/test_directive_other.py::test_toctree - AttributeError: 'documen...
+FAILED tests/test_directive_other.py::test_relative_toctree - AttributeError:...
+FAILED tests/test_directive_other.py::test_toctree_urls_and_titles - Attribut...
+FAILED tests/test_directive_other.py::test_toctree_glob - AttributeError: 'do...
+FAILED tests/test_directive_other.py::test_toctree_glob_and_url - AttributeEr...
+FAILED tests/test_directive_other.py::test_reversed_toctree - AttributeError:...
+FAILED tests/test_directive_other.py::test_toctree_twice - AttributeError: 'd...
+9 failed, 7 warnings in 0.48s

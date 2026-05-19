@@ -1,0 +1,4 @@
+ M sphinx/directives/other.py
+ M sphinx/environment/adapters/toctree.py
+?? tests/roots/test-toctree-special-pages/
+?? tests/test_issue_10673.py

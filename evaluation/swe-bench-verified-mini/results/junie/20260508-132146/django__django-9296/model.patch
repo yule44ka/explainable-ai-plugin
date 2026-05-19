@@ -1,0 +1,17 @@
+diff --git a/django/core/paginator.py b/django/core/paginator.py
+index df07462e8e..e1c442a243 100644
+--- a/django/core/paginator.py
++++ b/django/core/paginator.py
+@@ -113,6 +113,12 @@ class Paginator:
+         """
+         return range(1, self.num_pages + 1)
+ 
++    # • __iter__ allows iterating over all pages in the paginator, yielding Page objects.
++    def __iter__(self):
++        """Iterate over each page in the paginator."""
++        for page_num in self.page_range:
++            yield self.page(page_num)
++
+     # • _check_object_list_is_ordered method generates a warning if the provided object_list is likely unordered to prevent inconsistent results.
+     def _check_object_list_is_ordered(self):
+         """

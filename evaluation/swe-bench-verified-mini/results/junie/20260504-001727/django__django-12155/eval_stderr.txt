@@ -1,0 +1,6 @@
+test_parse_rst_with_docstring_no_leading_line_feed (admin_docs.test_utils.TestUtils) ... skipped 'no docutils installed.'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK (skipped=1)

@@ -1,0 +1,2084 @@
+..........EE...........EEEEEEEEEEEEEEEEEE                                [100%]
+==================================== ERRORS ====================================
+_____ ERROR at setup of test_LiteralIncludeReader_lines_and_lineno_match2 ______
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a784980>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a784830>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_LiteralIncludeReader_lines_and_lineno_match2>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a784980>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a784830>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+_____ ERROR at setup of test_LiteralIncludeReader_lines_and_lineno_match3 ______
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a9e0190>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e0cd0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_LiteralIncludeReader_lines_and_lineno_match3>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a9e0190>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e0cd0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+______________________ ERROR at setup of test_code_block _______________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a9e3890>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e34d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a9e3890>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e34d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+_____________________ ERROR at setup of test_force_option ______________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b0c2c40>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b135310>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_force_option>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b0c2c40>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b135310>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+________________ ERROR at setup of test_code_block_caption_html ________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b0c2190>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e3b10>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block_caption_html>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b0c2190>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e3b10>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+_______________ ERROR at setup of test_code_block_caption_latex ________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05f0b0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b1342d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block_caption_latex>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05f0b0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b1342d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+______________ ERROR at setup of test_code_block_namedlink_latex _______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05c3b0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e34d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block_namedlink_latex>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05c3b0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e34d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+______________ ERROR at setup of test_code_block_emphasize_latex _______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05d7f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e0f50>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block_emphasize_latex>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05d7f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e0f50>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+____________________ ERROR at setup of test_literal_include ____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a883530>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e1f90>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literal_include>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a883530>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e1f90>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+___ ERROR at setup of test_literal_include_block_start_with_comment_or_brank ___
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05dd90>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e1e50>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literal_include_block_start_with_comment_or_brank>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b05dd90>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a9e1e50>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+________________ ERROR at setup of test_literal_include_linenos ________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a883890>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a789e50>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literal_include_linenos>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a883890>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a789e50>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+________ ERROR at setup of test_literalinclude_file_whole_of_emptyline _________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a987410>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b134690>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literalinclude_file_whole_of_emptyline>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a987410>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b134690>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+______________ ERROR at setup of test_literalinclude_caption_html ______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a987530>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a789bd0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literalinclude_caption_html>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a987530>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10a789bd0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+_____________ ERROR at setup of test_literalinclude_caption_latex ______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a721eb0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b137610>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literalinclude_caption_latex>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10a721eb0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b137610>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+____________ ERROR at setup of test_literalinclude_namedlink_latex _____________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b109eb0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b244910>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literalinclude_namedlink_latex>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b109eb0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b244910>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+________________ ERROR at setup of test_literalinclude_classes _________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b10a0f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b137390>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literalinclude_classes>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b10a0f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b137390>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+______________ ERROR at setup of test_literalinclude_pydecorators ______________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2945f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b2460d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_literalinclude_pydecorators>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2945f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b2460d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+________________ ERROR at setup of test_code_block_highlighted _________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2967b0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b247390>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block_highlighted>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2967b0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b247390>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+____________________ ERROR at setup of test_linenothreshold ____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2969f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b2474d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_linenothreshold>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2969f0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b2474d0>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+___________________ ERROR at setup of test_code_block_dedent ___________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2d0cb0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b2b4b90>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:425: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:12: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:15: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:42: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:21: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Image utility functions for Sphinx."""
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:4: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_code_block_dedent>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:139: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:185: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:125: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:219: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:379: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x10b2d0cb0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x10b2b4b90>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:428: ExtensionError
+=========================== short test summary info ============================
+ERROR tests/test_directive_code.py::test_LiteralIncludeReader_lines_and_lineno_match2
+ERROR tests/test_directive_code.py::test_LiteralIncludeReader_lines_and_lineno_match3
+ERROR tests/test_directive_code.py::test_code_block - sphinx.errors.Extension...
+ERROR tests/test_directive_code.py::test_force_option - sphinx.errors.Extensi...
+ERROR tests/test_directive_code.py::test_code_block_caption_html - sphinx.err...
+ERROR tests/test_directive_code.py::test_code_block_caption_latex - sphinx.er...
+ERROR tests/test_directive_code.py::test_code_block_namedlink_latex - sphinx....
+ERROR tests/test_directive_code.py::test_code_block_emphasize_latex - sphinx....
+ERROR tests/test_directive_code.py::test_literal_include - sphinx.errors.Exte...
+ERROR tests/test_directive_code.py::test_literal_include_block_start_with_comment_or_brank
+ERROR tests/test_directive_code.py::test_literal_include_linenos - sphinx.err...
+ERROR tests/test_directive_code.py::test_literalinclude_file_whole_of_emptyline
+ERROR tests/test_directive_code.py::test_literalinclude_caption_html - sphinx...
+ERROR tests/test_directive_code.py::test_literalinclude_caption_latex - sphin...
+ERROR tests/test_directive_code.py::test_literalinclude_namedlink_latex - sph...
+ERROR tests/test_directive_code.py::test_literalinclude_classes - sphinx.erro...
+ERROR tests/test_directive_code.py::test_literalinclude_pydecorators - sphinx...
+ERROR tests/test_directive_code.py::test_code_block_highlighted - sphinx.erro...
+ERROR tests/test_directive_code.py::test_linenothreshold - sphinx.errors.Exte...
+ERROR tests/test_directive_code.py::test_code_block_dedent - sphinx.errors.Ex...
+21 passed, 20 errors in 1.47s

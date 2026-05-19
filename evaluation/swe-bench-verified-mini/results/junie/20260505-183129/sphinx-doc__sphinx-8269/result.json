@@ -1,0 +1,15 @@
+{
+  "agent_seconds": 211.21,
+  "base_commit": "1e2ccd8f0eca0870cf6f8fce6934e2da8eba9b72",
+  "error": "Failed to restore test patch targets:\nerror: pathspec 'tests/roots/test-linkcheck-localserver/conf.py' did not match any file(s) known to git\nerror: pathspec 'tests/roots/test-linkcheck-localserver/index.rst' did not match any file(s) known to git\n",
+  "eval_seconds": 0.0,
+  "finished_at": "2026-05-05T15:46:49.148584+00:00",
+  "instance_id": "sphinx-doc__sphinx-8269",
+  "junie_returncode": 0,
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-183129/sphinx-doc__sphinx-8269",
+  "repo": "sphinx-doc/sphinx",
+  "started_at": "2026-05-05T15:43:15.877024+00:00",
+  "status": "error",
+  "success": false,
+  "total_seconds": 213.271
+}

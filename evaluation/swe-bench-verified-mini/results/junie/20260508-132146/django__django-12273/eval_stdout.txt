@@ -1,0 +1,54 @@
+Testing against Django installed in '/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260508-132146/worktrees/django__django-12273/django__django/django'
+Importing application model_inheritance_regress
+Skipping setup of unused database(s): other.
+Operations to perform:
+  Synchronize unmigrated apps: auth, contenttypes, messages, model_inheritance_regress, sessions, staticfiles
+  Apply all migrations: admin, sites
+Synchronizing apps without migrations:
+  Creating tables...
+    Creating table django_content_type
+    Creating table auth_permission
+    Creating table auth_group
+    Creating table auth_user
+    Creating table django_session
+    Creating table model_inheritance_regress_place
+    Creating table model_inheritance_regress_restaurant
+    Creating table model_inheritance_regress_italianrestaurant
+    Creating table model_inheritance_regress_parkinglot
+    Creating table model_inheritance_regress_parkinglot3
+    Creating table model_inheritance_regress_parkinglot4a
+    Creating table model_inheritance_regress_parkinglot4b
+    Creating table model_inheritance_regress_supplier
+    Creating table model_inheritance_regress_wholesaler
+    Creating table model_inheritance_regress_parent
+    Creating table model_inheritance_regress_child
+    Creating table model_inheritance_regress_selfrefparent
+    Creating table model_inheritance_regress_selfrefchild
+    Creating table model_inheritance_regress_article
+    Creating table model_inheritance_regress_articlewithauthor
+    Creating table model_inheritance_regress_m2mbase
+    Creating table model_inheritance_regress_m2mchild
+    Creating table model_inheritance_regress_qualitycontrol
+    Creating table model_inheritance_regress_basem
+    Creating table model_inheritance_regress_derivedm
+    Creating table model_inheritance_regress_internalcertificationaudit
+    Creating table model_inheritance_regress_person
+    Creating table model_inheritance_regress_birthdayparty
+    Creating table model_inheritance_regress_bachelorparty
+    Creating table model_inheritance_regress_messybachelorparty
+    Creating table model_inheritance_regress_searchablelocation
+    Creating table model_inheritance_regress_busstation
+    Creating table model_inheritance_regress_trainstation
+    Creating table model_inheritance_regress_user
+    Creating table model_inheritance_regress_profile
+    Creating table model_inheritance_regress_politician
+    Creating table model_inheritance_regress_congressman
+    Creating table model_inheritance_regress_senator
+    Running deferred SQL...
+Running migrations:
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+System check identified no issues (0 silenced).

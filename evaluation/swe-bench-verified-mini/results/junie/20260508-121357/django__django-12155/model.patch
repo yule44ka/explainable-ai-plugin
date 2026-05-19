@@ -1,0 +1,14 @@
+diff --git a/django/contrib/admindocs/utils.py b/django/contrib/admindocs/utils.py
+index f9c87f7bf7..ced150f56a 100644
+--- a/django/contrib/admindocs/utils.py
++++ b/django/contrib/admindocs/utils.py
+@@ -37,7 +37,8 @@ def trim_docstring(docstring):
+         return ''
+     # Convert tabs to spaces and split into lines
+     lines = docstring.expandtabs().splitlines()
+-    indent = min(len(line) - len(line.lstrip()) for line in lines if line.lstrip())
++    indent_lines = [len(line) - len(line.lstrip()) for line in lines[1:] if line.lstrip()]
++    indent = min(indent_lines) if indent_lines else 0
+     trimmed = [lines[0].lstrip()] + [line[indent:].rstrip() for line in lines[1:]]
+     return "\n".join(trimmed).strip()
+ 

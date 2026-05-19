@@ -1,0 +1,17 @@
+imghdr.py
+repro.py
+repro2.py
+repro_issue/_build/text/.doctrees/environment.pickle
+repro_issue/_build/text/.doctrees/index.doctree
+repro_issue/_build/text/index.txt
+repro_issue/conf.py
+repro_issue/file.py
+repro_issue/index.rst
+repro_issue2/_build/text/.doctrees/environment.pickle
+repro_issue2/_build/text/.doctrees/index.doctree
+repro_issue2/_build/text/index.txt
+repro_issue2/conf.py
+repro_issue2/file.py
+repro_issue2/index.rst
+repro_issue2/other_module.py
+test_analyzer_test.py

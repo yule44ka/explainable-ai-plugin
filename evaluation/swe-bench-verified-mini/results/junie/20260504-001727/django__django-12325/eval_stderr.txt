@@ -1,0 +1,35 @@
+test_clash_parent_link (invalid_models_tests.test_relative_fields.ComplexClashTests) ... ERROR
+test_onetoone_with_parent_model (invalid_models_tests.test_models.OtherModelTests) ... ERROR
+
+======================================================================
+ERROR: test_clash_parent_link (invalid_models_tests.test_relative_fields.ComplexClashTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/tests/invalid_models_tests/test_relative_fields.py", line 1298, in test_clash_parent_link
+    class Child(Parent):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/django/db/models/base.py", line 320, in __new__
+    new_class._prepare()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/django/db/models/base.py", line 333, in _prepare
+    opts._prepare(cls)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/django/db/models/options.py", line 255, in _prepare
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Add parent_link=True to invalid_models_tests.Child.other_parent.
+
+======================================================================
+ERROR: test_onetoone_with_parent_model (invalid_models_tests.test_models.OtherModelTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/tests/invalid_models_tests/test_models.py", line 1012, in test_onetoone_with_parent_model
+    class ParkingLot(Place):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/django/db/models/base.py", line 320, in __new__
+    new_class._prepare()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/django/db/models/base.py", line 333, in _prepare
+    opts._prepare(cls)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12325/django__django/django/db/models/options.py", line 255, in _prepare
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Add parent_link=True to invalid_models_tests.ParkingLot.other_place.
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+FAILED (errors=2)

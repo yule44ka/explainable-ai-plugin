@@ -1,0 +1,15 @@
+{
+  "agent_seconds": 54.289,
+  "base_commit": "f35d2a6cc726f97d0e859ca7a0e1729f7da8a6c8",
+  "error": "Failed to restore test patch targets:\nerror: pathspec 'tests/roots/test-toctree-index/foo.rst' did not match any file(s) known to git\nerror: pathspec 'tests/roots/test-toctree-index/index.rst' did not match any file(s) known to git\n",
+  "eval_seconds": 0.0,
+  "finished_at": "2026-05-04T14:13:35.246228+00:00",
+  "instance_id": "sphinx-doc__sphinx-10673",
+  "junie_returncode": 0,
+  "output_dir": "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-170739/sphinx-doc__sphinx-10673",
+  "repo": "sphinx-doc/sphinx",
+  "started_at": "2026-05-04T14:12:38.542090+00:00",
+  "status": "error",
+  "success": false,
+  "total_seconds": 56.704
+}

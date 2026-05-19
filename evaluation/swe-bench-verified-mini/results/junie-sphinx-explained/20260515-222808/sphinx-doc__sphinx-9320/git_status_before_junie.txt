@@ -1,0 +1,11 @@
+ M doc/development/tutorials/examples/recipe.py
+ M sphinx/cmd/quickstart.py
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/ext/imgmath.py
+ M sphinx/ext/todo.py
+ M tests/roots/test-correct-year/conf.py
+ M tests/roots/test-manpage_url/conf.py
+ M tests/test_domain_std.py
+ M tests/test_ext_viewcode.py
+ M tests/test_util_docstrings.py
+ M utils/doclinter.py

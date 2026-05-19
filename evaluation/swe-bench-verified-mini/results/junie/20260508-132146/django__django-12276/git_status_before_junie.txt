@@ -1,0 +1,9 @@
+ M django/conf/locale/hu/formats.py
+ M django/conf/locale/kn/formats.py
+ M django/contrib/gis/db/backends/mysql/features.py
+ M django/contrib/gis/gdal/geomtype.py
+ M django/core/management/commands/compilemessages.py
+ M django/db/backends/sqlite3/features.py
+ M django/forms/widgets.py
+ M django/template/loader_tags.py
+ M django/utils/timesince.py

@@ -1,0 +1,11 @@
+ M sphinx/builders/latex/theming.py
+ M sphinx/builders/linkcheck.py
+ M sphinx/search/da.py
+ M sphinx/util/inspect.py
+ M sphinx/versioning.py
+ M sphinx/writers/texinfo.py
+ M tests/roots/test-add_source_parser/source_parser.py
+ M tests/roots/test-builder-dirhtml/conf.py
+ M tests/roots/test-ext-autosummary-mock_imports/foo.py
+ M tests/roots/test-images/conf.py
+ M tests/roots/test-toctree-empty/conf.py

@@ -1,0 +1,4 @@
+tests/roots/test-directive-include/baz/baz.rst
+tests/roots/test-directive-include/conf.py
+tests/roots/test-directive-include/foo.rst
+tests/roots/test-directive-include/text.txt

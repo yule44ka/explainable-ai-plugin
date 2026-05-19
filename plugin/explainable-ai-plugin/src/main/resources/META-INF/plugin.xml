@@ -38,6 +38,7 @@
         
         <!-- Services -->
         <projectService serviceImplementation="com.example.explainableaiplugin.services.OpenAIService"/>
+        <projectService serviceImplementation="com.example.explainableaiplugin.services.ExplanationCommentInserter"/>
         
         <!-- Notification Group -->
         <notificationGroup id="Explainable AI" displayType="BALLOON"/>
@@ -62,9 +63,15 @@
             
             <action id="ExplainableAI.GenerateSummary"
                     class="com.example.explainableaiplugin.actions.GenerateSummaryAction"
-                    text="Generate Summary"
-                    description="Generate multi-level summary of selected code"
+                    text="Generate Explanation"
+                    description="Generate multi-level explanation of selected code"
                     icon="AllIcons.Actions.Preview"/>
+
+            <action id="ExplainableAI.AddExplanationComments"
+                    class="com.example.explainableaiplugin.actions.AddExplanationCommentsAction"
+                    text="Add Explanation Comments"
+                    description="Generate high-detail bullet explanations and insert them as comments before mapped code chunks"
+                    icon="AllIcons.Actions.Annotate"/>
         </group>
     </actions>
 </idea-plugin>

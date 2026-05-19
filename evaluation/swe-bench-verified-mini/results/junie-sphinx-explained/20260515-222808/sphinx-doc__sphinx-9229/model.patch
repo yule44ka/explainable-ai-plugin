@@ -1,0 +1,928 @@
+diff --git a/imghdr.py b/imghdr.py
+new file mode 100644
+index 000000000..25ab8b2fe
+--- /dev/null
++++ b/imghdr.py
+@@ -0,0 +1,3 @@
++def what(filename, h=None):
++    return None
++tests = []
+diff --git a/repro.py b/repro.py
+new file mode 100644
+index 000000000..d1ba89341
+--- /dev/null
++++ b/repro.py
+@@ -0,0 +1,132 @@
++import os
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++
++# Create a temporary directory for the reproduction
++repro_dir = Path("repro_issue")
++if repro_dir.exists():
++    shutil.rmtree(repro_dir)
++repro_dir.mkdir()
++
++# Create file.py with the problematic type aliases
++file_py_content = """
++from pathlib import Path
++from typing import Any, Callable, Dict, Union
++
++class A:
++    class Inner:
++        \"\"\"Inner class docstring.\"\"\"
++        pass
++    Alias = Inner
++    \"\"\"Docstring for Alias. This should be shown!\"\"\"
++
++B = A
++\"\"\"Docstring for B. This should be shown!\"\"\"
++
++ScaffoldOpts = Dict[str, Any]
++\"\"\"Dictionary with PyScaffold's options, see ``pyscaffold.api.create_project``.
++Should be treated as immutable (if required, copy before changing).
++
++Please notice some behaviours given by the options **SHOULD** be observed. For example,
++files should be overwritten when the **force** option is ``True``. Similarly when
++**pretend** is ``True``, no operation should be really performed, but any action should
++be logged as if realized.
++\"\"\"
++
++FileContents = Union[str, None]
++\"\"\"When the file content is ``None``, the file should not be written to
++disk (empty files are represented by an empty string ``""`` as content).
++\"\"\"
++
++FileOp = Callable[[Path, FileContents, ScaffoldOpts], Union[Path, None]]
++\"\"\"Signature of functions considered file operations::
++
++    Callable[[Path, FileContents, ScaffoldOpts], Union[Path, None]]
++
++- **path** (:obj:`pathlib.Path`): file path potentially to be written to/changed
++  in the disk.
++- **contents** (:obj:`FileContents`): usually a string that represents a text content
++  of the file. :obj:`None` indicates the file should not be written.
++- **opts** (:obj:`ScaffoldOpts`): a dict with PyScaffold's options.
++
++If the file is written (or more generally changed, such as new access permissions),
++by convention they should return the :obj:`file path <pathlib.Path>`.
++If no file was touched, :obj:`None` should be returned. Please notice a **FileOp**
++might return :obj:`None` if a pre-existing file in the disk is not modified.
++
++.. note::
++    A **FileOp** usually has side effects (e.g. write a file to the disk), see
++    :obj:`FileFileContents` and :obj:`ScaffoldOpts` for other conventions.
++\"\"\"
++"""
++
++with open(repro_dir / "file.py", "w") as f:
++    f.write(file_py_content)
++
++# Create conf.py
++conf_py_content = """
++import os
++import sys
++sys.path.insert(0, os.path.abspath('.'))
++extensions = ['sphinx.ext.autodoc']
++master_doc = 'index'
++"""
++
++with open(repro_dir / "conf.py", "w") as f:
++    f.write(conf_py_content)
++
++# Create index.rst
++index_rst_content = """
++Welcome
++=======
++
++.. automodule:: file
++   :members:
++"""
++
++with open(repro_dir / "index.rst", "w") as f:
++    f.write(index_rst_content)
++
++# Run sphinx-build
++env = os.environ.copy()
++env["PYTHONPATH"] = str(Path(".").absolute()) + ":" + env.get("PYTHONPATH", "")
++
++result = subprocess.run(
++    [sys.executable, "-m", "sphinx.cmd.build", "-b", "text", ".", "_build/text"],
++    cwd=repro_dir,
++    env=env,
++    capture_output=True,
++    text=True
++)
++
++if result.returncode != 0:
++    print("Sphinx build failed")
++    print(result.stdout)
++    print(result.stderr)
++    sys.exit(1)
++
++# Check the output
++output_file = repro_dir / "_build/text/index.txt"
++if not output_file.exists():
++    print("Output file not found")
++    sys.exit(1)
++
++with open(output_file, "r") as f:
++    content = f.read()
++    print(content)
++
++# Verification
++missing_docs = []
++if "Dictionary with PyScaffold's options" not in content:
++    missing_docs.append("ScaffoldOpts")
++if "When the file content is None" not in content:
++    missing_docs.append("FileContents")
++if "Signature of functions considered file operations" not in content:
++    missing_docs.append("FileOp")
++
++if missing_docs:
++    print(f"FAILURE: Missing docstrings for: {', '.join(missing_docs)}")
++else:
++    print("SUCCESS: All docstrings are present.")
+diff --git a/repro2.py b/repro2.py
+new file mode 100644
+index 000000000..f42ccf93a
+--- /dev/null
++++ b/repro2.py
+@@ -0,0 +1,90 @@
++import os
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++
++# Create a temporary directory for the reproduction
++repro_dir = Path("repro_issue2")
++if repro_dir.exists():
++    shutil.rmtree(repro_dir)
++repro_dir.mkdir()
++
++# Create other_module.py
++with open(repro_dir / "other_module.py", "w") as f:
++    f.write("class OtherClass:\n    pass\n")
++
++# Create file.py with the problematic type aliases
++file_py_content = """
++from other_module import OtherClass
++from typing import Dict, Any
++
++Alias = OtherClass
++\"\"\"Docstring for Alias. Should be shown!\"\"\"
++
++ScaffoldOpts = Dict[str, Any]
++\"\"\"Docstring for ScaffoldOpts. Should be shown!\"\"\"
++"""
++
++with open(repro_dir / "file.py", "w") as f:
++    f.write(file_py_content)
++
++# Create conf.py
++conf_py_content = """
++import os
++import sys
++sys.path.insert(0, os.path.abspath('.'))
++extensions = ['sphinx.ext.autodoc']
++master_doc = 'index'
++"""
++
++with open(repro_dir / "conf.py", "w") as f:
++    f.write(conf_py_content)
++
++# Create index.rst
++index_rst_content = """
++Welcome
++=======
++
++.. automodule:: file
++   :members:
++"""
++
++with open(repro_dir / "index.rst", "w") as f:
++    f.write(index_rst_content)
++
++# Run sphinx-build
++env = os.environ.copy()
++env["PYTHONPATH"] = str(Path(".").absolute()) + ":" + env.get("PYTHONPATH", "")
++
++result = subprocess.run(
++    [sys.executable, "-m", "sphinx.cmd.build", "-b", "text", ".", "_build/text"],
++    cwd=repro_dir,
++    env=env,
++    capture_output=True,
++    text=True
++)
++
++if result.returncode != 0:
++    print("Sphinx build failed")
++    print(result.stdout)
++    print(result.stderr)
++    sys.exit(1)
++
++# Check the output
++output_file = repro_dir / "_build/text/index.txt"
++with open(output_file, "r") as f:
++    content = f.read()
++    print(content)
++
++# Verification
++missing_docs = []
++if "Docstring for Alias" not in content:
++    missing_docs.append("Alias")
++if "Docstring for ScaffoldOpts" not in content:
++    missing_docs.append("ScaffoldOpts")
++
++if missing_docs:
++    print(f"FAILURE: Missing docstrings for: {', '.join(missing_docs)}")
++else:
++    print("SUCCESS: All docstrings are present.")
+diff --git a/repro_issue/_build/text/.doctrees/environment.pickle b/repro_issue/_build/text/.doctrees/environment.pickle
+new file mode 100644
+index 0000000000000000000000000000000000000000..2c2d7efabbf39c3b7462c14096096737ef52d385
+GIT binary patch
+literal 11269
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/repro_issue/_build/text/.doctrees/index.doctree b/repro_issue/_build/text/.doctrees/index.doctree
+new file mode 100644
+index 0000000000000000000000000000000000000000..b5003fa9ca57e44cfab423f429b31b6f1e079c27
+GIT binary patch
+literal 22709
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/repro_issue/_build/text/index.txt b/repro_issue/_build/text/index.txt
+new file mode 100644
+index 000000000..d0d1f7c82
+--- /dev/null
++++ b/repro_issue/_build/text/index.txt
+@@ -0,0 +1,60 @@
++Welcome
++*******
++
++file.B
++
++   Docstring for B. This should be shown!
++
++   alias of "file.A"
++
++file.FileContents
++
++   When the file content is "None", the file should not be written to
++   disk (empty files are represented by an empty string """" as
++   content).
++
++   alias of "Optional"["str"]
++
++file.FileOp
++
++   Signature of functions considered file operations:
++
++      Callable[[Path, FileContents, ScaffoldOpts], Union[Path, None]]
++
++   * **path** ("pathlib.Path"): file path potentially to be written
++     to/changed in the disk.
++
++   * **contents** ("FileContents"): usually a string that represents a
++     text content of the file. "None" indicates the file should not be
++     written.
++
++   * **opts** ("ScaffoldOpts"): a dict with PyScaffold's options.
++
++   If the file is written (or more generally changed, such as new
++   access permissions), by convention they should return the "file
++   path". If no file was touched, "None" should be returned. Please
++   notice a **FileOp** might return "None" if a pre-existing file in
++   the disk is not modified.
++
++   Note:
++
++     A **FileOp** usually has side effects (e.g. write a file to the
++     disk), see "FileFileContents" and "ScaffoldOpts" for other
++     conventions.
++
++   alias of "Callable"[["pathlib._local.Path", "Optional"["str"],
++   "Dict"["str", "Any"]], "Optional"["pathlib._local.Path"]]
++
++file.ScaffoldOpts
++
++   Dictionary with PyScaffold's options, see
++   "pyscaffold.api.create_project". Should be treated as immutable (if
++   required, copy before changing).
++
++   Please notice some behaviours given by the options **SHOULD** be
++   observed. For example, files should be overwritten when the
++   **force** option is "True". Similarly when **pretend** is "True",
++   no operation should be really performed, but any action should be
++   logged as if realized.
++
++   alias of "Dict"["str", "Any"]
+diff --git a/repro_issue/conf.py b/repro_issue/conf.py
+new file mode 100644
+index 000000000..5e9f918d0
+--- /dev/null
++++ b/repro_issue/conf.py
+@@ -0,0 +1,6 @@
++
++import os
++import sys
++sys.path.insert(0, os.path.abspath('.'))
++extensions = ['sphinx.ext.autodoc']
++master_doc = 'index'
+diff --git a/repro_issue/file.py b/repro_issue/file.py
+new file mode 100644
+index 000000000..e7969f945
+--- /dev/null
++++ b/repro_issue/file.py
+@@ -0,0 +1,49 @@
++
++from pathlib import Path
++from typing import Any, Callable, Dict, Union
++
++class A:
++    class Inner:
++        """Inner class docstring."""
++        pass
++    Alias = Inner
++    """Docstring for Alias. This should be shown!"""
++
++B = A
++"""Docstring for B. This should be shown!"""
++
++ScaffoldOpts = Dict[str, Any]
++"""Dictionary with PyScaffold's options, see ``pyscaffold.api.create_project``.
++Should be treated as immutable (if required, copy before changing).
++
++Please notice some behaviours given by the options **SHOULD** be observed. For example,
++files should be overwritten when the **force** option is ``True``. Similarly when
++**pretend** is ``True``, no operation should be really performed, but any action should
++be logged as if realized.
++"""
++
++FileContents = Union[str, None]
++"""When the file content is ``None``, the file should not be written to
++disk (empty files are represented by an empty string ``""`` as content).
++"""
++
++FileOp = Callable[[Path, FileContents, ScaffoldOpts], Union[Path, None]]
++"""Signature of functions considered file operations::
++
++    Callable[[Path, FileContents, ScaffoldOpts], Union[Path, None]]
++
++- **path** (:obj:`pathlib.Path`): file path potentially to be written to/changed
++  in the disk.
++- **contents** (:obj:`FileContents`): usually a string that represents a text content
++  of the file. :obj:`None` indicates the file should not be written.
++- **opts** (:obj:`ScaffoldOpts`): a dict with PyScaffold's options.
++
++If the file is written (or more generally changed, such as new access permissions),
++by convention they should return the :obj:`file path <pathlib.Path>`.
++If no file was touched, :obj:`None` should be returned. Please notice a **FileOp**
++might return :obj:`None` if a pre-existing file in the disk is not modified.
++
++.. note::
++    A **FileOp** usually has side effects (e.g. write a file to the disk), see
++    :obj:`FileFileContents` and :obj:`ScaffoldOpts` for other conventions.
++"""
+diff --git a/repro_issue/index.rst b/repro_issue/index.rst
+new file mode 100644
+index 000000000..9150ed792
+--- /dev/null
++++ b/repro_issue/index.rst
+@@ -0,0 +1,6 @@
++
++Welcome
++=======
++
++.. automodule:: file
++   :members:
+diff --git a/repro_issue2/_build/text/.doctrees/environment.pickle b/repro_issue2/_build/text/.doctrees/environment.pickle
+new file mode 100644
+index 0000000000000000000000000000000000000000..12d5e3eaa86c7319d06e834a4d8203be6e5bedb6
+GIT binary patch
+literal 11011
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/repro_issue2/_build/text/.doctrees/index.doctree b/repro_issue2/_build/text/.doctrees/index.doctree
+new file mode 100644
+index 0000000000000000000000000000000000000000..4cb63b71bc9d633c1df24034652036e0f590dd67
+GIT binary patch
+literal 7166
+zcmds6ON<;x8Q#~-?CjHz*dW=CCJ}~N$FpNr336;9WW^V>VlBmqc?7H7(_ORGvpwBS
+zSM@%Sf(TNGmy`s^ojX@R5#gL15E2R};LZsSJj4+xLW&~z{;KYt?(wX(2`4Ag##4{~
+z|Es?LS$}`O_SV18P3iyCs))E3?62Fd8-y+sshW2~CmFIprVrA!*V0$hwra-qo(PlJ
+zVX2zJ4u^Zb8?zw2o2nJsE<InYXY>uh9O;EYLC$Nu&Kq~rHgBq$^rX*9ORDj8<~!k#
+zrL+Y*=3Zj^Bzm;)da6$WHm6lRvLRQd{AALz)q*W$?DZ0fbJICzJy+0~8jf!Zfl2(X
+z1@_SVns<|EH0asRPR#nWCs7S)Z_`rBSNS=<#HabJs^>R;r~9&CvFLh<?|JsR?<F$a
+zwYx$l?m<^_COpv<d#uxAfx|nyEcW^ybGtDUi7!QWkOUs<7??Y3Kk{ua!1BhGjW1n!
+z?u*ZLHa0e{Ub))c3*#LbGX`E-BOTysS=sOBH#VN1Fb^3~99o_b3ESv;fy?&SV<A&D
+z=R-!iIh*wOl&a~466Qu7{5&AzPXhE7{+`C)=kWJ=f)5DCo(8S0<|5mRQ?)b<-Na|t
+zTYV4uQ;TNU(IZ~plBu2WHou&s$Jf-K9~0O@s4%w7eb%FcYrtLL`oVT9?6)e5w`k`J
+zWLhbIW^)?gc8r7M7Jf`f>jK;f#j`hj&lat=7qpCgjqX~i76{jMy_!x$7b<*aOKW!y
+zPU}3R+&1*SLMxW=VA(Q>D^6F-SZlAGQcHR#g#hw_-0gWy)$}=xYo5(VBY&(z-QR*E
+zR_@(ai;&rg;HSh*EfaI?kb2B2rq<ja`qxBcQ)HP32^?*grDRIq0PmN`5kLK=WE9!d
+zN*L1szoWw<us0g3Vjn(?{XAiBfS)IZ4`a>;e1`xYjsWJqwk9^x<EBkf0TC7KV2;Ez
+z><tju)2jaJ#%>XDOkAjGMZ;#*d_VDhEuG&XaWC>U60<oCvA0OC+Io%UIbk5n2`Bd_
+z${0;Ve0w{#BVIPli#H1|?T2wogR|bc&BMfZTRqkiJlqSO$_@9JyGP(Yz#)G+4sO|S
+z=|(^P^joIZmddpClRVg|HCx9m#K&t|-`DOP5hw3y4Yc`L)htNT0_O500RNe>h=>I)
+z;-j^X>|9p)@npeb8ono4Z2Ki*{&wa@pE=^7qeCIGp5wnB*FEx}K98D-4k%I`bc~@_
+zyn&43SD^moICa@_R2}z1jzMK&@-nI`ni!%iNcnrJfss6j5Dzn7Qj3_Oy1{cinI7s5
+zdv+Y)XA|ivb3pzEoyw>q-O@az9d9!f14rJO&iiw?C31;YG!#$@0b^A`X7R=5%qkvD
+z@FSq1o!vM;0$p`~+u+$O>bUXnlH>9h)j<5wxbVNCL`7uF2aO;!KpxT&zot_L)o}V=
+z6k0z~lICAk7j8RtzaRSUtw>Hv(kFFtEN^;ruHMT12N>$adpn;{OI0p<^_#`&F|zP~
+z$4#!y8ShuDGmra}SU=P#t*Q4PlNwDUJzkr^01zkEZ+gf|rWy)z$oNN@zgK}RA`dzF
+zU}bu0>S5Rp_;)A5M(HwxZLkc=@r?O_$(Z~#{(~z053}6J??dV#|A?#<$uMK09q&I`
+zgnhF(e`X=0kbAkB@XGdbbl&@TL<Ks7FVOwY4K7Xqs2s|&kf1(WDVeKkq5BP<CVnR6
+zk8X6c$Ow57`Cf_i-nUz?<nt)U?_Dm!f4=KRaBvR~7VRs?$uEOv^>z3!a*)-TTtLo}
+zOv$7y{!YGY@D(~dq#%jSX<I9B(pGe10!VHC?r{>u;L8(e%K#U-g8#mpB?g<I`#6b$
+z|6%YH-Qtg1{7-7JgtD%*ODQ17=&YKZYP~W_ifR_>NTJDxFkH$pBqf=8YXqH3LJf4Y
+zSRe7z$n_`O{<z5XCeR)Sxd?Qh7&(0hGWv;#&0KDcE~scU39lz|ymFf(Gakq7u!I}d
+zM{G52Z%(-TadCTN0_|~dd+YzfZ6UKby2_F8P2U||Q(;hmSFISzht1*-K+*L}Da<^Y
+zhN==Ba*HT@RADmb+S0DpB>ZoKcS${eAG}BZ{KNe7&m)SD(Lvh$x@zoYy)KsbTt-uN
+z-hQE5E#QQ+CP(v2xE&r#)kk(2hN4r&FA?puT5*z?x@1<?!P-(w`Hb!hZK-*|q(t&W
+zyYD1|x9Q*YWBm+sQ&qoX`w99#MJHet73DSyP*uw?rt%WFFd^+>gu$W_V}bV$h6~v+
+ziG7TgCE8fjYok?&t5I(WCG@F&7|I}&thBf}t(K{I7$ie$AJ4jBikTH^#zYocgw&H1
+zV0q5WFrVoeYtNJ1(&adg42c;*)&j)k(IpFGY58oI`RV42THv-{3~TBn+xLK#M3+S5
+zo6!1jSufcJzZELB=|KX%%pPK<DPuG&=u+u@wc-U)A}#d(LVC8Os+q`s=W0hkoX=Mm
+zEf&XNY;ikqeTJr5osNp?MXiR3ta7PoE~&aOwlc<I@Go-A6~lLQhMf9*bzzKHouE4i
+z0L1~3ubVK-z8!2Q_BI3JE*>E>=<=%5F>}J$wOmGzGl-$);FhZ6-QGuk0El?5h3-w?
+z+oz}hij5AbHJVa09*k<)O@@(G7#@Jt6CR%aabWwza8=I$-9V7~M^lkti5psI7Gc*3
+zJcdHStTLsx5=UCQp74x`u3D}q?4C~-$xhkG9fDs{OSp`H3)s3<4XeqvSyXE3#_>wT
+zB8#40a3x3IcZp_tHbj$cs}`3s64$!jy}dm&4kZtR^)TM<x@@<LouZqnGekigiNca>
+z2$ZF6b+M>(@yfG+WhL%AV`6A#B<6fBMus7}>>iVSEr!dX4-rji_uvAq<mu+Tx&VV3
+zT7_>F$44WX)O)DT>eF}u8f|oQ*ezk?!jKoy<S&MByc6OekoLaCy>0H}Pq&prvhXD_
+zwBb+RN#MQ$l&AIB3@tx&><qyR4oC0Cfqso!L1PquEKu(x5e`G&4)h0s%-s)RB%$L4
+zeW*J3|5FqZMAED7JHduM=E5ZpAd53Ra}U)S#}Dlti{T~hTWDsYn@HaP?yFfA?4}6u
+zYTiTwxE`zsk46u6EiLm-);d24L9hymfCy|{`aJL|VpV09dRlrK-1^0UUiI|#0oxli
+zX?_oW2lpKO7XK5fNz=%LnpiJv3H~H{@Om8&*6Zk9)U!u>5qYz3C!@~Xb^Xq$#Q&Nn
+z&;>~EBl-_IGe}Bn>Nk(`!;VZ;ci52y^|u&2;y2L@{(yg&sO7S8YrL1y7twA^Ze(UC
+z0Ok9PV#_mTA3k)z#D~4mFZ@MsePV2~*xjsfZ01rm(Wwf5<dRrY@;WolD_faT3kZ)+
+zm{9P;*Ayr8eV8JQ4k@znLN@;Z*7SP%B4Px3poluKJAue-1Qt=UGQC(#Ya?H9DR5^o
+J&b+|Z{|6ZQhfV+h
+
+literal 0
+HcmV?d00001
+
+diff --git a/repro_issue2/_build/text/index.txt b/repro_issue2/_build/text/index.txt
+new file mode 100644
+index 000000000..ebb9cce15
+--- /dev/null
++++ b/repro_issue2/_build/text/index.txt
+@@ -0,0 +1,14 @@
++Welcome
++*******
++
++file.Alias
++
++   Docstring for Alias. Should be shown!
++
++   alias of "other_module.OtherClass"
++
++file.ScaffoldOpts
++
++   Docstring for ScaffoldOpts. Should be shown!
++
++   alias of "Dict"["str", "Any"]
+diff --git a/repro_issue2/conf.py b/repro_issue2/conf.py
+new file mode 100644
+index 000000000..5e9f918d0
+--- /dev/null
++++ b/repro_issue2/conf.py
+@@ -0,0 +1,6 @@
++
++import os
++import sys
++sys.path.insert(0, os.path.abspath('.'))
++extensions = ['sphinx.ext.autodoc']
++master_doc = 'index'
+diff --git a/repro_issue2/file.py b/repro_issue2/file.py
+new file mode 100644
+index 000000000..4a499bd1d
+--- /dev/null
++++ b/repro_issue2/file.py
+@@ -0,0 +1,9 @@
++
++from other_module import OtherClass
++from typing import Dict, Any
++
++Alias = OtherClass
++"""Docstring for Alias. Should be shown!"""
++
++ScaffoldOpts = Dict[str, Any]
++"""Docstring for ScaffoldOpts. Should be shown!"""
+diff --git a/repro_issue2/index.rst b/repro_issue2/index.rst
+new file mode 100644
+index 000000000..9150ed792
+--- /dev/null
++++ b/repro_issue2/index.rst
+@@ -0,0 +1,6 @@
++
++Welcome
++=======
++
++.. automodule:: file
++   :members:
+diff --git a/repro_issue2/other_module.py b/repro_issue2/other_module.py
+new file mode 100644
+index 000000000..70f19cb5e
+--- /dev/null
++++ b/repro_issue2/other_module.py
+@@ -0,0 +1,2 @@
++class OtherClass:
++    pass
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 926c252f4..b6ca034fd 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1683,7 +1683,16 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+ 
+     def get_doc(self, ignore: int = None) -> Optional[List[List[str]]]:
+         if self.doc_as_attr:
+-            # Don't show the docstring of the class when it is an alias.
++            # Check the variable has a docstring-comment
++            try:
++                analyzer = ModuleAnalyzer.for_module(self.modname)
++                analyzer.analyze()
++                key = ('.'.join(self.objpath[:-1]), self.objpath[-1])
++                if key in analyzer.attr_docs:
++                    return [list(analyzer.attr_docs[key])]
++            except PycodeError:
++                pass
++
+             return None
+ 
+         lines = getattr(self, '_new_docstrings', None)
+@@ -1732,12 +1741,14 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+     def add_content(self, more_content: Optional[StringList], no_docstring: bool = False
+                     ) -> None:
+         if self.doc_as_attr:
++            if more_content is None:
++                more_content = StringList()
+             try:
+-                more_content = StringList([_('alias of %s') % restify(self.object)], source='')
++                more_content.append(_('alias of %s') % restify(self.object), '')
+             except AttributeError:
+                 pass  # Invalid class object is passed.
+ 
+-        super().add_content(more_content)
++        super().add_content(more_content, no_docstring=no_docstring)
+ 
+     def document_members(self, all_members: bool = False) -> None:
+         if self.doc_as_attr:
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index af6edcae0..7217e29b8 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -33,8 +33,8 @@ else:
+             ref = _ForwardRef(self.arg)
+             return ref._eval_type(globalns, localns)
+ 
+-if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++if sys.version_info >= (3, 10):
++    from types import UnionType as types_Union
+ else:
+     types_Union = None
+ 
+diff --git a/test_analyzer_test.py b/test_analyzer_test.py
+new file mode 100644
+index 000000000..45590a49a
+--- /dev/null
++++ b/test_analyzer_test.py
+@@ -0,0 +1,25 @@
++from sphinx.pycode import ModuleAnalyzer
++from sphinx.errors import PycodeError
++import os
++
++content = """
++from typing import Any, Dict
++
++ScaffoldOpts = Dict[str, Any]
++\"\"\"Dictionary with PyScaffold's options.
++Line 2.
++\"\"\"
++"""
++
++with open("test_analyzer.py", "w") as f:
++    f.write(content)
++
++try:
++    analyzer = ModuleAnalyzer.for_file("test_analyzer.py", "test_analyzer")
++    analyzer.analyze()
++    print("Attr docs:", analyzer.attr_docs)
++except PycodeError as e:
++    print("Error:", e)
++finally:
++    if os.path.exists("test_analyzer.py"):
++        os.remove("test_analyzer.py")

@@ -1,0 +1,264 @@
+test_clash_parent_link (invalid_models_tests.test_relative_fields.ComplexClashTests) ... ERROR
+test_onetoone_with_parent_model (invalid_models_tests.test_models.OtherModelTests) ... ERROR
+test_check_constraints (invalid_models_tests.test_models.ConstraintsTests) ... ok
+test_check_constraints_required_db_features (invalid_models_tests.test_models.ConstraintsTests) ... ok
+test_accessor_clash (invalid_models_tests.test_relative_fields.SelfReferentialFKClashTests) ... ok
+test_clash_under_explicit_related_name (invalid_models_tests.test_relative_fields.SelfReferentialFKClashTests) ... ok
+test_reverse_query_name_clash (invalid_models_tests.test_relative_fields.SelfReferentialFKClashTests) ... ok
+test_complex_clash (invalid_models_tests.test_relative_fields.ComplexClashTests) ... ok
+test_list_containing_non_iterable (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_non_iterable (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_non_list (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_pointing_to_fk (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_pointing_to_m2m_field (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_pointing_to_missing_field (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_pointing_to_non_local_field (invalid_models_tests.test_models.IndexTogetherTests) ... ok
+test_abstract_model_children_inherit_indexes (migrations.test_state.ModelStateTests) ... ok
+test_bound_field_sanity_check (migrations.test_state.ModelStateTests) ... ok
+test_create_swappable (migrations.test_state.ModelStateTests)
+Tests making a ProjectState from an Apps with a swappable model ... ok
+test_create_swappable_from_abstract (migrations.test_state.ModelStateTests)
+A swappable model inheriting from a hierarchy: ... ok
+test_custom_manager_swappable (migrations.test_state.ModelStateTests)
+Tests making a ProjectState from unused models with custom managers ... ok
+test_custom_model_base (migrations.test_state.ModelStateTests) ... ok
+test_explicit_index_name (migrations.test_state.ModelStateTests) ... ok
+test_fields_immutability (migrations.test_state.ModelStateTests)
+Rendering a model state doesn't alter its internal fields. ... ok
+test_from_model_constraints (migrations.test_state.ModelStateTests) ... ok
+test_order_with_respect_to_private_field (migrations.test_state.ModelStateTests) ... ok
+test_repr (migrations.test_state.ModelStateTests) ... ok
+test_sanity_check_through (migrations.test_state.ModelStateTests) ... ok
+test_sanity_check_to (migrations.test_state.ModelStateTests) ... ok
+test_sanity_index_name (migrations.test_state.ModelStateTests) ... ok
+test_db_column_clash (invalid_models_tests.test_models.FieldNamesTests) ... ok
+test_ending_with_underscore (invalid_models_tests.test_models.FieldNamesTests) ... ok
+test_including_separator (invalid_models_tests.test_models.FieldNamesTests) ... ok
+test_pk (invalid_models_tests.test_models.FieldNamesTests) ... ok
+test_accessor_clash (invalid_models_tests.test_relative_fields.SelfReferentialM2MClashTests) ... ok
+test_clash_between_accessors (invalid_models_tests.test_relative_fields.SelfReferentialM2MClashTests) ... ok
+test_clash_under_explicit_related_name (invalid_models_tests.test_relative_fields.SelfReferentialM2MClashTests) ... ok
+test_reverse_query_name_clash (invalid_models_tests.test_relative_fields.SelfReferentialM2MClashTests) ... ok
+test_valid_model (invalid_models_tests.test_relative_fields.SelfReferentialM2MClashTests) ... ok
+test_list_containing_non_iterable (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_non_iterable (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_non_list (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_pointing_to_fk (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_pointing_to_m2m (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_pointing_to_missing_field (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_valid_model (invalid_models_tests.test_models.UniqueTogetherTests) ... ok
+test_fk_to_fk (invalid_models_tests.test_relative_fields.ExplicitRelatedNameClashTests) ... ok
+test_fk_to_integer (invalid_models_tests.test_relative_fields.ExplicitRelatedNameClashTests) ... ok
+test_fk_to_m2m (invalid_models_tests.test_relative_fields.ExplicitRelatedNameClashTests) ... ok
+test_m2m_to_fk (invalid_models_tests.test_relative_fields.ExplicitRelatedNameClashTests) ... ok
+test_m2m_to_integer (invalid_models_tests.test_relative_fields.ExplicitRelatedNameClashTests) ... ok
+test_m2m_to_m2m (invalid_models_tests.test_relative_fields.ExplicitRelatedNameClashTests) ... ok
+test_explicit_field_names (invalid_models_tests.test_relative_fields.M2mThroughFieldsTests)
+If ``through_fields`` kwarg is given, it must specify both ... ok
+test_intersection_foreign_object (invalid_models_tests.test_relative_fields.M2mThroughFieldsTests) ... ok
+test_invalid_field (invalid_models_tests.test_relative_fields.M2mThroughFieldsTests)
+Providing invalid field names to ManyToManyField.through_fields ... ok
+test_invalid_order (invalid_models_tests.test_relative_fields.M2mThroughFieldsTests)
+Mixing up the order of link fields to ManyToManyField.through_fields ... ok
+test_m2m_field_argument_validation (invalid_models_tests.test_relative_fields.M2mThroughFieldsTests)
+ManyToManyField accepts the ``through_fields`` kwarg ... ok
+test_superset_foreign_object (invalid_models_tests.test_relative_fields.M2mThroughFieldsTests) ... ok
+test_max_name_length (invalid_models_tests.test_models.IndexesTests) ... ok
+test_name_constraints (invalid_models_tests.test_models.IndexesTests) ... ok
+test_pointing_to_fk (invalid_models_tests.test_models.IndexesTests) ... ok
+test_pointing_to_m2m_field (invalid_models_tests.test_models.IndexesTests) ... ok
+test_pointing_to_missing_field (invalid_models_tests.test_models.IndexesTests) ... ok
+test_pointing_to_non_local_field (invalid_models_tests.test_models.IndexesTests) ... ok
+test_fk_to_fk (invalid_models_tests.test_relative_fields.ReverseQueryNameClashTests) ... ok
+test_fk_to_integer (invalid_models_tests.test_relative_fields.ReverseQueryNameClashTests) ... ok
+test_fk_to_m2m (invalid_models_tests.test_relative_fields.ReverseQueryNameClashTests) ... ok
+test_m2m_to_fk (invalid_models_tests.test_relative_fields.ReverseQueryNameClashTests) ... ok
+test_m2m_to_integer (invalid_models_tests.test_relative_fields.ReverseQueryNameClashTests) ... ok
+test_m2m_to_m2m (invalid_models_tests.test_relative_fields.ReverseQueryNameClashTests) ... ok
+test_field_name_clash_with_child_accessor (invalid_models_tests.test_models.ShadowingFieldsTests) ... ok
+test_id_clash (invalid_models_tests.test_models.ShadowingFieldsTests) ... ok
+test_inheritance_clash (invalid_models_tests.test_models.ShadowingFieldsTests) ... ok
+test_multigeneration_inheritance (invalid_models_tests.test_models.ShadowingFieldsTests) ... ok
+test_multiinheritance_clash (invalid_models_tests.test_models.ShadowingFieldsTests) ... ok
+test_clash_between_accessors (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_fk_to_fk (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_fk_to_integer (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_fk_to_m2m (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_m2m_to_fk (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_m2m_to_integer (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_m2m_to_m2m (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_m2m_to_m2m_with_inheritance (invalid_models_tests.test_relative_fields.AccessorClashTests)
+Ref #22047. ... ok
+test_no_clash_for_hidden_related_name (invalid_models_tests.test_relative_fields.AccessorClashTests) ... ok
+test_fk_to_fk (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_fk_to_integer (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_fk_to_m2m (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_hidden_fk_to_fk (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_hidden_fk_to_integer (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_hidden_fk_to_m2m (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_hidden_m2m_to_fk (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_hidden_m2m_to_integer (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_hidden_m2m_to_m2m (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_m2m_to_fk (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_m2m_to_integer (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_m2m_to_m2m (invalid_models_tests.test_relative_fields.ExplicitRelatedQueryNameClashTests) ... ok
+test_abstract_base (migrations.test_state.RelatedModelsTests) ... ok
+test_base (migrations.test_state.RelatedModelsTests) ... ok
+test_base_to_base_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_base_to_subclass_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_circle (migrations.test_state.RelatedModelsTests) ... ok
+test_direct_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_direct_hidden_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_direct_m2m (migrations.test_state.RelatedModelsTests) ... ok
+test_direct_m2m_self (migrations.test_state.RelatedModelsTests) ... ok
+test_fk_through_proxy (migrations.test_state.RelatedModelsTests) ... ok
+test_generic_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_intermediate_m2m (migrations.test_state.RelatedModelsTests) ... ok
+test_intermediate_m2m_base (migrations.test_state.RelatedModelsTests) ... ok
+test_intermediate_m2m_extern_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_intermediate_m2m_self (migrations.test_state.RelatedModelsTests) ... ok
+test_multiple_bases (migrations.test_state.RelatedModelsTests) ... ok
+test_multiple_mixed_bases (migrations.test_state.RelatedModelsTests) ... ok
+test_multiple_nested_bases (migrations.test_state.RelatedModelsTests) ... ok
+test_nested_abstract_base (migrations.test_state.RelatedModelsTests) ... ok
+test_nested_base (migrations.test_state.RelatedModelsTests) ... ok
+test_nested_fk (migrations.test_state.RelatedModelsTests) ... ok
+test_nested_proxy_base (migrations.test_state.RelatedModelsTests) ... ok
+test_proxy_base (migrations.test_state.RelatedModelsTests) ... ok
+test_two_sided (migrations.test_state.RelatedModelsTests) ... ok
+test_unrelated (migrations.test_state.RelatedModelsTests) ... ok
+test_ambiguous_relationship_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_foreign_key_to_abstract_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_foreign_key_to_isolate_apps_model (invalid_models_tests.test_relative_fields.RelativeFieldTests)
+#25723 - Referenced model registration lookup should be run against the ... ok
+test_foreign_key_to_missing_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_foreign_key_to_non_unique_field (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_foreign_key_to_non_unique_field_under_explicit_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_foreign_object_to_non_unique_fields (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_invalid_related_query_name (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_m2m_to_abstract_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_many_to_many_through_isolate_apps_model (invalid_models_tests.test_relative_fields.RelativeFieldTests)
+#25723 - Through model registration lookup should be run against the ... ok
+test_many_to_many_to_isolate_apps_model (invalid_models_tests.test_relative_fields.RelativeFieldTests)
+#25723 - Referenced model registration lookup should be run against the ... ok
+test_many_to_many_to_missing_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_many_to_many_with_limit_choices_auto_created_no_warning (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_many_to_many_with_useless_options (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_missing_relationship_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_missing_relationship_model_on_model_check (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_not_swapped_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_nullable_primary_key (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_on_delete_set_default_without_default_value (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_on_delete_set_null_on_non_nullable_field (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_referencing_to_swapped_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_related_field_has_invalid_related_name (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_related_field_has_valid_related_name (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_relationship_model_missing_foreign_key (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_relationship_model_with_foreign_key_to_wrong_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_to_fields_exist (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_to_fields_not_checked_if_related_model_doesnt_exist (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_too_many_foreign_keys_in_self_referential_model (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_unique_m2m (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_valid_foreign_key_without_accessor (invalid_models_tests.test_relative_fields.RelativeFieldTests) ... ok
+test_just_order_with_respect_to_no_errors (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_just_ordering_no_errors (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_lazy_reference_checks (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_m2m_autogenerated_table_name_clash (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_m2m_field_table_name_clash (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_m2m_table_name_clash (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_m2m_to_concrete_and_proxy_allowed (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_m2m_unmanaged_shadow_models_not_checked (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_name_beginning_with_underscore (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_name_contains_double_underscores (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_name_ending_with_underscore (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_non_valid (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_onetoone_with_explicit_parent_link_parent_model (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_allows_registered_lookups (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_non_iterable (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_multiple_times_to_model_fields (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_foreignkey_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_missing_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_missing_foreignkey_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_missing_related_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_missing_related_model_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_non_related_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_related_model_pk (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_pointing_to_two_related_model_field (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_ordering_with_order_with_respect_to (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_property_and_related_field_accessor_clash (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_single_primary_key (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_swappable_missing_app (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_swappable_missing_app_name (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_two_m2m_through_same_model_with_different_through_fields (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_two_m2m_through_same_relationship (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_unique_primary_key (invalid_models_tests.test_models.OtherModelTests) ... ok
+test_add_relations (migrations.test_state.StateTests)
+#24573 - Adding relations to existing models should reload the ... ok
+test_apps_bulk_update (migrations.test_state.StateTests)
+StateApps.bulk_update() should update apps.ready to False and reset ... ok
+test_choices_iterator (migrations.test_state.StateTests)
+#24483 - ProjectState.from_apps should not destructively consume ... ok
+test_create (migrations.test_state.StateTests)
+Tests making a ProjectState from an Apps ... ok
+test_custom_base_manager (migrations.test_state.StateTests) ... ok
+test_custom_default_manager (migrations.test_state.StateTests) ... ok
+test_custom_default_manager_added_to_the_model_state (migrations.test_state.StateTests)
+When the default manager of the model is a custom manager, ... ok
+test_custom_default_manager_named_objects_with_false_migration_flag (migrations.test_state.StateTests)
+When a manager is added with a name of 'objects' but it does not ... ok
+test_dangling_references_throw_error (migrations.test_state.StateTests) ... ok
+test_equality (migrations.test_state.StateTests)
+== and != are implemented correctly. ... ok
+test_ignore_order_wrt (migrations.test_state.StateTests)
+Makes sure ProjectState doesn't include OrderWrt fields when ... ok
+test_manager_refer_correct_model_version (migrations.test_state.StateTests)
+#24147 - Managers refer to the correct version of a ... ok
+test_no_duplicate_managers (migrations.test_state.StateTests)
+When a manager is added with `use_in_migrations = True` and a parent ... ok
+test_real_apps (migrations.test_state.StateTests)
+Including real apps can resolve dangling FK errors. ... ok
+test_remove_relations (migrations.test_state.StateTests)
+#24225 - Relations between models are updated while ... ok
+test_render (migrations.test_state.StateTests)
+Tests rendering a ProjectState into an Apps. ... ok
+test_render_model_inheritance (migrations.test_state.StateTests) ... ok
+test_render_model_with_multiple_inheritance (migrations.test_state.StateTests) ... ok
+test_render_project_dependencies (migrations.test_state.StateTests)
+The ProjectState render method correctly renders models ... ok
+test_render_unique_app_labels (migrations.test_state.StateTests)
+The ProjectState render method doesn't raise an ... ok
+test_self_relation (migrations.test_state.StateTests)
+#24513 - Modifying an object pointing to itself would cause it to be ... ok
+
+======================================================================
+ERROR: test_clash_parent_link (invalid_models_tests.test_relative_fields.ComplexClashTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/tests/invalid_models_tests/test_relative_fields.py", line 1298, in test_clash_parent_link
+    class Child(Parent):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/django/db/models/base.py", line 322, in __new__
+    new_class._prepare()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/django/db/models/base.py", line 335, in _prepare
+    opts._prepare(cls)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/django/db/models/options.py", line 255, in _prepare
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Add parent_link=True to invalid_models_tests.Child.other_parent.
+
+======================================================================
+ERROR: test_onetoone_with_parent_model (invalid_models_tests.test_models.OtherModelTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/tests/invalid_models_tests/test_models.py", line 1012, in test_onetoone_with_parent_model
+    class ParkingLot(Place):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/django/db/models/base.py", line 322, in __new__
+    new_class._prepare()
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/django/db/models/base.py", line 335, in _prepare
+    opts._prepare(cls)
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-135801/worktrees/django__django-12325/django__django/django/db/models/options.py", line 255, in _prepare
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Add parent_link=True to invalid_models_tests.ParkingLot.other_place.
+
+----------------------------------------------------------------------
+Ran 203 tests in 1.616s
+
+FAILED (errors=2)

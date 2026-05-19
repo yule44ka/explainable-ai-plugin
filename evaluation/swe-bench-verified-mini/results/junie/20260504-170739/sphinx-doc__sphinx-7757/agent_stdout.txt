@@ -1,0 +1,2 @@
+Authenticated successfully
+[38;5;203m● Junie: Insufficient Account Balance. All tokens on your balance are spent.[0m

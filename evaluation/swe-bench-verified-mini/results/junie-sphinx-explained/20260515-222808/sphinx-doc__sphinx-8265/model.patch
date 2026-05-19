@@ -1,0 +1,249 @@
+diff --git a/reproduction/source/conf.py b/reproduction/source/conf.py
+new file mode 100644
+index 000000000..a695d1804
+--- /dev/null
++++ b/reproduction/source/conf.py
+@@ -0,0 +1 @@
++extensions = ['sphinx.ext.autodoc']
+diff --git a/reproduction/source/index.rst b/reproduction/source/index.rst
+new file mode 100644
+index 000000000..cba54ad02
+--- /dev/null
++++ b/reproduction/source/index.rst
+@@ -0,0 +1,2 @@
++.. automodule:: test_module
++   :members:
+diff --git a/reproduction/test_ast_unparse.py b/reproduction/test_ast_unparse.py
+new file mode 100644
+index 000000000..aac8a2a44
+--- /dev/null
++++ b/reproduction/test_ast_unparse.py
+@@ -0,0 +1,22 @@
++import ast
++from sphinx.pycode.ast import unparse
++
++code = "def f(color=(1, 1, 1), single=(1,), empty=()): pass"
++tree = ast.parse(code)
++# tree.body[0] is the FunctionDef
++# tree.body[0].args.defaults contains the default values
++
++for i, default in enumerate(tree.body[0].args.defaults):
++    print(f"Default {i}: {unparse(default)}")
++
++# Test Tuple[int, int]
++subscript_node = ast.parse("Tuple[int, int]").body[0].value
++print(f"Subscript Tuple[int, int]: {unparse(subscript_node)}")
++tuple_node = ast.parse("(1, 1, 1)").body[0].value
++print(f"Tuple node (1, 1, 1): {unparse(tuple_node)}")
++
++single_tuple_node = ast.parse("(1,)").body[0].value
++print(f"Single element tuple (1,): {unparse(single_tuple_node)}")
++
++empty_tuple_node = ast.parse("()").body[0].value
++print(f"Empty tuple (): {unparse(empty_tuple_node)}")
+diff --git a/reproduction/test_module.py b/reproduction/test_module.py
+new file mode 100644
+index 000000000..1da2aebac
+--- /dev/null
++++ b/reproduction/test_module.py
+@@ -0,0 +1,3 @@
++class TestClass:
++    def add_lines(self, lines, color=(1, 1, 1), width=5, label=None, name=None):
++        pass
+diff --git a/reproduction/test_parse_annotation.py b/reproduction/test_parse_annotation.py
+new file mode 100644
+index 000000000..82435bd03
+--- /dev/null
++++ b/reproduction/test_parse_annotation.py
+@@ -0,0 +1,44 @@
++import sys
++import os
++from unittest.mock import MagicMock
++
++# Add project root to sys.path
++sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
++
++from sphinx.domains.python import _parse_annotation
++from docutils import nodes
++from sphinx import addnodes
++
++def print_nodes(nodes_list):
++    res = []
++    for node in nodes_list:
++        if isinstance(node, nodes.Text):
++            res.append(f"Text('{node.astext()}')")
++        elif isinstance(node, addnodes.desc_sig_punctuation):
++            res.append(f"Punct('{node.astext()}')")
++        else:
++            res.append(f"{node.__class__.__name__}('{node.astext()}')")
++    return " ".join(res)
++
++env = MagicMock()
++env.ref_context = {}
++
++print("Testing _parse_annotation:")
++
++# Test Tuple[int, int] - should NOT have extra parentheses
++nodes_list = _parse_annotation("Tuple[int, int]", env)
++print(f"Tuple[int, int]: {print_nodes(nodes_list)}")
++
++# Test (1, 2, 3) - should HAVE parentheses
++# Note: _parse_annotation parses the string as an expression. 
++# If we pass "(1, 2, 3)", it should work.
++nodes_list = _parse_annotation("(1, 2, 3)", env)
++print(f"(1, 2, 3): {print_nodes(nodes_list)}")
++
++# Test single element tuple (1,)
++nodes_list = _parse_annotation("(1,)", env)
++print(f"(1,): {print_nodes(nodes_list)}")
++
++# Test empty tuple ()
++nodes_list = _parse_annotation("()", env)
++print(f"(): {print_nodes(nodes_list)}")
+diff --git a/reproduction/test_sig.py b/reproduction/test_sig.py
+new file mode 100644
+index 000000000..777ee42a6
+--- /dev/null
++++ b/reproduction/test_sig.py
+@@ -0,0 +1,17 @@
++import inspect
++from sphinx.util.inspect import stringify_signature
++
++def test_func(color=(1, 1, 1)):
++    pass
++
++sig = inspect.signature(test_func)
++print(f"Signature: {sig}")
++print(f"Stringified: {stringify_signature(sig)}")
++
++class TestClass:
++    def add_lines(self, lines, color=(1, 1, 1), width=5, label=None, name=None):
++        pass
++
++sig2 = inspect.signature(TestClass.add_lines)
++print(f"Class method signature: {sig2}")
++print(f"Stringified class method: {stringify_signature(sig2)}")
+diff --git a/reproduction/test_sig_ast.py b/reproduction/test_sig_ast.py
+new file mode 100644
+index 000000000..09fc3dfc5
+--- /dev/null
++++ b/reproduction/test_sig_ast.py
+@@ -0,0 +1,10 @@
++import ast
++from sphinx.util.inspect import signature_from_ast, stringify_signature
++
++code = "def f(color=(1, 1, 1)): pass"
++tree = ast.parse(code)
++func_node = tree.body[0]
++
++sig = signature_from_ast(func_node)
++print(f"Signature from AST: {sig}")
++print(f"Stringified signature: {stringify_signature(sig)}")
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index f4bc58b69..ca4c16a0e 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -103,7 +103,14 @@ def _parse_annotation(annotation: str, env: BuildEnvironment = None) -> List[Nod
+         elif isinstance(node, ast.Expr):
+             return unparse(node.value)
+         elif isinstance(node, ast.Index):
+-            return unparse(node.value)
++            result = unparse(node.value)
++            if isinstance(node.value, ast.Tuple) and node.value.elts:
++                if (isinstance(result[0], addnodes.desc_sig_punctuation) and
++                        result[0].astext() == '(' and
++                        isinstance(result[-1], addnodes.desc_sig_punctuation) and
++                        result[-1].astext() == ')'):
++                    result = result[1:-1]
++            return result
+         elif isinstance(node, ast.List):
+             result = [addnodes.desc_sig_punctuation('', '[')]  # type: List[Node]
+             for elem in node.elts:
+@@ -119,20 +126,27 @@ def _parse_annotation(annotation: str, env: BuildEnvironment = None) -> List[Nod
+         elif isinstance(node, ast.Subscript):
+             result = unparse(node.value)
+             result.append(addnodes.desc_sig_punctuation('', '['))
+-            result.extend(unparse(node.slice))
++
++            slice_nodes = unparse(node.slice)
++            if isinstance(node.slice, ast.Tuple) and node.slice.elts:
++                if (isinstance(slice_nodes[0], addnodes.desc_sig_punctuation) and
++                        slice_nodes[0].astext() == '(' and
++                        isinstance(slice_nodes[-1], addnodes.desc_sig_punctuation) and
++                        slice_nodes[-1].astext() == ')'):
++                    slice_nodes = slice_nodes[1:-1]
++
++            result.extend(slice_nodes)
+             result.append(addnodes.desc_sig_punctuation('', ']'))
+             return result
+         elif isinstance(node, ast.Tuple):
++            result = [addnodes.desc_sig_punctuation('', '(')]
+             if node.elts:
+-                result = []
+                 for elem in node.elts:
+                     result.extend(unparse(elem))
+                     result.append(addnodes.desc_sig_punctuation('', ', '))
+-                result.pop()
+-            else:
+-                result = [addnodes.desc_sig_punctuation('', '('),
+-                          addnodes.desc_sig_punctuation('', ')')]
+-
++                if len(node.elts) > 1:
++                    result.pop()
++            result.append(addnodes.desc_sig_punctuation('', ')'))
+             return result
+         else:
+             if sys.version_info >= (3, 6):
+diff --git a/sphinx/pycode/ast.py b/sphinx/pycode/ast.py
+index 3e2e2804e..893a30bda 100644
+--- a/sphinx/pycode/ast.py
++++ b/sphinx/pycode/ast.py
+@@ -158,7 +158,10 @@ class _UnparseVisitor(ast.NodeVisitor):
+         return "{" + ", ".join(items) + "}"
+ 
+     def visit_Index(self, node: ast.Index) -> str:
+-        return self.visit(node.value)
++        res = self.visit(node.value)
++        if isinstance(node.value, ast.Tuple) and node.value.elts:
++            res = res[1:-1]
++        return res
+ 
+     def visit_Lambda(self, node: ast.Lambda) -> str:
+         return "lambda %s: ..." % self.visit(node.args)
+@@ -173,14 +176,20 @@ class _UnparseVisitor(ast.NodeVisitor):
+         return "{" + ", ".join(self.visit(e) for e in node.elts) + "}"
+ 
+     def visit_Subscript(self, node: ast.Subscript) -> str:
+-        return "%s[%s]" % (self.visit(node.value), self.visit(node.slice))
++        res = self.visit(node.slice)
++        if isinstance(node.slice, ast.Tuple) and node.slice.elts:
++            res = res[1:-1]
++        return "%s[%s]" % (self.visit(node.value), res)
+ 
+     def visit_UnaryOp(self, node: ast.UnaryOp) -> str:
+         return "%s %s" % (self.visit(node.op), self.visit(node.operand))
+ 
+     def visit_Tuple(self, node: ast.Tuple) -> str:
+         if node.elts:
+-            return ", ".join(self.visit(e) for e in node.elts)
++            if len(node.elts) == 1:
++                return "(" + self.visit(node.elts[0]) + ",)"
++            else:
++                return "(" + ", ".join(self.visit(e) for e in node.elts) + ")"
+         else:
+             return "()"
+ 
+diff --git a/tests/test_pycode_ast.py b/tests/test_pycode_ast.py
+index 9b12d24d5..ec48f0de3 100644
+--- a/tests/test_pycode_ast.py
++++ b/tests/test_pycode_ast.py
+@@ -53,7 +53,8 @@ from sphinx.pycode import ast
+     ("+ a", "+ a"),                             # UAdd
+     ("- 1", "- 1"),                             # UnaryOp
+     ("- a", "- a"),                             # USub
+-    ("(1, 2, 3)", "1, 2, 3"),                   # Tuple
++    ("(1, 2, 3)", "(1, 2, 3)"),                 # Tuple
++    ("(1,)", "(1,)"),                           # Tuple (single item)
+     ("()", "()"),                               # Tuple (empty)
+ ])
+ def test_unparse(source, expected):

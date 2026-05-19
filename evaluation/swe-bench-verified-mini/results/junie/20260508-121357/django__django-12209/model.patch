@@ -1,0 +1,64 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index d1cc3c5060..0d2d28e461 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -420,6 +420,18 @@ class Model(metaclass=ModelBase):
+         # Set up the storage for instance state
+         self._state = ModelState()
+ 
++        # Check if the primary key is provided in args or kwargs.
++        self._state._explicit_pk = False
++        if kwargs:
++            if 'pk' in kwargs or opts.pk.name in kwargs or opts.pk.attname in kwargs:
++                self._state._explicit_pk = True
++        if not self._state._explicit_pk and args:
++            for i, field in enumerate(opts.concrete_fields):
++                if field.primary_key:
++                    if len(args) > i:
++                        self._state._explicit_pk = True
++                    break
++
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+         # The reason for the kwargs check is that standard iterator passes in by
+@@ -505,6 +517,7 @@ class Model(metaclass=ModelBase):
+             for kwarg in kwargs:
+                 raise TypeError("%s() got an unexpected keyword argument '%s'" % (cls.__name__, kwarg))
+         super().__init__()
++        self._state._initial_pk = self.pk
+         post_init.send(sender=cls, instance=self)
+ 
+     @classmethod
+@@ -846,21 +859,28 @@ class Model(metaclass=ModelBase):
+                        if f.name in update_fields or f.attname in update_fields]
+ 
+         pk_val = self._get_pk_val(meta)
+-        if pk_val is None:
++        pk_set = pk_val is not None
++        if not pk_set:
+             pk_val = meta.pk.get_pk_value_on_save(self)
+             setattr(self, meta.pk.attname, pk_val)
+-        pk_set = pk_val is not None
+-        if not pk_set and (force_update or update_fields):
++        if pk_val is None and (force_update or update_fields):
+             raise ValueError("Cannot force an update in save() with no primary key.")
+         updated = False
+         # Skip an UPDATE when adding an instance and primary key has a default.
+         if (
+             not force_insert and
++            not force_update and
++            not raw and
+             self._state.adding and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+-            force_insert = True
++            if (
++                not getattr(self._state, '_explicit_pk', False) and
++                pk_val == getattr(self._state, '_initial_pk', None)
++            ) or not pk_set:
++                force_insert = True
++        pk_set = pk_val is not None
+         # If possible, try an UPDATE. If that doesn't update anything, do an INSERT.
+         if pk_set and not force_insert:
+             base_qs = cls._base_manager.using(using)

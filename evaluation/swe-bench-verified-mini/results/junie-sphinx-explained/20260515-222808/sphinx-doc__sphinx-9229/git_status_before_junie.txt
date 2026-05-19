@@ -1,0 +1,11 @@
+ M sphinx/builders/latex/util.py
+ M sphinx/cmd/build.py
+ M sphinx/ext/autodoc/__init__.py
+ M sphinx/ext/imgmath.py
+ M sphinx/util/fileutil.py
+ M tests/roots/test-directive-code/conf.py
+ M tests/roots/test-ext-autodoc/target/inheritance.py
+ M tests/roots/test-ext-autosummary/autosummary_importfail.py
+ M tests/roots/test-html_style/conf.py
+ M tests/test_domain_cpp.py
+ M tests/test_ext_graphviz.py

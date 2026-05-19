@@ -1,0 +1,12 @@
+
+=============================== warnings summary ===============================
+sphinx/util/rst.py:58
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8056/sphinx-doc__sphinx/sphinx/util/rst.py:58: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+sphinx/jinja2glue.py:106
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-163447/worktrees/sphinx-doc__sphinx-8056/sphinx-doc__sphinx/sphinx/jinja2glue.py:106: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    def warning(context: Dict, message: str, *args: Any, **kwargs: Any) -> str:
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 warnings in 0.11s

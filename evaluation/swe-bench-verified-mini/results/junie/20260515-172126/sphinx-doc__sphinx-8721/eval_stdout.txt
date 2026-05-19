@@ -1,0 +1,84 @@
+.F..                                                                     [100%]
+=================================== FAILURES ===================================
+__________________________ test_viewcode_epub_enabled __________________________
+
+app = <SphinxTestApp buildername='epub'>
+status = <_io.StringIO object at 0x107e6c8b0>
+warning = <_io.StringIO object at 0x107e6c940>
+
+    @pytest.mark.sphinx('epub', testroot='ext-viewcode',
+                        confoverrides={'viewcode_enable_epub': True})
+    def test_viewcode_epub_enabled(app, status, warning):
+        app.builder.build_all()
+    
+>       assert (app.outdir / '_modules/spam/mod1.xhtml').exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = (path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-200/ext-viewcode/_build/epub') / '_modules/spam/mod1.xhtml').exists
+E        +      where path('/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-200/ext-viewcode/_build/epub') = <SphinxTestApp buildername='epub'>.outdir
+
+tests/test_ext_viewcode.py:64: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: epub
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-200/ext-viewcode
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-200/ext-viewcode/_build/epub
+# status: 
+[01mRunning Sphinx v3.5.0+/82ef497a8[39;49;00m
+[01mloading pickled environment... [39;49;00mdone
+[01mbuilding [epub]: [39;49;00mall source files
+[01mupdating environment: [39;49;00m0 added, 0 changed, 0 removed
+[01mlooking for now-outdated files... [39;49;00mnone found
+[01mpreparing documents... [39;49;00mdone
+[01mwriting output... [39;49;00m[ 50%] [32mindex[39;49;00m                                                 
+[01mwriting output... [39;49;00m[100%] [32mobjects[39;49;00m                                               
+[01mgenerating indices... [39;49;00mgenindex py-modindex done
+[01mwriting additional pages... [39;49;00mdone
+[01mcopying static files... [39;49;00mdone
+[01mcopying extra files... [39;49;00mdone
+writing mimetype file...
+writing META-INF/container.xml file...
+writing content.opf file...
+writing nav.xhtml file...
+writing toc.ncx file...
+writing Python.epub file...
+
+# warning: 
+[91mWARNING: conf value "epub_copyright" (or "copyright")should not be empty for EPUB3[39;49;00m
+[91mWARNING: conf value "version" should not be empty for EPUB3[39;49;00m
+[91m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-200/ext-viewcode/objects.rst:117: WARNING: Unparseable C cross-reference: 'SphinxType *'
+Invalid C declaration: Expected end of definition. [error at 11]
+  SphinxType *
+  -----------^[39;49;00m
+
+=============================== warnings summary ===============================
+sphinx/util/rst.py:56
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/worktrees/sphinx-doc__sphinx-8721/sphinx-doc__sphinx/sphinx/util/rst.py:56: DeprecationWarning: 'environmentfilter' is renamed to 'pass_environment', the old name will be removed in Jinja 3.1.
+    def heading(env: Environment, text: str, level: int = 1) -> str:
+
+tests/test_ext_viewcode.py::test_viewcode_epub_default
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/worktrees/sphinx-doc__sphinx-8721/sphinx-doc__sphinx/sphinx/jinja2glue.py:106: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    def warning(context: Dict, message: str, *args: Any, **kwargs: Any) -> str:
+
+tests/test_ext_viewcode.py::test_viewcode_epub_default
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+tests/test_ext_viewcode.py::test_viewcode_epub_default
+tests/test_ext_viewcode.py::test_viewcode_epub_enabled
+tests/test_ext_viewcode.py::test_linkcode
+tests/test_ext_viewcode.py::test_local_source_files
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/worktrees/sphinx-doc__sphinx-8721/sphinx-doc__sphinx/sphinx/jinja2glue.py:184: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    self.environment.globals['debug'] = contextfunction(pformat)
+
+tests/test_ext_viewcode.py::test_viewcode_epub_default
+tests/test_ext_viewcode.py::test_viewcode_epub_enabled
+tests/test_ext_viewcode.py::test_linkcode
+tests/test_ext_viewcode.py::test_local_source_files
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260515-172126/worktrees/sphinx-doc__sphinx-8721/sphinx-doc__sphinx/sphinx/jinja2glue.py:186: DeprecationWarning: 'contextfunction' is renamed to 'pass_context', the old name will be removed in Jinja 3.1.
+    self.environment.globals['accesskey'] = contextfunction(accesskey)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_ext_viewcode.py::test_viewcode_epub_enabled - AssertionErro...
+1 failed, 3 passed, 11 warnings in 1.38s

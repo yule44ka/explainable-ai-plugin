@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.swing.JComponent
+import javax.swing.JLabel
 
 /**
  * UI for OpenAI settings in Settings -> Tools -> Explainable AI
@@ -24,10 +25,15 @@ class OpenAISettingsConfigurable : Configurable {
     
     // UI components
     private val apiKeyField = JBPasswordField()
+    private val junieTokenField = JBPasswordField()
     private val apiEndpointField = JBTextField()
     private val modelField = JBTextField()
+    private val modelLabel = JLabel("Model:")
     private val temperatureField = JBTextField()
     private val maxTokensField = JBTextField()
+    private val explanationProviderCombo = javax.swing.JComboBox(
+        ExplanationProvider.entries.map { it.displayName }.toTypedArray()
+    )
     
     override fun getDisplayName(): String = "Explainable AI"
     
@@ -50,8 +56,36 @@ class OpenAISettingsConfigurable : Configurable {
                         testConnection()
                     }
                 }
-                
+            }
+            
+            group("Junie CLI Configuration") {
+                row("Junie API Key:") {
+                    cell(junieTokenField)
+                        .align(AlignX.FILL)
+                        .comment("Your Junie API Key (securely stored)")
+                        .resizableColumn()
+                }
+                row {
+                    link("Get API Key from Junie") {
+                        java.awt.Desktop.getDesktop().browse(
+                            java.net.URI("https://junie.jetbrains.com/cli")
+                        )
+                    }
+                }
+            }
+            
+            group("Advanced Settings") {
                 separator()
+
+                row("Explanation Provider:") {
+                    cell(explanationProviderCombo)
+                        .comment("Choose Junie or the legacy OpenAI API calls for explanations and mappings")
+                        .applyToComponent {
+                            addActionListener {
+                                updateModelVisibility()
+                            }
+                        }
+                }
                 
                 row("API Endpoint:") {
                     cell(apiEndpointField)
@@ -59,7 +93,8 @@ class OpenAISettingsConfigurable : Configurable {
                         .comment("OpenAI API endpoint URL")
                 }
                 
-                row("Model:") {
+                row {
+                    cell(modelLabel)
                     cell(modelField)
                         .align(AlignX.FILL)
                         .comment("Model to use (e.g., gpt-4, gpt-3.5-turbo)")
@@ -88,6 +123,15 @@ class OpenAISettingsConfigurable : Configurable {
         
         reset()
         return settingsPanel!!
+    }
+
+    private fun updateModelVisibility() {
+        val isOpenAIProviderSelected = ExplanationProvider.entries[explanationProviderCombo.selectedIndex] ==
+                ExplanationProvider.OPENAI_API
+        modelLabel.isVisible = isOpenAIProviderSelected
+        modelField.isVisible = isOpenAIProviderSelected
+        settingsPanel?.revalidate()
+        settingsPanel?.repaint()
     }
     
     private fun testConnection() {
@@ -133,7 +177,12 @@ class OpenAISettingsConfigurable : Configurable {
         val currentApiKey = settings.getApiKey() ?: ""
         val newApiKey = String(apiKeyField.password)
         
+        val currentJunieToken = settings.getJunieToken() ?: ""
+        val newJunieToken = String(junieTokenField.password)
+        
         return newApiKey != currentApiKey ||
+                newJunieToken != currentJunieToken ||
+                ExplanationProvider.entries[explanationProviderCombo.selectedIndex] != settings.explanationProvider ||
                 apiEndpointField.text != settings.apiEndpoint ||
                 modelField.text != settings.model ||
                 temperatureField.text != settings.temperature.toString() ||
@@ -146,8 +195,14 @@ class OpenAISettingsConfigurable : Configurable {
             settings.setApiKey(newApiKey)
         }
         
+        val newJunieToken = String(junieTokenField.password)
+        if (newJunieToken.isNotEmpty()) {
+            settings.setJunieToken(newJunieToken)
+        }
+        
         settings.apiEndpoint = apiEndpointField.text
         settings.model = modelField.text
+        settings.explanationProvider = ExplanationProvider.entries[explanationProviderCombo.selectedIndex]
         
         try {
             settings.temperature = temperatureField.text.toDouble()
@@ -165,10 +220,16 @@ class OpenAISettingsConfigurable : Configurable {
     override fun reset() {
         val apiKey = settings.getApiKey() ?: ""
         apiKeyField.text = apiKey
+        
+        val junieToken = settings.getJunieToken() ?: ""
+        junieTokenField.text = junieToken
+        
         apiEndpointField.text = settings.apiEndpoint
         modelField.text = settings.model
         temperatureField.text = settings.temperature.toString()
         maxTokensField.text = settings.maxTokens.toString()
+        explanationProviderCombo.selectedIndex = settings.explanationProvider.ordinal
+        updateModelVisibility()
     }
     
     override fun disposeUIResources() {

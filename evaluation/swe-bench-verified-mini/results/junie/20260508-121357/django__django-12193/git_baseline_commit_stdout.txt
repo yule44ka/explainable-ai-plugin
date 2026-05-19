@@ -1,0 +1,2 @@
+[detached HEAD a99c96cbce] SWE-bench runner baseline before Junie
+ 10 files changed, 97 insertions(+)

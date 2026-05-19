@@ -1,0 +1,130 @@
+E                                                                        [100%]
+==================================== ERRORS ====================================
+___________________ ERROR at setup of test_pymethod_options ____________________
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1090e06e0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x1090e0830>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+>               mod = import_module(extname)
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+sphinx/registry.py:429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/builders/epub3.py:18: in <module>
+    from sphinx.builders import _epub_base
+sphinx/builders/_epub_base.py:23: in <module>
+    from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
+sphinx/builders/html/__init__.py:50: in <module>
+    from sphinx.writers.html import HTMLTranslator, HTMLWriter
+sphinx/writers/html.py:30: in <module>
+    from sphinx.util.images import get_image_size
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """
+        sphinx.util.images
+        ~~~~~~~~~~~~~~~~~~
+    
+        Image utility functions for Sphinx.
+    
+        :copyright: Copyright 2007-2021 by the Sphinx team, see AUTHORS.
+        :license: BSD, see LICENSE for details.
+    """
+    
+    import base64
+>   import imghdr
+E   ModuleNotFoundError: No module named 'imghdr'
+
+sphinx/util/images.py:12: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+fixturedef = <FixtureDef argname='app' scope='function' baseid=''>
+request = <SubRequest 'app' for <Function test_pymethod_options>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/fixtures.py:147: in app
+    app_ = make_app(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/fixtures.py:193: in make
+    app_: Any = SphinxTestApp(*args, **kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sphinx/testing/util.py:133: in __init__
+    super().__init__(srcdir, confdir, outdir, doctreedir,
+sphinx/application.py:233: in __init__
+    self.setup_extension(extension)
+sphinx/application.py:393: in setup_extension
+    self.registry.load_extension(self, extname)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sphinx.registry.SphinxComponentRegistry object at 0x1090e06e0>
+app = <[AttributeError("'NoneType' object has no attribute 'name'") raised in repr()] SphinxTestApp object at 0x1090e0830>
+extname = 'sphinx.builders.epub3'
+
+    def load_extension(self, app: "Sphinx", extname: str) -> None:
+        """Load a Sphinx extension."""
+        if extname in app.extensions:  # already loaded
+            return
+        if extname in EXTENSION_BLACKLIST:
+            logger.warning(__('the extension %r was already merged with Sphinx since '
+                              'version %s; this extension is ignored.'),
+                           extname, EXTENSION_BLACKLIST[extname])
+            return
+    
+        # update loading context
+        prefix = __('while setting up extension %s:') % extname
+        with prefixed_warnings(prefix):
+            try:
+                mod = import_module(extname)
+            except ImportError as err:
+                logger.verbose(__('Original exception:\n') + traceback.format_exc())
+>               raise ExtensionError(__('Could not import extension %s') % extname,
+                                     err) from err
+E               sphinx.errors.ExtensionError: Could not import extension sphinx.builders.epub3 (exception: No module named 'imghdr')
+
+sphinx/registry.py:432: ExtensionError
+=============================== warnings summary ===============================
+sphinx/util/docutils.py:44
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-9698/sphinx-doc__sphinx/sphinx/util/docutils.py:44: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+    __version_info__ = tuple(LooseVersion(docutils.__version__).version)
+
+sphinx/highlighting.py:67
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-9698/sphinx-doc__sphinx/sphinx/highlighting.py:67: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+    if tuple(LooseVersion(pygmentsversion).version) <= (2, 7, 4):
+
+sphinx/registry.py:24
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-9698/sphinx-doc__sphinx/sphinx/registry.py:24: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+    from pkg_resources import iter_entry_points
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_domain_py.py::test_pymethod_options - sphinx.errors.Extensio...
+3 warnings, 1 error in 0.77s

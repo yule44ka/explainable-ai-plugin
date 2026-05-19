@@ -1,0 +1,2 @@
+instance_id,repo,base_commit,status,success,agent_seconds,eval_seconds,total_seconds,junie_returncode,eval_returncode,output_dir,error
+django__django-11880,django/django,06909fe084f87a65459a83bd69d7cdbe4fce9a7c,passed,True,93.994,2.252,97.642,0,0,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260508-114501/django__django-11880,

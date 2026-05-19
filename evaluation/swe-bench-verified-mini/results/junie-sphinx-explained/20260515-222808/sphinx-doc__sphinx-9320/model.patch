@@ -1,0 +1,82 @@
+diff --git a/sphinx/cmd/quickstart.py b/sphinx/cmd/quickstart.py
+index 612f7e493..f8689e862 100644
+--- a/sphinx/cmd/quickstart.py
++++ b/sphinx/cmd/quickstart.py
+@@ -94,6 +94,8 @@ class ValidationError(Exception):
+ 
+ 
+ def is_path(x: str) -> str:
++    if x == '':
++        return x
+     x = path.expanduser(x)
+     if not path.isdir(x):
+         raise ValidationError(__("Please enter a valid path name."))
+diff --git a/sphinx/deprecation.py b/sphinx/deprecation.py
+index 3963e6361..6b0bdd158 100644
+--- a/sphinx/deprecation.py
++++ b/sphinx/deprecation.py
+@@ -14,6 +14,10 @@ from importlib import import_module
+ from typing import Any, Dict, Type
+ 
+ 
++class RemovedInSphinx40Warning(DeprecationWarning):
++    pass
++
++
+ class RemovedInSphinx50Warning(DeprecationWarning):
+     pass
+ 
+diff --git a/sphinx/util/images.py b/sphinx/util/images.py
+index a2a31f55b..5fa8933eb 100644
+--- a/sphinx/util/images.py
++++ b/sphinx/util/images.py
+@@ -9,7 +9,10 @@
+ """
+ 
+ import base64
+-import imghdr
++try:
++    import imghdr
++except ImportError:
++    imghdr = None
+ from collections import OrderedDict
+ from os import path
+ from typing import IO, BinaryIO, NamedTuple, Optional, Tuple
+@@ -56,11 +59,12 @@ def get_image_size(filename: str) -> Optional[Tuple[int, int]]:
+ 
+ 
+ def guess_mimetype_for_stream(stream: IO, default: Optional[str] = None) -> Optional[str]:
+-    imgtype = imghdr.what(stream)
+-    if imgtype:
+-        return 'image/' + imgtype
+-    else:
+-        return default
++    if imghdr:
++        imgtype = imghdr.what(stream)
++        if imgtype:
++            return 'image/' + imgtype
++
++    return default
+ 
+ 
+ def guess_mimetype(filename: str = '', default: Optional[str] = None) -> Optional[str]:
+@@ -116,4 +120,5 @@ def test_svg(h: bytes, f: Optional[BinaryIO]) -> Optional[str]:
+ 
+ # install test_svg() to imghdr
+ # refs: https://docs.python.org/3.6/library/imghdr.html#imghdr.tests
+-imghdr.tests.append(test_svg)
++if imghdr:
++    imghdr.tests.append(test_svg)
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index 279268aee..53205e9a1 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -34,7 +34,7 @@ else:
+             return ref._eval_type(globalns, localns)
+ 
+ if sys.version_info > (3, 10):
+-    from types import Union as types_Union
++    from types import UnionType as types_Union
+ else:
+     types_Union = None
+ 

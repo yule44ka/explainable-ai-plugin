@@ -1,0 +1,1 @@
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m pytest -q tests/test_util_inspect.py::test_signature_from_str_positionaly_only_args

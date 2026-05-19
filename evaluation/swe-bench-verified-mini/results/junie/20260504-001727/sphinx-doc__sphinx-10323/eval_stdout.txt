@@ -1,0 +1,34 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_LiteralIncludeReader_dedent_and_append_and_prepend ____________
+
+literal_inc_path = path('/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/sphinx-doc__sphinx-10323/sphinx-doc__sphinx/tests/roots/test-directive-code/literal.inc')
+
+    @pytest.mark.xfail(os.name != 'posix', reason="Not working on windows")
+    def test_LiteralIncludeReader_dedent_and_append_and_prepend(literal_inc_path):
+        # dedent: 2
+        options = {'lines': '9-11', 'dedent': 2, 'prepend': 'class Foo:', 'append': '# comment'}
+        reader = LiteralIncludeReader(literal_inc_path, options, DUMMY_CONFIG)
+        content, lines = reader.read()
+>       assert content == ("class Foo:\n"
+                           "  def baz():\n"
+                           "      pass\n"
+                           "\n"
+                           "# comment\n")
+E       AssertionError: assert 'ass Foo:\n  ...\n\ncomment\n' == 'class Foo:\n...\n# comment\n'
+E         
+E         - class Foo:
+E         ? --
+E         + ass Foo:
+E             def baz():
+E                 pass
+E           ...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/test_directive_code.py:260: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  sphinx.sphinx.directives.code:logging.py:122 non-whitespace stripped by dedent
+=========================== short test summary info ============================
+FAILED tests/test_directive_code.py::test_LiteralIncludeReader_dedent_and_append_and_prepend
+1 failed in 0.53s

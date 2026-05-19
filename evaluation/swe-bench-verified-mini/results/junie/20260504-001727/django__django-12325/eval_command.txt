@@ -1,0 +1,1 @@
+/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/django39/bin/python tests/runtests.py --verbosity=2 invalid_models_tests.test_relative_fields.ComplexClashTests.test_clash_parent_link invalid_models_tests.test_models.OtherModelTests.test_onetoone_with_parent_model

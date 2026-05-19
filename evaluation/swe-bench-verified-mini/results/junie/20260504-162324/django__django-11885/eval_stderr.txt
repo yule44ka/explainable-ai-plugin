@@ -1,0 +1,57 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_fast_delete_combined_relationships (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)
+#25932 - Fast deleting on backends that don't have the ... ok
+test_fast_delete_fk (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_inheritance (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_joined_qs (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_large_batch (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_m2m (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_qs (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_revm2m (delete.tests.FastDeleteTests) ... ok
+test_auto (delete.tests.OnDeleteTests) ... ok
+test_auto_nullable (delete.tests.OnDeleteTests) ... ok
+test_cascade (delete.tests.OnDeleteTests) ... ok
+test_cascade_from_child (delete.tests.OnDeleteTests) ... ok
+test_cascade_from_parent (delete.tests.OnDeleteTests) ... ok
+test_cascade_nullable (delete.tests.OnDeleteTests) ... ok
+test_do_nothing (delete.tests.OnDeleteTests) ... ok
+test_do_nothing_qscount (delete.tests.OnDeleteTests)
+A models.DO_NOTHING relation doesn't trigger a query. ... ok
+test_inheritance_cascade_down (delete.tests.OnDeleteTests) ... ok
+test_inheritance_cascade_up (delete.tests.OnDeleteTests) ... ok
+test_non_callable (delete.tests.OnDeleteTests) ... ok
+test_o2o_setnull (delete.tests.OnDeleteTests) ... ok
+test_protect (delete.tests.OnDeleteTests) ... ok
+test_setdefault (delete.tests.OnDeleteTests) ... ok
+test_setdefault_none (delete.tests.OnDeleteTests) ... ok
+test_setnull (delete.tests.OnDeleteTests) ... ok
+test_setnull_from_child (delete.tests.OnDeleteTests) ... ok
+test_setnull_from_parent (delete.tests.OnDeleteTests) ... ok
+test_setvalue (delete.tests.OnDeleteTests) ... ok
+test_bulk (delete.tests.DeletionTests) ... ok
+test_can_defer_constraint_checks (delete.tests.DeletionTests) ... ok
+test_delete_with_keeping_parents (delete.tests.DeletionTests) ... ok
+test_delete_with_keeping_parents_relationships (delete.tests.DeletionTests) ... ok
+test_deletion_order (delete.tests.DeletionTests) ... ok
+test_hidden_related (delete.tests.DeletionTests) ... ok
+test_instance_update (delete.tests.DeletionTests) ... ok
+test_large_delete (delete.tests.DeletionTests) ... ok
+test_large_delete_related (delete.tests.DeletionTests) ... ok
+test_m2m (delete.tests.DeletionTests) ... ok
+test_model_delete_returns_num_rows (delete.tests.DeletionTests)
+Model.delete() should return the number of deleted rows and a ... ok
+test_only_referenced_fields_selected (delete.tests.DeletionTests)
+Only referenced fields are selected during cascade deletion SELECT ... ok
+test_proxied_model_duplicate_queries (delete.tests.DeletionTests)
+#25685 - Deleting instances of a model with existing proxy ... ok
+test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)
+QuerySet.delete() should return the number of deleted rows and a ... ok
+test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 0.300s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

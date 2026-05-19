@@ -1,0 +1,43 @@
+F.............                                                           [100%]
+=================================== FAILURES ===================================
+______________________ test_class_alias_having_doccomment ______________________
+
+app = <SphinxTestApp buildername='html'>
+
+    def test_class_alias_having_doccomment(app):
+        actual = do_autodoc(app, 'class', 'target.classes.OtherAlias')
+>       assert list(actual) == [
+            '',
+            '.. py:attribute:: OtherAlias',
+            '   :module: target.classes',
+            '',
+            '   docstring',
+            '',
+        ]
+E       AssertionError: assert [] == ['', '.. py:a...ocstring', '']
+E         
+E         Right contains 6 more items, first extra item: ''
+E         Use -v to get more diff
+
+tests/test_ext_autodoc_autoclass.py:334: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-193/root
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-193/root/_build/html
+# status: 
+[01mRunning Sphinx v4.1.0[39;49;00m
+
+# warning: 
+[91mWARNING: autodoc: failed to import class 'classes.OtherAlias' from module 'target'; the following exception was raised:
+No module named 'target'[39;49;00m
+
+=============================== warnings summary ===============================
+tests/test_ext_autodoc_autoclass.py::test_class_alias_having_doccomment
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_ext_autodoc_autoclass.py::test_class_alias_having_doccomment
+1 failed, 13 passed, 1 warning in 0.55s

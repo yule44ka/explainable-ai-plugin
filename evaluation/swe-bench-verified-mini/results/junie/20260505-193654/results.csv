@@ -1,0 +1,14 @@
+instance_id,repo,base_commit,status,success,agent_seconds,eval_seconds,total_seconds,junie_returncode,eval_returncode,output_dir,error
+sphinx-doc__sphinx-10323,sphinx-doc/sphinx,31eba1a76dd485dc633cae48227b46879eda5df4,failed,False,214.006,1.551,217.814,0,1,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-193654/sphinx-doc__sphinx-10323,
+sphinx-doc__sphinx-10466,sphinx-doc/sphinx,cab2d93076d0cca7c53fac885f927dde3e2a5fec,passed,True,217.803,1.553,221.579,0,0,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-193654/sphinx-doc__sphinx-10466,
+sphinx-doc__sphinx-10673,sphinx-doc/sphinx,f35d2a6cc726f97d0e859ca7a0e1729f7da8a6c8,error,False,239.26,0.0,241.562,0,,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-193654/sphinx-doc__sphinx-10673,"Failed to restore test patch targets:
+error: pathspec 'tests/roots/test-toctree-index/foo.rst' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-toctree-index/index.rst' did not match any file(s) known to git
+"
+sphinx-doc__sphinx-10435,sphinx-doc/sphinx,f1061c012e214f16fd8790dec3c283d787e3daa8,failed,False,313.657,4.704,320.565,0,1,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-193654/sphinx-doc__sphinx-10435,
+sphinx-doc__sphinx-11510,sphinx-doc/sphinx,6cb783c0024a873722952a67ebb9f41771c8eb6d,error,False,327.061,0.0,329.202,0,,/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260505-193654/sphinx-doc__sphinx-11510,"Failed to restore test patch targets:
+error: pathspec 'tests/roots/test-directive-include/baz/baz.rst' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-directive-include/conf.py' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-directive-include/foo.rst' did not match any file(s) known to git
+error: pathspec 'tests/roots/test-directive-include/text.txt' did not match any file(s) known to git
+"

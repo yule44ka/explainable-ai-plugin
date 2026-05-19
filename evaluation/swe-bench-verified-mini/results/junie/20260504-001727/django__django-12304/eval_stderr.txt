@@ -1,0 +1,14 @@
+test_templates (model_enums.tests.ChoicesTests) ... FAIL
+
+======================================================================
+FAIL: test_templates (model_enums.tests.ChoicesTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12304/django__django/tests/model_enums/tests.py", line 156, in test_templates
+    self.assertEqual(output, 'Diamond|1')
+AssertionError: '|' != 'Diamond|1'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

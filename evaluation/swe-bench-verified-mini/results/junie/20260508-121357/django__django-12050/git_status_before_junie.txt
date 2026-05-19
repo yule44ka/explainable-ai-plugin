@@ -1,0 +1,9 @@
+ M django/conf/locale/fy/formats.py
+ M django/contrib/admin/models.py
+ M django/contrib/gis/apps.py
+ M django/contrib/gis/gdal/prototypes/geom.py
+ M django/core/checks/security/csrf.py
+ M django/db/migrations/operations/models.py
+ M django/db/models/lookups.py
+ M django/db/models/sql/query.py
+ M django/views/decorators/cache.py

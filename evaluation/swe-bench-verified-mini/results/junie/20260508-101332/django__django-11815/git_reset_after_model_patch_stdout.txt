@@ -1,0 +1,3 @@
+Unstaged changes after reset:
+M	django/db/migrations/serializer.py
+M	tests/migrations/test_writer.py

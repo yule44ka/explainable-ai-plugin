@@ -1,0 +1,9 @@
+ M django/contrib/contenttypes/migrations/0001_initial.py
+ M django/contrib/gis/db/models/aggregates.py
+ M django/core/management/commands/startapp.py
+ M django/core/management/commands/startproject.py
+ M django/db/backends/base/features.py
+ M django/db/models/base.py
+ M django/utils/dateparse.py
+ M django/utils/ipv6.py
+ M django/utils/jslex.py

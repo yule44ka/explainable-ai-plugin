@@ -6,6 +6,20 @@ import com.intellij.credentialStore.generateServiceName
 import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.*
 
+private const val DEFAULT_MODEL = "gpt-5.4"
+private val PREVIOUS_DEFAULT_MODELS = setOf("gpt-4.1-nano", "gpt-4.1")
+
+enum class ExplanationProvider(val displayName: String) {
+    JUNIE("Junie"),
+    OPENAI_API("OpenAI API");
+
+    companion object {
+        fun fromValue(value: String?): ExplanationProvider {
+            return entries.firstOrNull { it.name == value || it.displayName == value } ?: JUNIE
+        }
+    }
+}
+
 /**
  * Service for managing OpenAI API settings.
  * Uses PasswordSafe API for secure token storage.
@@ -16,12 +30,12 @@ import com.intellij.openapi.components.*
     storages = [Storage("openai-settings.xml")]
 )
 class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
-    
     data class State(
         var apiEndpoint: String = "https://api.openai.com/v1",
-        var model: String = "gpt-4.1-nano",
+        var model: String = DEFAULT_MODEL,
         var temperature: Double = 0.7,
-        var maxTokens: Int = 2000
+        var maxTokens: Int = 2000,
+        var explanationProvider: String = ExplanationProvider.JUNIE.name
     )
     
     private var state = State()
@@ -29,6 +43,7 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     companion object {
         private const val CREDENTIAL_SUBSYSTEM = "ExplainableAIPlugin"
         private const val CREDENTIAL_KEY = "OpenAI_API_Key"
+        private const val JUNIE_TOKEN_KEY = "Junie_CLI_Token"
         
         fun getInstance(): OpenAISettings = service()
         
@@ -37,12 +52,21 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
                 generateServiceName(CREDENTIAL_SUBSYSTEM, CREDENTIAL_KEY)
             )
         }
+        
+        private fun createJunieCredentialAttributes(): CredentialAttributes {
+            return CredentialAttributes(
+                generateServiceName(CREDENTIAL_SUBSYSTEM, JUNIE_TOKEN_KEY)
+            )
+        }
     }
     
     override fun getState(): State = state
     
     override fun loadState(state: State) {
         this.state = state
+        if (this.state.model in PREVIOUS_DEFAULT_MODELS) {
+            this.state.model = DEFAULT_MODEL
+        }
     }
     
     /**
@@ -73,10 +97,38 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
     }
     
     /**
+     * Get Junie CLI Token from secure storage
+     */
+    fun getJunieToken(): String? {
+        return PasswordSafe.instance.getPassword(createJunieCredentialAttributes())
+    }
+    
+    /**
+     * Save Junie CLI Token to secure storage
+     */
+    fun setJunieToken(token: String?) {
+        val credentialAttributes = createJunieCredentialAttributes()
+        if (token.isNullOrEmpty()) {
+            PasswordSafe.instance.set(credentialAttributes, null)
+        } else {
+            val credentials = Credentials(JUNIE_TOKEN_KEY, token)
+            PasswordSafe.instance.set(credentialAttributes, credentials)
+        }
+    }
+    
+    /**
+     * Check if Junie CLI Token is configured
+     */
+    fun isJunieTokenConfigured(): Boolean {
+        return !getJunieToken().isNullOrEmpty()
+    }
+    
+    /**
      * Clear all settings
      */
     fun clear() {
         setApiKey(null)
+        setJunieToken(null)
         state = State()
     }
     
@@ -104,5 +156,11 @@ class OpenAISettings : PersistentStateComponent<OpenAISettings.State> {
         get() = state.maxTokens
         set(value) {
             state.maxTokens = value.coerceIn(1, 32000)
+        }
+
+    var explanationProvider: ExplanationProvider
+        get() = ExplanationProvider.fromValue(state.explanationProvider)
+        set(value) {
+            state.explanationProvider = value.name
         }
 }

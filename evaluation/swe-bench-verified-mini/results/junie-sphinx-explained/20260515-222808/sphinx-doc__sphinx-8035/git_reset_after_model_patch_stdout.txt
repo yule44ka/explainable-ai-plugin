@@ -1,0 +1,2 @@
+Unstaged changes after reset:
+M	sphinx/ext/autodoc/__init__.py

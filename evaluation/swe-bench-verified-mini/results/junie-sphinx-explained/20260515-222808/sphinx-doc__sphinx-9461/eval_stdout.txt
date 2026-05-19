@@ -1,0 +1,172 @@
+FFF...........................................................           [100%]
+=================================== FAILURES ===================================
+_______________________________ test_pyproperty ________________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    def test_pyproperty(app):
+        text = (".. py:class:: Class\n"
+                "\n"
+                "   .. py:property:: prop1\n"
+                "      :abstractmethod:\n"
+                "      :type: str\n"
+                "\n"
+                "   .. py:property:: prop2\n"
+                "      :classmethod:\n"
+                "      :type: str\n")
+        domain = app.env.get_domain('py')
+        doctree = restructuredtext.parse(app, text)
+>       assert_node(doctree, (addnodes.index,
+                              [desc, ([desc_signature, ([desc_annotation, "class "],
+                                                        [desc_name, "Class"])],
+                                      [desc_content, (addnodes.index,
+                                                      desc,
+                                                      addnodes.index,
+                                                      desc)])]))
+
+tests/test_domain_py.py:825: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sphinx/testing/util.py:68: in assert_node
+    assert_node(node[i], nodecls, xpath=path, **kwargs)
+sphinx/testing/util.py:54: in assert_node
+    assert_node(node, cls[1], xpath=xpath, **kwargs)
+sphinx/testing/util.py:68: in assert_node
+    assert_node(node[i], nodecls, xpath=path, **kwargs)
+sphinx/testing/util.py:54: in assert_node
+    assert_node(node, cls[1], xpath=xpath, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+node = <desc_content: <index...><desc...><system_message...>>
+cls = (<class 'sphinx.addnodes.index'>, <class 'sphinx.addnodes.desc'>, <class 'sphinx.addnodes.index'>, <class 'sphinx.addnodes.desc'>)
+xpath = '[1][1]', kwargs = {}
+
+    def assert_node(node: Node, cls: Any = None, xpath: str = "", **kwargs: Any) -> None:
+        if cls:
+            if isinstance(cls, list):
+                assert_node(node, cls[0], xpath=xpath, **kwargs)
+                if cls[1:]:
+                    if isinstance(cls[1], tuple):
+                        assert_node(node, cls[1], xpath=xpath, **kwargs)
+                    else:
+                        assert isinstance(node, nodes.Element), \
+                            'The node%s does not have any children' % xpath
+                        assert len(node) == 1, \
+                            'The node%s has %d child nodes, not one' % (xpath, len(node))
+                        assert_node(node[0], cls[1:], xpath=xpath + "[0]", **kwargs)
+            elif isinstance(cls, tuple):
+                assert isinstance(node, (list, nodes.Element)), \
+                    'The node%s does not have any items' % xpath
+>               assert len(node) == len(cls), \
+                    'The node%s has %d child nodes, not %r' % (xpath, len(node), len(cls))
+E               AssertionError: The node[1][1] has 3 child nodes, not 4
+
+sphinx/testing/util.py:64: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/root
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/root/_build/html
+# status: 
+[01mRunning Sphinx v4.2.0+/1f4db2823[39;49;00m
+
+# warning: 
+[31m/private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/root/index.rst:7: WARNING: Error in "py:property" directive:
+unknown option: "classmethod".
+
+.. py:property:: prop2
+   :classmethod:
+   :type: str[39;49;00m
+
+_______________________________ test_properties ________________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_properties(app):
+        options = {"members": None}
+        actual = do_autodoc(app, 'class', 'target.properties.Foo', options)
+>       assert list(actual) == [
+            '',
+            '.. py:class:: Foo()',
+            '   :module: target.properties',
+            '',
+            '   docstring',
+            '',
+            '',
+            '   .. py:property:: Foo.prop1',
+            '      :module: target.properties',
+            '      :type: int',
+            '',
+            '      docstring',
+            '',
+            '',
+            '   .. py:property:: Foo.prop2',
+            '      :module: target.properties',
+            '      :classmethod:',
+            '      :type: int',
+            '',
+            '      docstring',
+            '',
+        ]
+E       AssertionError: assert ['', '.. py:c...ing', '', ...] == ['', '.. py:c...ing', '', ...]
+E         
+E         At index 16 diff: '' != '      :classmethod:'
+E         Right contains 4 more items, first extra item: '      :type: int'
+E         Use -v to get more diff
+
+tests/test_ext_autodoc_autoclass.py:207: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v4.2.0+/1f4db2823[39;49;00m
+
+# warning: 
+
+____________________________ test_class_properties _____________________________
+
+app = <SphinxTestApp buildername='html'>
+
+    @pytest.mark.sphinx('html', testroot='ext-autodoc')
+    def test_class_properties(app):
+        actual = do_autodoc(app, 'property', 'target.properties.Foo.prop2')
+>       assert list(actual) == [
+            '',
+            '.. py:property:: Foo.prop2',
+            '   :module: target.properties',
+            '   :classmethod:',
+            '   :type: int',
+            '',
+            '   docstring',
+            '',
+        ]
+E       AssertionError: assert ['', '.. py:p...operties', ''] == ['', '.. py:p...int', '', ...]
+E         
+E         At index 3 diff: '' != '   :classmethod:'
+E         Right contains 4 more items, first extra item: '   :type: int'
+E         Use -v to get more diff
+
+tests/test_ext_autodoc_autoproperty.py:34: AssertionError
+--------------------------- Captured stdout teardown ---------------------------
+# testroot: root
+# builder: html
+# srcdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/ext-autodoc
+# outdir: /private/var/folders/75/7l2h8zg96934mm2b_y1zgnsc0000gn/T/pytest-of-iuliia.liutova/pytest-336/ext-autodoc/_build/html
+# status: 
+[01mRunning Sphinx v4.2.0+/1f4db2823[39;49;00m
+
+# warning: 
+
+=============================== warnings summary ===============================
+tests/test_domain_py.py::test_pyproperty
+  /Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/.venvs/sphinx39/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_domain_py.py::test_pyproperty - AssertionError: The node[1]...
+FAILED tests/test_ext_autodoc_autoclass.py::test_properties - AssertionError:...
+FAILED tests/test_ext_autodoc_autoproperty.py::test_class_properties - Assert...
+3 failed, 59 passed, 1 warning in 1.27s

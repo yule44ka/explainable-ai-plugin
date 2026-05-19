@@ -1,0 +1,11 @@
+ M sphinx/builders/gettext.py
+ M sphinx/pycode/parser.py
+ M sphinx/search/zh.py
+ M sphinx/util/jsdump.py
+ M tests/roots/test-changes/conf.py
+ M tests/roots/test-latex-table/conf.py
+ M tests/roots/test-linkcheck-localserver-anchor/conf.py
+ M tests/roots/test-toctree/conf.py
+ M tests/test_api_translator.py
+ M tests/test_theming.py
+ M tests/test_util_rst.py

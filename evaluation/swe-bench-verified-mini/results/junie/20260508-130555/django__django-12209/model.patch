@@ -1,0 +1,36 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index d1cc3c5060..c72024c515 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -420,6 +420,19 @@ class Model(metaclass=ModelBase):
+         # Set up the storage for instance state
+         self._state = ModelState()
+ 
++        # Check if the primary key was provided as a kwarg or an arg.
++        pk_name = opts.pk.name
++        if pk_name in kwargs or opts.pk.attname in kwargs or 'pk' in kwargs:
++            self._state._pk_was_set = True
++        elif args:
++            # Check if the primary key was provided as a positional arg.
++            for i, field in enumerate(opts.concrete_fields):
++                if i < len(args) and field.primary_key:
++                    self._state._pk_was_set = True
++                    break
++        else:
++            self._state._pk_was_set = False
++
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+         # The reason for the kwargs check is that standard iterator passes in by
+@@ -856,7 +869,11 @@ class Model(metaclass=ModelBase):
+         # Skip an UPDATE when adding an instance and primary key has a default.
+         if (
+             not force_insert and
++            not force_update and
++            update_fields is None and
++            not raw and
+             self._state.adding and
++            not getattr(self._state, '_pk_was_set', False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):

@@ -1,0 +1,11 @@
+ M django/conf/locale/sk/formats.py
+ M django/contrib/flatpages/apps.py
+ M django/contrib/gis/geos/factory.py
+ M django/contrib/gis/sitemaps/kml.py
+ M django/core/mail/backends/smtp.py
+ M django/core/management/commands/squashmigrations.py
+ M django/db/backends/mysql/compiler.py
+ M django/db/models/fields/related.py
+ M django/db/models/query.py
+ M django/forms/models.py
+ M django/template/backends/dummy.py

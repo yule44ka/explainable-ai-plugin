@@ -1,0 +1,1 @@
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m pytest -q tests/test_domain_py.py::test_pymethod_options

@@ -1,0 +1,3 @@
+Unstaged changes after reset:
+M	sphinx/builders/linkcheck.py
+D	tests/conftest.py

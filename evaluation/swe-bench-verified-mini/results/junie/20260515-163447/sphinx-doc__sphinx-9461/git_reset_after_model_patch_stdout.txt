@@ -1,0 +1,6 @@
+Unstaged changes after reset:
+M	sphinx/deprecation.py
+M	sphinx/domains/python.py
+M	sphinx/ext/autodoc/__init__.py
+M	sphinx/util/inspect.py
+M	sphinx/util/typing.py

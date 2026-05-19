@@ -1,0 +1,16 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_get_list_editable_queryset_with_regex_chars_in_prefix (admin_changelist.tests.ChangeListTests) ... FAIL
+
+======================================================================
+FAIL: test_get_list_editable_queryset_with_regex_chars_in_prefix (admin_changelist.tests.ChangeListTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/iuliia.liutova/study/thesis/explainable-ai-plugin/evaluation/swe-bench-verified-mini/results/junie/20260504-001727/worktrees/django__django-12143/django__django/tests/admin_changelist/tests.py", line 865, in test_get_list_editable_queryset_with_regex_chars_in_prefix
+    self.assertEqual(queryset.count(), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.017s
+
+FAILED (failures=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

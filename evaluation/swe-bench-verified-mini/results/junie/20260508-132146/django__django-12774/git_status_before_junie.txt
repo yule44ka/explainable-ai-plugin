@@ -1,0 +1,9 @@
+ M django/conf/locale/lt/formats.py
+ M django/conf/locale/sq/formats.py
+ M django/contrib/gis/geos/point.py
+ M django/contrib/messages/context_processors.py
+ M django/core/management/commands/diffsettings.py
+ M django/core/management/commands/squashmigrations.py
+ M django/db/backends/mysql/client.py
+ M django/db/backends/oracle/schema.py
+ M django/db/models/query.py

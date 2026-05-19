@@ -1,0 +1,11 @@
+ M doc/development/tutorials/examples/helloworld.py
+ M sphinx/addnodes.py
+ M sphinx/builders/changes.py
+ M sphinx/pycode/ast.py
+ M sphinx/registry.py
+ M sphinx/util/parallel.py
+ M tests/roots/test-add_enumerable_node/enumerable_node.py
+ M tests/roots/test-apidoc-pep420/a/b/c/__init__.py
+ M tests/roots/test-ext-autosummary-template/conf.py
+ M tests/roots/test-ext-viewcode-find/conf.py
+ M tests/test_ext_doctest.py
