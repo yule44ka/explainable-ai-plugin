@@ -1,9 +1,6 @@
 .idea
 /figures
-
-# Keep evaluation figures with the evaluation artifacts.
-!evaluation/figures/
-!evaluation/figures/**
+evaluation/figures/
 
 # Evaluation local source repositories and generated worktrees are large and
 # should be recreated locally rather than committed.

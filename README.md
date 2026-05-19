@@ -12,10 +12,9 @@ The project has two main parts:
 ```text
 .
 ├── plugin/explainable-ai-plugin/       IntelliJ IDEA plugin source code
-├── evaluation/                         Evaluation scripts, data, results, and figures
+├── evaluation/                         Evaluation scripts, data, and results
 │   ├── llm-as-a-judge/                 Explanation-quality evaluation on labml.ai data
 │   ├── swe-bench-verified-mini/        Paired SWE-bench Verified Mini evaluation
-│   └── figures/                        Figures used in the thesis evaluation chapter
 └── README.md                           This overview
 ```
 
@@ -113,7 +112,7 @@ This part compares regular repositories with explanation-enriched repositories o
 - Junie task runner;
 - scripts for building explanation-enriched repositories;
 - mapping-quality judge scripts;
-- collected result CSVs, patches, logs, and figures.
+- collected result CSVs, patches, and logs.
 
 Common commands:
 
@@ -139,13 +138,6 @@ For API-backed runs, create an ignored `.env` file in either the repository root
 ```bash
 OPENAI_API_KEY=...
 JUNIE_API_KEY=...
-GOOGLE_API_KEY=...
 ```
 
 Do not commit credentials, local virtual environments, cloned benchmark repositories, or generated worktrees.
-
-## Notes for Reproducibility
-
-The committed evaluation data and results make it possible to inspect the experiments without downloading the large local repositories. To rerun the full experiments, recreate the ignored source repositories and virtual environments described in [`evaluation/README.md`](evaluation/README.md).
-
-The plugin code and the evaluation package are intentionally separated: the plugin is the production artifact, while `evaluation/` is the experimental artifact used to measure explanation quality and downstream agent performance.

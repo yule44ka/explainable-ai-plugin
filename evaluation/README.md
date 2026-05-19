@@ -6,7 +6,6 @@ This folder contains the reproducibility materials for the dissertation evaluati
 
 - `llm-as-a-judge/` - explanation-quality evaluation on the labml.ai-derived dataset.
 - `swe-bench-verified-mini/` - paired Junie evaluation on SWE-bench Verified Mini tasks with regular and explanation-enriched repositories.
-- `figures/` - plots used in the thesis evaluation chapter.
 
 Large local repositories are kept out of git:
 
@@ -30,7 +29,6 @@ Junie-based generation/evaluation also requires the `junie` CLI and a configured
 ```bash
 OPENAI_API_KEY=...
 JUNIE_API_KEY=...
-GOOGLE_API_KEY=...
 ```
 
 ## LLM-as-a-Judge Evaluation
